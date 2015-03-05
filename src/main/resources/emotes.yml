@@ -1,0 +1,35 @@
+radius: 100
+cooldown: 10
+target-must-be-in-range: true
+lang:
+ emote-command-base-string: "&6Usable emotes:"
+gender-replacements:
+ "<its>":
+  male: his
+  female: her
+  default: its
+emotes:
+ clap:
+  command: "/clap"
+  permission: "sc.emotes.clap"
+  emote-text: "<player> claps excitedly"
+  usage: "/clap <target>"
+  emote-text-targeted: "<player> claps excitedly for <target>"
+ feet:
+  command: "/feet"
+  permission: "sc.emotes.feet"
+  usage: "/feet <target>"
+  emote-text: "<player> stomps <its> feet"
+  emote-text-male: "<player> stomps his boots"
+  emote-text-female: "<player> stomps her heels"
+  emote-text-targeted: "<player> stomps <its> feet at <target>"
+  emote-text-male-targeted: "<player> stomps <its> boots at <target>"
+  emote-text-female-targeted: "<player> stomps <its> heels at <target>"
+ kiss:
+  command: "/kiss"
+  permission: "sc.emotes.kiss"
+  usage: "/kiss <target>"
+  emote-text-targeted: "<player> blows a kiss to <target>"
+  target-blacklist:
+   - JesusTheCaffeine
+  permission-to-bypass-target-blacklist: "sc.emotes.kiss.blacklistbypass"
