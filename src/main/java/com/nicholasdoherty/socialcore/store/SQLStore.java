@@ -66,6 +66,117 @@ public class SQLStore extends Store {
 					PreparedStatement preparedStatement = connection.prepareStatement("alter ignore table SocialCore ADD (pet_name char(30));");
 					preparedStatement.execute();
 				}catch (Exception e) {}
+                try {
+                    String sql = "-- Create syntax for TABLE 'courts_case_history'\n" +
+                            "CREATE TABLE `courts_case_history` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `case_id` int(11) DEFAULT NULL,\n" +
+                            "  `date` datetime DEFAULT NULL,\n" +
+                            "  `case_status` varchar(25) DEFAULT NULL,\n" +
+                            "  `responsible` varchar(60) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  KEY `case_id` (`case_id`),\n" +
+                            "  KEY `date` (`date`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_case_resolves'\n" +
+                            "CREATE TABLE `courts_case_resolves` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `case_id` int(11) DEFAULT NULL,\n" +
+                            "  `resolve` text,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  UNIQUE KEY `case_id` (`case_id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_cases'\n" +
+                            "CREATE TABLE `courts_cases` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `case_status` varchar(20) DEFAULT NULL,\n" +
+                            "  `plaintiff_id` int(11) DEFAULT NULL,\n" +
+                            "  `defendant_id` int(11) DEFAULT NULL,\n" +
+                            "  `case_category` varchar(64) DEFAULT NULL,\n" +
+                            "  `case_meta` text,\n" +
+                            "  `case_book_blob` text,\n" +
+                            "  PRIMARY KEY (`id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_citizens'\n" +
+                            "CREATE TABLE `courts_citizens` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `uuid` char(36) DEFAULT NULL,\n" +
+                            "  `name` varchar(64) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  UNIQUE KEY `uuid` (`uuid`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_court_dates'\n" +
+                            "CREATE TABLE `courts_court_dates` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `case_id` int(11) DEFAULT NULL,\n" +
+                            "  `judge_id` int(11) DEFAULT NULL,\n" +
+                            "  `date` datetime DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  UNIQUE KEY `case_id_2` (`case_id`),\n" +
+                            "  KEY `case_id` (`case_id`),\n" +
+                            "  KEY `judge_id` (`judge_id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_fines'\n" +
+                            "CREATE TABLE `courts_fines` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `sender_id` int(11) DEFAULT NULL,\n" +
+                            "  `rec_id` int(11) DEFAULT NULL,\n" +
+                            "  `amount` int(11) DEFAULT NULL,\n" +
+                            "  `amount_paid` int(11) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_judges'\n" +
+                            "CREATE TABLE `courts_judges` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `citizen_id` int(11) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_secretaries'\n" +
+                            "CREATE TABLE `courts_secretaries` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `citizen_id` int(11) DEFAULT NULL,\n" +
+                            "  `judge_id` int(11) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_stalls'\n" +
+                            "CREATE TABLE `courts_stalls` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `type` varchar(20) DEFAULT NULL,\n" +
+                            "  `location` varchar(64) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'courts_votes'\n" +
+                            "CREATE TABLE `courts_votes` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `approval` tinyint(1) DEFAULT NULL,\n" +
+                            "  `citizen_id` int(11) DEFAULT NULL,\n" +
+                            "  `voter_uuid` char(36) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  UNIQUE KEY `citizen_id` (`citizen_id`,`voter_uuid`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;\n" +
+                            "\n" +
+                            "-- Create syntax for TABLE 'election_candidates'\n" +
+                            "CREATE TABLE `election_candidates` (\n" +
+                            "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+                            "  `citizen_id` int(11) DEFAULT NULL,\n" +
+                            "  PRIMARY KEY (`id`),\n" +
+                            "  UNIQUE KEY `citizen_id` (`citizen_id`)\n" +
+                            ") ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;";
+                    for (String sqlL : sql.split(";")) {
+                        PreparedStatement preparedStatement = connection.prepareStatement(sqlL);
+                        preparedStatement.execute();
+                    }
+
+                }catch (Exception e) {}
 				return connection;
 			}else {
 				return connection;

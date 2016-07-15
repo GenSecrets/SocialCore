@@ -6,6 +6,7 @@ import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUIManager;
 import com.nicholasdoherty.socialcore.emotes.EmoteCommand;
 import com.nicholasdoherty.socialcore.emotes.EmoteListener;
 import com.nicholasdoherty.socialcore.emotes.Emotes;
+import com.nicholasdoherty.socialcore.emotes.ForceEmoteCommand;
 import com.nicholasdoherty.socialcore.genders.GenderCommandHandler;
 import com.nicholasdoherty.socialcore.genders.Genders;
 import com.nicholasdoherty.socialcore.marriages.*;
@@ -14,6 +15,7 @@ import com.nicholasdoherty.socialcore.races.Races;
 import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
+import com.nicholasdoherty.socialcore.titles.TitleManager;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -78,7 +80,6 @@ public class SocialCore extends JavaPlugin {
         Clock.start(SocialCore.plugin);
 		timeConditionManager = new TimeConditionManager();
 		inventoryGUIManager = new InventoryGUIManager(this);
-		courts = new Courts(this);
 		inputLib = new InputLib(this);
 		socialPlayersCache = new HashMap<String,SocialPlayer>();
 		//helpers
@@ -88,7 +89,8 @@ public class SocialCore extends JavaPlugin {
 		save = new SaveHandler(directory, this);
 		marriages = new Marriages(this);
 		store = new SQLStore();
-		//commands
+        courts = new Courts(this);
+        //commands
 				SCCommandHandler scCommandHandler = new SCCommandHandler(this);
 		MarriageCommandHandler marriageCommandHandler = new MarriageCommandHandler(this);
 		GenderCommandHandler genderCommandHandler = new GenderCommandHandler(this);
@@ -133,6 +135,7 @@ public class SocialCore extends JavaPlugin {
 		new EmoteListener(this);
 		new EmoteCommand(this);
 		new FixerCommand(this);
+		new ForceEmoteCommand(this);
 		races.reloadRaces();
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			SocialPlayer socialPlayer = save.getSocialPlayer(p.getName());
@@ -158,7 +161,9 @@ public class SocialCore extends JavaPlugin {
 				race.applyRace(p,permissionAttachment);
 			}
 		}
+		titleManager = new TitleManager(this);
 	}
+	private TitleManager titleManager;
 
 	public TimeConditionManager getTimeConditionManager() {
 		return timeConditionManager;
@@ -176,8 +181,8 @@ public class SocialCore extends JavaPlugin {
 				}catch (Exception e) {}
 			}
 		}
-
-
+		titleManager.onDisable();
+		titleManager.saveCacheFile();
 	}
 	public void onReload() {
 

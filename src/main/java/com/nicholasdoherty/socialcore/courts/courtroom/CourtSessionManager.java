@@ -35,6 +35,9 @@ public class CourtSessionManager implements ConfigurationSerializable{
     public void addAllBackToGlobal() {
         Chat chat = (Chat) Bukkit.getServer().getPluginManager().getPlugin("TownyChat");
         Channel chan = chat.getChannelsHandler().getChannel("global");
+        if (chan == null) {
+            return;
+        }
         for (String name : new HashSet<>(removedGlobal)) {
             chan.join(name);
             if (removedGlobal.contains(name))
@@ -44,12 +47,18 @@ public class CourtSessionManager implements ConfigurationSerializable{
     public void removeFromGlobal(String name) {
         Chat chat = (Chat) Bukkit.getServer().getPluginManager().getPlugin("TownyChat");
         Channel chan = chat.getChannelsHandler().getChannel("global");
+        if (chan == null) {
+            return;
+        }
         chan.leave(name);
         removedGlobal.add(name);
     }
     public void addToGlobal(String name) {
         Chat chat = (Chat) Bukkit.getServer().getPluginManager().getPlugin("TownyChat");
         Channel chan = chat.getChannelsHandler().getChannel("global");
+        if (chan == null) {
+            return;
+        }
         chan.join(name);
         if (removedGlobal.contains(name))
             removedGlobal.remove(name);
@@ -92,7 +101,6 @@ public class CourtSessionManager implements ConfigurationSerializable{
             CourtDate courtDate = caze.getCourtDate();
             long time = courtDate.getTime();
             if (time < new Date().getTime()+3000) {
-                caze.setCaseStatus(CaseStatus.PROCESSED, courtDate.getJudge().getName());
                 caze.backToProcessed();
             }
             RealTimeCondition realTimeCondition = new RealTimeCondition(new StartSessionRunnable(caze),false,time);
@@ -101,9 +109,11 @@ public class CourtSessionManager implements ConfigurationSerializable{
     }
     public CourtSession getActiveCourtSession(Judge judge, Location location) {
         for (CourtSession courtSession : inSession) {
-            if (courtSession.getJudge().equals(judge)) {
-                if (courtSession.getCourtRoom().isInRoom(location)) {
-                    return courtSession;
+            if (courtSession.getJudge() != null) {
+                if (courtSession.getJudge().equals(judge)) {
+                    if (courtSession.getCourtRoom().isInRoom(location)) {
+                        return courtSession;
+                    }
                 }
             }
         }
@@ -124,6 +134,9 @@ public class CourtSessionManager implements ConfigurationSerializable{
         return inSession;
     }
     public void addInSession(CourtSession courtSession) {
+        if (courtSession == null || courtSession.getJudge() == null) {
+            return;
+        }
         inSession.add(courtSession);
     }
     public void removeInSession(CourtSession courtSession) {
@@ -153,7 +166,7 @@ public class CourtSessionManager implements ConfigurationSerializable{
         Set<CourtSession> ses = (Set<CourtSession>) map.get("in-session");
         this.inSession = new HashSet<>();
         for (CourtSession courtSession : ses) {
-            if (courtSession != null) {
+            if (courtSession != null && courtSession.getJudge() != null) {
                 this.inSession.add(courtSession);
             }
         }

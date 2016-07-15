@@ -2,9 +2,7 @@ package com.nicholasdoherty.socialcore.utils;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by john on 8/11/14.
@@ -25,7 +23,20 @@ public class SerializableUUID implements ConfigurationSerializable {
         map.put("uuid",uuid.toString());
         return map;
     }
-
+    public static Set<UUID> fromSerializableSet(Set<SerializableUUID> in) {
+        Set<UUID> out = new HashSet<>();
+        for (SerializableUUID serializableUUID : in) {
+            out.add(serializableUUID.asUUID());
+        }
+        return out;
+    }
+    public static Set<SerializableUUID> toSerializableSet(Set<UUID> in) {
+        Set<SerializableUUID> out = new HashSet<>();
+        for (UUID uuid : in) {
+            out.add(new SerializableUUID(uuid));
+        }
+        return out;
+    }
     public UUID asUUID() {
         return uuid;
     }

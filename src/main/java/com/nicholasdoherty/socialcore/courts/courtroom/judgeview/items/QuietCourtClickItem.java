@@ -22,7 +22,7 @@ public class QuietCourtClickItem implements ClickItem {
     public void click(boolean right) {
         if (right)
             return;
-        judgeBaseView.getCourtSession().getCourtRoom().silence();
+        judgeBaseView.getCourtSession().silence();
     }
 
     @Override

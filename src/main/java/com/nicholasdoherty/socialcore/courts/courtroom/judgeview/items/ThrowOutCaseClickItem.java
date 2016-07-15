@@ -21,7 +21,7 @@ public class ThrowOutCaseClickItem implements ClickItem {
     public void click(boolean right) {
         if (right)
             return;
-        judgeBaseView.throwOut();
+        judgeBaseView.throwOut(false);
         judgeBaseView.reactivate();
     }
 

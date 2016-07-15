@@ -9,17 +9,14 @@ import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
 
 /**
  * Created by john on 1/9/15.
  */
-public class JudgeStall extends Stall implements ConfigurationSerializable {
-    public JudgeStall(VLocation vLocation) {
-        super(StallType.JUDGE, vLocation);
+public class JudgeStall extends Stall {
+    public JudgeStall(int id, VLocation vLocation) {
+        super(id,StallType.JUDGE, vLocation);
     }
 
     @Override
@@ -40,7 +37,4 @@ public class JudgeStall extends Stall implements ConfigurationSerializable {
         }
     }
 
-    public JudgeStall(Map<String, Object> map) {
-        super(map);
-    }
 }

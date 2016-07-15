@@ -28,10 +28,15 @@ public class ElectionJudgeView extends PaginatedItemView {
     @Override
     public void update() {
         Election election = Courts.getCourts().getElectionManager().getCurrentElection();
+        if (election == null || election.getCandidateSet() == null) {
+            return;
+        }
         List<ClickItem> clickItemList = new ArrayList<>();
         for (Candidate candidate : election.getCandidateSet()) {
-            ApprovalItem approvalItem = new JudgeApprovalItem(this,candidate);
-            clickItemList.add(approvalItem);
+            if (candidate != null) {
+                ApprovalItem approvalItem = new JudgeApprovalItem(this,candidate);
+                clickItemList.add(approvalItem);
+            }
         }
         this.setPaginatedItems(clickItemList);
         super.update();

@@ -47,7 +47,7 @@ public class GrantBuildingPermit implements PostCourtAction,ConfigurationSeriali
 
     @Override
     public String prettyDescription() {
-        return ChatColor.GREEN + "A building permit will be granted to the plaintiff at" + caseLocation.getvLocation().toString();
+        return ChatColor.GREEN + "A building permit will be granted to the plaintiff at " + caseLocation.getvLocation().toPrettyString();
     }
     public GrantBuildingPermit(Map<String, Object> map) {
         if (map.containsKey("case")) {

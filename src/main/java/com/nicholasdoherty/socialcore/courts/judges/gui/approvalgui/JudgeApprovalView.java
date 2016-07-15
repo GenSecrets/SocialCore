@@ -29,8 +29,10 @@ public class JudgeApprovalView extends PaginatedItemView {
         JudgeManager judgeManager = Courts.getCourts().getJudgeManager();
         List<ClickItem> clickItemList = new ArrayList<>();
         for (Judge judge : judgeManager.getJudges()) {
-            ApprovalItem approvalItem = new ApprovalItem(this,judge);
-            clickItemList.add(approvalItem);
+            if (judge != null) {
+                ApprovalItem approvalItem = new ApprovalItem(this,judge);
+                clickItemList.add(approvalItem);
+            }
         }
         this.setPaginatedItems(clickItemList);
         super.update();

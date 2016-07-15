@@ -35,7 +35,9 @@ public class VoxTitle {
             }
         }
         for (Player p : playerCollection) {
-            TitleUtil.sendTitle(p,title,subtitle,fadeIn,stay,fadeOut);
+            try {
+                TitleUtil.sendTitle(p,title,subtitle,fadeIn,stay,fadeOut);
+            }catch (Exception e) {e.printStackTrace();}
         }
     }
     public static VoxTitle fromConfig(ConfigurationSection section) {

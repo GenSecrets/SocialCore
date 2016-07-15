@@ -1,6 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.objects;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
@@ -12,42 +13,21 @@ import java.util.UUID;
  * Created by john on 1/3/15.
  */
 public class Citizen implements ConfigurationSerializable {
+    private int id;
     private String name;
     private UUID uuid;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Citizen citizen = (Citizen) o;
-
-        if (!uuid.equals(citizen.uuid)) return false;
-
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Citizen{" +
-                "name='" + name + '\'' +
-                ", uuid=" + uuid +
-                '}';
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }
-
-    public Citizen(String name, UUID uuid) {
+    public Citizen(int id, String name, UUID uuid) {
+        this.id = id;
         this.name = name;
         this.uuid = uuid;
     }
-    public Citizen(Player p) {
-        this.name = p.getName();
-        this.uuid = p.getUniqueId();
+    public Citizen(Citizen citizen) {
+        this.id = citizen.getId();
+        this.uuid = citizen.getUuid();
+        this.name = citizen.getName();
     }
+
     public boolean isSameUUID(UUID uuid) {
         return this.uuid.equals(uuid);
     }
@@ -58,12 +38,23 @@ public class Citizen implements ConfigurationSerializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public UUID getUuid() {
         return uuid;
     }
     public Citizen(Map<String, Object> map) {
         this.name = (String) map.get("name");
         this.uuid = UUID.fromString((String) map.get("uuid"));
+    }
+    public OfflinePlayer toOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(uuid);
     }
     @Override
     public Map<String, Object> serialize() {

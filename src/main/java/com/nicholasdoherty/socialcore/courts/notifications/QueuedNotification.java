@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.notifications;
 
+import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -12,11 +13,11 @@ import java.util.UUID;
  * Created by john on 2/20/15.
  */
 public abstract class QueuedNotification implements ConfigurationSerializable{
-    private Citizen citizen;
+    private int citizenId;
     private long timeoutDate;
 
     public QueuedNotification(Citizen citizen, long timeoutDate) {
-        this.citizen = citizen;
+        this.citizenId = citizen.getId();
         this.timeoutDate = timeoutDate;
     }
     public abstract boolean trySend();
@@ -32,16 +33,15 @@ public boolean hasTimedOut() {
         }
 
     public Citizen getCitizen() {
+        Citizen citizen = Courts.getCourts().getSqlSaveManager().getCitizen(citizenId);
         return citizen;
     }
 
     public UUID getRecUUID() {
-        return citizen.getUuid();
+        return getCitizen().getUuid();
         }
     public QueuedNotification(Map<String, Object> map) {
-        if (map.containsKey("citizen")) {
-            citizen = (Citizen) map.get("citizen");
-        }
+        citizenId = (int) map.get("citizen-id");
         if (map.containsKey("timeout-date")) {
             timeoutDate = Long.valueOf(map.get("timeout-date")+"");
         }
@@ -49,7 +49,7 @@ public boolean hasTimedOut() {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
-        map.put("citizen",citizen);
+        map.put("citizen-id",citizenId);
         map.put("timeout-date",timeoutDate);
         return map;
     }

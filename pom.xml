@@ -12,12 +12,20 @@
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>wg</id>
+            <url>http://maven.sk89q.com/repo/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -32,7 +40,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.0-R0.1</version>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -50,6 +58,7 @@
             <version>1.5</version>
             <scope>provided</scope>
             <exclusions>
+                <exclusion><groupId>org.spigotmc</groupId><artifactId>spigot</artifactId></exclusion>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
                     <artifactId>craftbukkit</artifactId>
@@ -65,6 +74,8 @@
             <artifactId>worldguard</artifactId>
             <version>6.0.0-SNAPSHOT</version>
             <exclusions>
+                <exclusion><groupId>org.spigotmc</groupId><artifactId>spigot</artifactId></exclusion>
+
                 <exclusion>
                     <groupId>org.bukkit</groupId>
                     <artifactId>craftbukkit</artifactId>
@@ -78,7 +89,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>5.5.8</version>
+            <version>6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -104,6 +115,11 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>coloredtags</groupId>
+            <artifactId>coloredtags</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>mcore</groupId>
@@ -163,6 +179,9 @@
             <groupId>com.mewin</groupId>
             <artifactId>WGRegionEvents</artifactId>
             <version>1.1</version>
+            <exclusions>
+                <exclusion><groupId>org.spigotmc</groupId><artifactId>spigot</artifactId></exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>gm</groupId>
@@ -170,10 +189,17 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>com.voxmc</groupId>
+            <artifactId>logfilter</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>Werewolves</groupId>
             <artifactId>Werewolves</artifactId>
             <version>1.1-SNAPSHOT</version>
             <exclusions>
+                <exclusion><groupId>org.spigotmc</groupId><artifactId>spigot</artifactId></exclusion>
+
                 <exclusion>
                     <groupId>org.bukkit</groupId>
                     <artifactId>craftbukkit</artifactId>
@@ -193,6 +219,8 @@
             <artifactId>essentials</artifactId>
             <version>1.0</version>
             <exclusions>
+                <exclusion><groupId>org.spigotmc</groupId><artifactId>spigot</artifactId></exclusion>
+
                 <exclusion>
                     <groupId>org.bukkit</groupId>
                     <artifactId>craftbukkit</artifactId>
@@ -213,7 +241,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.4.3</version>
                 <configuration>
                     <artifactSet>
                         <includes>
@@ -246,8 +274,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

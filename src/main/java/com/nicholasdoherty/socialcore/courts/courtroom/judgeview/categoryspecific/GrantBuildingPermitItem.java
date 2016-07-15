@@ -24,12 +24,16 @@ public class GrantBuildingPermitItem implements ClickItem {
     public void click(boolean right) {
         if (right)
             return;
-        if (caze.getCaseMeta().getCaseLocation() == null) {
+        if (caze != null && caze.getCaseMeta() != null && caze.getCaseMeta().getCaseLocation() == null) {
             return;
         }
         CaseLocation caseLocation = caze.getCaseMeta().getCaseLocation();
-        GrantBuildingPermit grantBuildingPermit = new GrantBuildingPermit(caze,caseLocation,categorySpecificView.getJudgeBaseView().getCourtSession().getJudge());
-        categorySpecificView.getJudgeBaseView().getCourtSession().addPostCourtAction(grantBuildingPermit);
+        if (caseLocation != null) {
+            GrantBuildingPermit grantBuildingPermit = new GrantBuildingPermit(caze,caseLocation,categorySpecificView.getJudgeBaseView().getCourtSession().getJudge());
+            categorySpecificView.getJudgeBaseView().getCourtSession().addPostCourtAction(grantBuildingPermit);
+        }else {
+            categorySpecificView.getJudgeBaseView().getInventoryGUI().getPlayer().sendMessage(ChatColor.RED + "No case location.");
+        }
     }
 
     @Override
@@ -40,7 +44,7 @@ public class GrantBuildingPermitItem implements ClickItem {
         }
         return new ItemStackBuilder(Material.PAPER).setName(ChatColor.GREEN + "Grant Building Permit")
                 .addLore(ChatColor.GRAY + "<Left click to grant a building permit to",
-                        ChatColor.GRAY + "defendant at " + caseLocation.getvLocation().toString())
+                        ChatColor.GRAY + "the plaintiff at " + caseLocation.getvLocation().toPrettyString())
                 .toItemStack();
     }
 }

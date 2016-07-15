@@ -83,6 +83,9 @@ public class ApprovalItem implements ClickItem {
                 lore.addAll(VoxStringUtils.splitLoreFormat(VoxStringUtils.formatToString(VoxStringUtils.toStringList(secretarySet, new VoxStringUtils.ToStringConverter() {
                     @Override
                     public String convertToString(Object o) {
+                        if (o == null) {
+                            return "";
+                        }
                         if (o instanceof Citizen) {
                             return ChatColor.WHITE + ((Citizen) o).getName();
                         }

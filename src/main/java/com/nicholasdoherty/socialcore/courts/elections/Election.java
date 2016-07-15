@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.elections;
 
+import com.nicholasdoherty.socialcore.courts.Courts;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.*;
@@ -18,11 +19,18 @@ public class Election implements ConfigurationSerializable{
     }
 
     public void setCandidateSet(Set<Candidate> candidateSet) {
-        this.candidateSet = candidateSet;
+        if (candidateSet == null) {
+            candidateSet = new HashSet<>();
+        }else {
+            this.candidateSet = candidateSet;
+        }
     }
     public boolean isInElection(UUID uuid) {
+        if (candidateSet == null) {
+            return false;
+        }
         for (Candidate candidate : candidateSet) {
-            if (candidate.getUuid().equals(uuid)) {
+            if (candidate != null && candidate.getUuid().equals(uuid)) {
                 return true;
             }
         }
@@ -31,16 +39,10 @@ public class Election implements ConfigurationSerializable{
     public void addCandidate(Candidate candidate) {
         candidateSet.add(candidate);
     }
-    public int amountElected() {
-        int amount = 0;
-        for (Candidate candidate : candidateSet) {
-            if (candidate.isElected())
-                amount += 1;
-        }
-        return amount;
-    }
+
     public void removeCandiate(Candidate candidate) {
         candidateSet.remove(candidate);
+        Courts.getCourts().getSqlSaveManager().removeCandidate(candidate);
     }
     public Election(Map<String, Object> map) {
         this.candidateSet = new HashSet<>((Set<Candidate>)map.get("cs"));

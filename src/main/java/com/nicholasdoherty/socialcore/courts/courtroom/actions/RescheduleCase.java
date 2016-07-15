@@ -32,6 +32,7 @@ public class RescheduleCase implements PostCourtAction,OnlyAction,DontChangeStat
         Case caze = Courts.getCourts().getCaseManager().getCase(cazeId);
         caze.setCaseStatus(CaseStatus.COURT_DATE_SET, courtDate.getJudge().getName());
         caze.setCourtDate(courtDate);
+        caze.updateSave();
     }
     @Override
     public String prettyDescription() {

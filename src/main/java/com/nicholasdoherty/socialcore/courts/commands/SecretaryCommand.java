@@ -50,7 +50,7 @@ public class SecretaryCommand implements CommandExecutor{
         }
         Player p = (Player) commandSender;
 
-        if (secretaryAddRequestMap.containsKey(p.getUniqueId()) && !secretaryAddRequestMap.get(p.getUniqueId()).isEmpty()) {
+        if ( secretaryAddRequestMap != null && secretaryAddRequestMap.containsKey(p.getUniqueId()) && !secretaryAddRequestMap.get(p.getUniqueId()).isEmpty()) {
             SecretaryAddRequest secretaryAddRequest = secretaryAddRequestMap.get(p.getUniqueId()).get(0);
             if (!judgeManager.isJudge(secretaryAddRequest.getJudge().getUuid())) {
                 p.sendMessage(ChatColor.RED + secretaryAddRequest.getJudge().getName() + " is no longer a judge.");
@@ -66,7 +66,11 @@ public class SecretaryCommand implements CommandExecutor{
 
             if (args.length > 0 && (args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny"))) {
                 if (args[0].equalsIgnoreCase("accept")) {
-                    Secretary secretary = new Secretary(secretaryAddRequest.getSecretary().getName(), secretaryAddRequest.getSecretary().getUuid(), secretaryAddRequest.getJudge());
+                    if (secretaryAddRequest.getJudge() != null && secretaryAddRequest.getJudge().getSecretaries() != null && secretaryAddRequest.getJudge().getSecretaries().stream().anyMatch(sec -> sec != null && sec.getUuid() != null && sec.getUuid().equals(secretaryAddRequest.getSecretary().getUuid()))) {
+                        p.sendMessage(ChatColor.RED + "This player is already a secretary.");
+                        return true;
+                    }
+                    Secretary secretary = Courts.getCourts().getSqlSaveManager().createSecretary(secretaryAddRequest.getJudge(),secretaryAddRequest.getSecretary());
                     if (courts.getElectionManager().getCurrentElection() != null && courts.getElectionManager().getCurrentElection().isInElection(secretary.getUuid())) {
                         p.sendMessage(ChatColor.RED + "You may not accept because you are running for judge.");
                         removeRequest(secretaryAddRequest);
@@ -75,14 +79,18 @@ public class SecretaryCommand implements CommandExecutor{
                     judgeManager.getJudge(secretaryAddRequest.getJudge().getUuid()).addSecretary(secretary);
 
                     String acceptMessage = courts.getCourtsLangManager().getSecretaryRequestedAcceptMessage();
-                    acceptMessage = acceptMessage.replace("{judge-name}", secretaryAddRequest.getJudge().getName());
-                    p.sendMessage(acceptMessage);
+                    if (acceptMessage != null) {
+                        acceptMessage = acceptMessage.replace("{judge-name}", secretaryAddRequest.getJudge().getName());
+                        p.sendMessage(acceptMessage);
+                    }
 
                     String requesterAcceptMessage = courts.getCourtsLangManager().getSecretaryRequesterAcceptedMessage();
-                    requesterAcceptMessage = requesterAcceptMessage.replace("{requested-name}", secretaryAddRequest.getSecretary().getName());
-                    Player judgeP = secretaryAddRequest.getJudge().getPlayer();
-                    if (judgeP != null) {
-                        judgeP.sendMessage(requesterAcceptMessage);
+                    if (requesterAcceptMessage != null) {
+                        requesterAcceptMessage = requesterAcceptMessage.replace("{requested-name}", secretaryAddRequest.getSecretary().getName());
+                        Player judgeP = secretaryAddRequest.getJudge().getPlayer();
+                        if (judgeP != null) {
+                            judgeP.sendMessage(requesterAcceptMessage);
+                        }
                     }
                 } else {
                     String denyMessage = courts.getCourtsLangManager().getSecretaryRequestedDenyMessage();
@@ -131,7 +139,7 @@ public class SecretaryCommand implements CommandExecutor{
                 p.sendMessage(ChatColor.RED + "Your prospective secretary must be online to be added.");
                 return true;
             }
-            Citizen secretaryCitizen = new Citizen(requestedPlayer);
+            Citizen secretaryCitizen = Courts.getCourts().getCitizenManager().toCitizen(requestedPlayer);
             if (secretaryAddRequestMap.containsKey(secretaryCitizen.getUuid())) {
                 for (SecretaryAddRequest secretaryAddRequest : secretaryAddRequestMap.get(secretaryCitizen.getUuid())) {
                     if (secretaryAddRequest.getJudge().equals(judge)) {

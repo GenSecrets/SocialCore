@@ -51,6 +51,9 @@ public class SaveHandler {
 			socialPlayerMap.put(socialPlayer.getPlayerName(),socialPlayer);
 		}
 		for (SocialPlayer socialPlayer : socialPlayers) {
+			if (!socialPlayer.isMarried() && socialPlayer.getPetName() != null) {
+				socialPlayer.setPetName(null);
+			}
 			if (!socialPlayer.isMarried() && socialPlayer.getMarriedTo() != null) {
 				socialPlayer.setMarriedTo(null);
 			}

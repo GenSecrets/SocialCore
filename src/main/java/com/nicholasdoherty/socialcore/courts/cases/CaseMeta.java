@@ -21,7 +21,7 @@ public class CaseMeta implements ConfigurationSerializable{
     }
     public CaseMeta(Map<String, Object> map) {
         if (map.containsKey("case-locations") && map.get("case-locations") != null) {
-            caseLocations = new ArrayList<>((Collection<? extends CaseLocation>) map.get(caseLocations));
+            caseLocations = new ArrayList<>((Collection<? extends CaseLocation>) map.get("case-locations"));
         }else {
             caseLocations = new ArrayList<>();
         }

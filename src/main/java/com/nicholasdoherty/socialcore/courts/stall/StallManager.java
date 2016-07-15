@@ -1,31 +1,42 @@
 package com.nicholasdoherty.socialcore.courts.stall;
 
+import com.garbagemule.MobArena.util.config.ConfigSection;
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.CitizensStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.JudgeStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.MasterListStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.SecretaryStall;
+import com.nicholasdoherty.socialcore.utils.ConfigAccessor;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import org.bukkit.Location;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by john on 1/6/15.
  */
-public class StallManager implements ConfigurationSerializable{
+public class StallManager{
     private Courts courts;
     private Set<Stall> stalls;
     private boolean cacheLoaded = false;
     private Map<Location, Stall> stallCache = new HashMap<>();
+    private ConfigAccessor stallStore;
     public StallManager(Set<Stall> stalls) {
         this.courts = Courts.getCourts();
         this.stalls = stalls;
+
+        stallStore = new ConfigAccessor(Courts.getCourts().getPlugin(),"stalls.yml");
+        stallStore.saveDefaultConfig();
+        loadMoreStalls();
         new StallListener(courts,this);
+    }
+    private void loadMoreStalls() {
+        for (String key : stallStore.getConfig().getKeys(false)) {
+            ConfigurationSection section = stallStore.getConfig().getConfigurationSection(key);
+            VLocation loc = VLocation.fromString(section.getString("location"));
+            StallType stallType = StallType.valueOf(section.getString("type"));
+            Stall stall = Stall.createStall(Integer.parseInt(key.replace("stall-","")),stallType,loc);
+            stalls.add(stall);
+        }
     }
     public Stall getStall(Location loc) {
         if (!cacheLoaded) {
@@ -57,23 +68,22 @@ public class StallManager implements ConfigurationSerializable{
                 stallCache.remove(stall.getLocation());
             }
         }
+        stallStore.getConfig().set("stall-"+stall.getId(),null);
+        stallStore.saveConfig();
+        Courts.getCourts().getSqlSaveManager().removeStall(stall);
     }
-    public void createStall(Location loc, StallType stallType) {
-        Stall stall = null;
-        if (stallType == StallType.CITIZEN) {
-            stall = new CitizensStall(new VLocation(loc));
-        }
-        if (stallType == StallType.SECRETARY) {
-            stall = new SecretaryStall(new VLocation(loc));
-        }
-        if (stallType == StallType.JUDGE) {
-            stall = new JudgeStall(new VLocation(loc));
-        }
-        if (stallType == StallType.MASTERLIST) {
-            stall = new MasterListStall(new VLocation(loc));
-        }
+    public void addStall(Stall stall) {
         stalls.add(stall);
-        stallCache.put(loc,stall);
+        stallCache.put(stall.getLocation(),stall);
+    }
+    public Stall createStall(Location loc, StallType stallType) {
+        Stall stall = Courts.getCourts().getSqlSaveManager().addStall(stallType,new VLocation(loc));
+        addStall(stall);
+        ConfigurationSection section = stallStore.getConfig().createSection("stall-" + stall.getId());
+        section.set("location",new VLocation(loc).toString());
+        section.set("type",stallType.toString());
+        stallStore.saveConfig();
+        return stall;
     }
     public Courts getCourts() {
         return courts;
@@ -82,15 +92,5 @@ public class StallManager implements ConfigurationSerializable{
     public Set<Stall> getStalls() {
         return stalls;
     }
-    public StallManager(Map<String, Object> map) {
-        this.courts = Courts.getCourts();
-        this.stalls = new HashSet<>((Set<Stall>)map.get("stalls"));
-        new StallListener(courts,this);
-    }
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("stalls",stalls);
-        return map;
-    }
+
 }

@@ -30,7 +30,7 @@ public class FinePlantiff implements PostCourtAction,ConfigurationSerializable {
         Citizen defendant = caze.getDefendent();
         if (plaintiff == null)
             return;
-        Fine fine = new Fine(plaintiff,defendant,amount);
+        Fine fine = Courts.getCourts().getSqlSaveManager().addFine(plaintiff, defendant, amount);
         Courts.getCourts().getFineManager().addFine(fine);
     }
 

@@ -4,27 +4,30 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.notifications.VoteNotification;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.nicholasdoherty.socialcore.utils.SerializableUUID;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.OfflinePlayer;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by john on 1/6/15.
  */
-public class ApprovedCitizen extends Citizen implements ConfigurationSerializable{
-    private Set<SerializableUUID> approvals, disapprovals;
+public class ApprovedCitizen extends Citizen {
+    private Set<UUID> approvals, disapprovals;
     private long lastVote;
     private int newApprovals,newDisapprovals;
 
+    public ApprovedCitizen(Citizen citizen, Set<UUID> approvals, Set<UUID> disapprovals) {
+        super(citizen);
+        this.approvals = approvals;
+        this.disapprovals = disapprovals;
+    }
     public ApprovedCitizen(ApprovedCitizen approvedCitizen) {
-        super(approvedCitizen.getName(), approvedCitizen.getUuid());
-        approvals = approvedCitizen.getApprovals();
-        disapprovals = approvedCitizen.getDisapprovals();
-        this.lastVote = approvedCitizen.getLastVote();
-        this.newApprovals = approvedCitizen.getNewApprovals();
-        this.newDisapprovals = approvedCitizen.getNewDisapprovals();
+        super(approvedCitizen);
+        this.approvals = approvedCitizen.getApprovals();
+        this.disapprovals = approvedCitizen.getDisapprovals();
     }
 
     public long getLastVote() {
@@ -39,19 +42,15 @@ public class ApprovedCitizen extends Citizen implements ConfigurationSerializabl
         return newDisapprovals;
     }
 
-    public Set<SerializableUUID> getApprovals() {
+    public Set<UUID> getApprovals() {
         return approvals;
     }
 
-    public Set<SerializableUUID> getDisapprovals() {
+    public Set<UUID> getDisapprovals() {
         return disapprovals;
     }
 
-    public ApprovedCitizen(String name, UUID uuid, Set<SerializableUUID> approvals, Set<SerializableUUID> disapprovals) {
-        super(name, uuid);
-        this.approvals = approvals;
-        this.disapprovals = disapprovals;
-    }
+
 
     public double electPercentage() {
         int votes = votes();
@@ -69,21 +68,19 @@ public class ApprovedCitizen extends Citizen implements ConfigurationSerializabl
         return approvals.size() + disapprovals.size();
     }
 
-    public void approve(UUID Nuuid) {
-        SerializableUUID uuid = new SerializableUUID(Nuuid);
+    public void approve(UUID uuid) {
         if (approvals.contains(uuid))
             return;
         if (disapprovals.contains(uuid))
             disapprovals.remove(uuid);
         approvals.add(uuid);
-        onVote(Nuuid,true);
+        onVote(uuid,true);
     }
-    public boolean hasVoted(UUID nUUID) {
-        SerializableUUID uuid = new SerializableUUID(nUUID);
+    public boolean hasVoted(UUID uuid) {
         return (approvals.contains(uuid) || disapprovals.contains(uuid));
     }
     public boolean vote(UUID uuid) {
-        return approvals.contains(new SerializableUUID(uuid));
+        return approvals.contains(uuid);
     }
     public void vote(UUID uuid, boolean pos) {
         if (pos) {
@@ -93,14 +90,13 @@ public class ApprovedCitizen extends Citizen implements ConfigurationSerializabl
         }
     }
 
-    public void disapprove(UUID Nuuid) {
-        SerializableUUID uuid = new SerializableUUID(Nuuid);
+    public void disapprove(UUID uuid) {
         if (disapprovals.contains(uuid))
             return;
         if (approvals.contains(uuid))
             approvals.remove(uuid);
         disapprovals.add(uuid);
-        onVote(Nuuid, false);
+        onVote(uuid, false);
     }
     public void resetNew() {
         newApprovals = 0;
@@ -118,6 +114,7 @@ public class ApprovedCitizen extends Citizen implements ConfigurationSerializabl
     }
 
     public void onVote(UUID uuid, boolean approved) {
+        Courts.getCourts().getSqlSaveManager().updateVote(this,uuid,approved);
         if (approved) {
             newApprovals += 1;
         }else {
@@ -148,30 +145,5 @@ public class ApprovedCitizen extends Citizen implements ConfigurationSerializabl
             VoteNotification voteNotification = (VoteNotification) Courts.getCourts().getNotificationManager().getNotificationTypeNotificationMap().get(NotificationType.VOTE_NOTIFICATION);
             voteNotification.vote(this,uuid,approved);
         }
-    }
-    public ApprovedCitizen(Map<String, Object> map) {
-        super(map);
-        this.approvals = new HashSet<>((Set<SerializableUUID>) map.get("approvals"));
-        this.disapprovals = new HashSet<>((Set<SerializableUUID>) map.get("disapprovals"));
-        this.lastVote = -1;
-        if (map.containsKey("lastvote")) {
-            lastVote = Long.parseLong(map.get("lastvote") + "");
-        }
-        if (map.containsKey("new-approvals")) {
-            newApprovals = (int) map.get("new-approvals");
-        }
-        if (map.containsKey("new-disapprovals")) {
-            newDisapprovals = (int) map.get("new-disapprovals");
-        }
-    }
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = super.serialize();
-        map.put("approvals", approvals);
-        map.put("disapprovals",disapprovals);
-        map.put("lastvote",lastVote);
-        map.put("new-approvals",newApprovals);
-        map.put("new-disapprovals",newDisapprovals);
-        return map;
     }
 }

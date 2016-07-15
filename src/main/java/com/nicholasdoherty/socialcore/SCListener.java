@@ -6,6 +6,7 @@ import com.massivecraft.vampire.event.EventVampirePlayerInfectionChange;
 import com.nicholasdoherty.socialcore.utils.VampWWUtil;
 import com.nicholasdoherty.werewolf.customevents.WerewolveInfectionEvent;
 import org.bukkit.*;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,6 +45,19 @@ public class SCListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
+
+	@EventHandler
+	public void onlogoutInventory(PlayerQuitEvent event) {
+		event.getPlayer().getInventory().getViewers().stream().forEach(v -> {
+				new BukkitRunnable(){
+					@Override
+					public void run() {
+						v.closeInventory();
+					}
+				}.runTaskLater(sc,1);
+		});
+	}
+
 	@EventHandler
 	public void vampireChange(EventVampirePlayerInfectionChange event) {
 		if (event.getInfection() == 0)

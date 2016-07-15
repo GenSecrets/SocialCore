@@ -1,7 +1,10 @@
 package com.nicholasdoherty.socialcore.utils.title;
 
-import net.minecraft.server.v1_8_R1.*;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+
+import net.minecraft.server.v1_10_R1.IChatBaseComponent;
+import net.minecraft.server.v1_10_R1.PacketPlayOutTitle;
+import net.minecraft.server.v1_10_R1.PlayerConnection;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,8 +18,8 @@ public class TitleUtil {
         if (title != null) {
             try {
                 title = TellRawConverterLite.convertToJSON(title);
-                IChatBaseComponent titleJSON = ChatSerializer.a(title);
-                PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleJSON, fadeIn, stay, fadeOut);
+                IChatBaseComponent titleJSON = IChatBaseComponent.ChatSerializer.a(title);
+                PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleJSON, fadeIn, stay, fadeOut);
                 connection.sendPacket(titlePacket);
             }catch (Exception e) {
 
@@ -25,8 +28,8 @@ public class TitleUtil {
         if (subtitle != null) {
             try {
             subtitle = TellRawConverterLite.convertToJSON(subtitle);
-            IChatBaseComponent subtitleJSON = ChatSerializer.a(subtitle);
-            PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, subtitleJSON);
+            IChatBaseComponent subtitleJSON = IChatBaseComponent.ChatSerializer.a(subtitle);
+            PacketPlayOutTitle subtitlePacket = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitleJSON);
             connection.sendPacket(subtitlePacket);
         }catch (Exception e) {
 

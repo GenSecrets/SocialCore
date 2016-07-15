@@ -7,17 +7,14 @@ import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
 
 /**
  * Created by john on 1/6/15.
  */
-public class SecretaryStall extends Stall implements ConfigurationSerializable{
-    public SecretaryStall(VLocation vLocation) {
-        super(StallType.SECRETARY, vLocation);
+public class SecretaryStall extends Stall {
+    public SecretaryStall(int id, VLocation vLocation) {
+        super(id,StallType.SECRETARY, vLocation);
     }
 
     @Override
@@ -29,8 +26,5 @@ public class SecretaryStall extends Stall implements ConfigurationSerializable{
             return;
         }
         SecretaryGUI.createAndOpen(p,secretary);
-    }
-    public SecretaryStall(Map<String, Object> map) {
-        super(map);
     }
 }

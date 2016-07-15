@@ -1,63 +1,40 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.courtroom.CourtRoom;
 import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CalendarEvent;
 import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CalendarEventType;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.joda.time.DateTime;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by john on 1/9/15.
  */
-public class CourtDate implements ConfigurationSerializable, CalendarEvent{
+public class CourtDate implements CalendarEvent{
     private long time;
-    private Judge judge;
-    private CourtRoom courtRoom;
+    private int judgeId;
 
-    public CourtDate(long time, Judge judge, CourtRoom courtRoom) {
+    public CourtDate(long time, int judgeId) {
         this.time = time;
-        this.judge = judge;
-        this.courtRoom = courtRoom;
+        this.judgeId = judgeId;
+    }
+
+    public int getJudgeId() {
+        return judgeId;
+    }
+    public Judge getJudge() {
+        Judge judge = Courts.getCourts().getJudgeManager().getJudge(judgeId);
+        return judge;
     }
 
     public long getTime() {
         return time;
     }
 
-    public Judge getJudge() {
-        return judge;
-    }
     public long ticksUntil() {
         long currentTicks = new Date().getTime();
         return (time-currentTicks)/20;
-    }
-
-    public CourtDate(Map<String, Object> map) {
-        this.time = (long) map.get("time");
-        this.judge = (Judge) map.get("judge");
-        String courtRoomId = (String) map.get("court-room-id");
-        courtRoom = Courts.getCourts().getCourtsConfig().getCourtRoom(courtRoomId);
-        if (courtRoom == null) {
-            courtRoom = Courts.getCourts().getCourtsConfig().getDefaultCourtRoom();
-        }
-    }
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("time",time);
-        map.put("judge",judge);
-        map.put("court-room-id",courtRoom.getName());
-        return map;
-    }
-
-    public CourtRoom getCourtRoom() {
-        return courtRoom;
     }
 
     @Override

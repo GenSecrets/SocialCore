@@ -1,22 +1,21 @@
 package com.nicholasdoherty.socialcore.emotes;
 
+import com.nicholasdoherty.socialcore.NearbyAPI;
 import com.nicholasdoherty.socialcore.SocialCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.kitteh.vanish.VanishManager;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -124,13 +123,13 @@ public class EmoteListener implements Listener{
 				toSend.sendMessage(message);
 			}
 		} else {
-			for (Entity e : p.getNearbyEntities(radius, radius, radius)) {
+			for (Player e : NearbyAPI.getNearbyPlayers(p.getLocation(), radius)) {
 				if (e.getType().equals(EntityType.PLAYER)) {
 					Player toSend = (Player) e;
 					toSend.sendMessage(message);
 				}
 			}
-			p.sendMessage(message);
+			//p.sendMessage(message);
 			final String pName = p.getName();
 			long time = new Date().getTime();
 			onCooldown.put(p.getName(), time);

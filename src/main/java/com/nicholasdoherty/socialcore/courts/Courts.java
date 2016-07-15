@@ -2,10 +2,7 @@ package com.nicholasdoherty.socialcore.courts;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.cases.*;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.CitizensStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.JudgeStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.MasterListStall;
-import com.nicholasdoherty.socialcore.courts.citizens.stall.SecretaryStall;
+import com.nicholasdoherty.socialcore.courts.citizens.CitizenManager;
 import com.nicholasdoherty.socialcore.courts.commands.*;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSessionManager;
@@ -14,7 +11,6 @@ import com.nicholasdoherty.socialcore.courts.courtroom.voting.*;
 import com.nicholasdoherty.socialcore.courts.elections.Candidate;
 import com.nicholasdoherty.socialcore.courts.elections.Election;
 import com.nicholasdoherty.socialcore.courts.elections.ElectionManager;
-import com.nicholasdoherty.socialcore.courts.fines.Fine;
 import com.nicholasdoherty.socialcore.courts.fines.FineManager;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
@@ -25,16 +21,15 @@ import com.nicholasdoherty.socialcore.courts.notifications.VoteSummaryQueued;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.prefix.PrefixManager;
-import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallManager;
 import com.nicholasdoherty.socialcore.utils.SerializableUUID;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by john on 1/3/15.
@@ -54,6 +49,8 @@ public class Courts {
     private CourtsLangManager courtsLangManager;
     private FineManager fineManager;
     private DivorceManager divorceManager;
+    private SqlSaveManager sqlSaveManager;
+    private CitizenManager citizenManager;
     public Courts(SocialCore plugin) {
         courts = this;
         this.plugin = plugin;
@@ -64,38 +61,27 @@ public class Courts {
         plugin.reloadConfig();
         courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
         courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
+        sqlSaveManager = new SqlSaveManager();
+        sqlSaveManager.upgrade();
+        sqlSaveManager.clean();
+        try {
+            sqlSaveManager.purgeVotes();
+        }catch (Exception e) {e.printStackTrace();}
         long time1 = new Date().getTime();
+        citizenManager = new CitizenManager(courts);
         try {
             courtsSaveManager = new CourtsSaveManager(this);
         } catch (Exception e) {
             e.printStackTrace();
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    CourtsSaveManager.revertFile();
-                }
-            }.runTaskLater(SocialCore.plugin, 1);
-            return;
         }
-        electionManager = courtsSaveManager.electionManager();
-        judgeManager = courtsSaveManager.judgeManager();
-        try {
-            caseManager = courtsSaveManager.caseManager();
-        } catch (Exception e) {
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    CourtsSaveManager.revertFile();
-                }
-            }.runTaskLater(SocialCore.plugin, 1);
-            e.printStackTrace();
-            return;
-        }
-        stallManager = courtsSaveManager.stallManager();
+        electionManager = new ElectionManager(sqlSaveManager.election());
+        judgeManager = new JudgeManager(this);
+        caseManager = new CaseManager(sqlSaveManager.getCases());
+        stallManager = new StallManager(sqlSaveManager.getStalls());
         courtSessionManager = courtsSaveManager.courtRoomManager();
         defaultDayGetter = new DefaultDayGetter(caseManager);
         notificationManager = new NotificationManager(this);
-        fineManager = courtsSaveManager.fineManager();
+        fineManager = new FineManager(sqlSaveManager.getFines());
         fineManager.startTimer();
         long time2 = new Date().getTime();
         long diff =time2-time1;
@@ -106,6 +92,7 @@ public class Courts {
         new TestCommand(this);
         new JudgeCommand(this,judgeManager);
         new SecretaryCommand(this,judgeManager);
+        new IfElectionCommand(this,electionManager);
         for (Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
             judgeManager.setPrefix(p);
@@ -147,6 +134,10 @@ public class Courts {
         this.forceNotSave = forceNotSave;
     }
 
+    public SqlSaveManager getSqlSaveManager() {
+        return sqlSaveManager;
+    }
+
     public void onDisable() {
         try {
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -165,24 +156,12 @@ public class Courts {
         ConfigurationSerialization.registerClass(Case.class);
         ConfigurationSerialization.registerClass(CaseHistory.class);
         ConfigurationSerialization.registerClass(CaseHistory.HistoryEntry.class);
-        ConfigurationSerialization.registerClass(CaseManager.class);
-        ConfigurationSerialization.registerClass(CourtDate.class);
-        ConfigurationSerialization.registerClass(CitizensStall.class);
-        ConfigurationSerialization.registerClass(JudgeStall.class);
-        ConfigurationSerialization.registerClass(SecretaryStall.class);
-        ConfigurationSerialization.registerClass(MasterListStall.class);
         ConfigurationSerialization.registerClass(Candidate.class);
         ConfigurationSerialization.registerClass(Election.class);
-        ConfigurationSerialization.registerClass(ElectionManager.class);
         ConfigurationSerialization.registerClass(Secretary.class);
         ConfigurationSerialization.registerClass(Judge.class);
-        ConfigurationSerialization.registerClass(JudgeManager.class);
         ConfigurationSerialization.registerClass(ApprovedCitizen.class);
         ConfigurationSerialization.registerClass(Citizen.class);
-        ConfigurationSerialization.registerClass(Fine.class);
-        ConfigurationSerialization.registerClass(FineManager.class);
-        ConfigurationSerialization.registerClass(Stall.class);
-        ConfigurationSerialization.registerClass(StallManager.class);
         ConfigurationSerialization.registerClass(VLocation.class);
         ConfigurationSerialization.registerClass(SerializableUUID.class);
         ConfigurationSerialization.registerClass(CaseLocation.class);
@@ -202,6 +181,7 @@ public class Courts {
         ConfigurationSerialization.registerClass(FineDefendent.class);
         ConfigurationSerialization.registerClass(FinePlantiff.class);
         ConfigurationSerialization.registerClass(GrantBuildingPermit.class);
+        ConfigurationSerialization.registerClass(GrantChestPermit.class);
         ConfigurationSerialization.registerClass(GrantDivorce.class);
         ConfigurationSerialization.registerClass(JailDefendent.class);
         ConfigurationSerialization.registerClass(JailPlantiff.class);
@@ -219,6 +199,10 @@ public class Courts {
 
     public void setCaseManager(CaseManager caseManager) {
         this.caseManager = caseManager;
+    }
+
+    public CitizenManager getCitizenManager() {
+        return citizenManager;
     }
 
     public DefaultDayGetter getDefaultDayGetter() {

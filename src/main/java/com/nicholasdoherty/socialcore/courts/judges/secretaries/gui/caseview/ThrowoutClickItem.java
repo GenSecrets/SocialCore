@@ -23,7 +23,7 @@ public class ThrowoutClickItem implements ClickItem {
     public void click(boolean right) {
         if (right)
             return;
-        throwOut.throwOut();
+        throwOut.throwOut(false);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class ThrowoutClickItem implements ClickItem {
         return itemStack;
     }
     public interface ThrowoutCase {
-        public void throwOut();
+        public void throwOut(boolean refund);
     }
 }

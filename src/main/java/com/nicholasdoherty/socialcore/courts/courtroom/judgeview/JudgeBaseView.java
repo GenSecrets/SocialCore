@@ -1,5 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.courtroom.judgeview;
 
+import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
@@ -15,13 +17,10 @@ import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.CaseInf
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.AssignCategoryClickItem;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.AssignDefendentClickItem;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.ThrowoutClickItem;
-import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.UUIDUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,6 @@ public class JudgeBaseView extends InventoryView implements AssignCategoryClickI
         addActiveItem(21, new TallyVotesClickItem(this));
         addActiveItem(22, new ClearVotesClickItem(this));
 
-        addActiveItem(24, new JailPlaintiffClickItem(this));
-        addActiveItem(25, new JailDefendantClickItem(this));
         if (caze.getCaseCategory() != null) {
             addActiveItem(26, new CategorySpecificClickItem(this));
         }
@@ -92,7 +89,7 @@ public class JudgeBaseView extends InventoryView implements AssignCategoryClickI
         }
 
         addActiveItem(51, new QuietCourtClickItem(this));
-
+        addActiveItem(52, new RefundCaseClickItem(this));
         addActiveItem(53, new ThrowOutCaseClickItem(this));
     }
 
@@ -102,6 +99,18 @@ public class JudgeBaseView extends InventoryView implements AssignCategoryClickI
 
     @Override
     public void assignCategory(CaseCategory caseCategory) {
+        if (caseCategory == CaseCategory.DIVORCE) {
+            if (caze.getPlantiff() == null || caze.getDefendent() == null) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant are required to assign a case to divorce!");
+                return;
+            }
+            String plaintiffName = caze.getPlantiff().getName();
+            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(plaintiffName);
+            if (socialPlayer == null || !socialPlayer.isMarried() || !socialPlayer.getMarriedTo().equalsIgnoreCase(caze.getDefendent().getName())) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant must be married assign a case to divorce!");
+                return;
+            }
+        }
         caze.setCaseCategory(caseCategory);
         getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Assigned case " + caze.getId() + " to category " + caseCategory);
         update(caseInfoClickItem);
@@ -112,16 +121,17 @@ public class JudgeBaseView extends InventoryView implements AssignCategoryClickI
         if (uuid == null)
             return false;
         name = UUIDUtil.prettyName(name,uuid);
-        caze.setDefendent(new Citizen(name, uuid));
+        caze.setDefendent(Courts.getCourts().getCitizenManager().toCitizen(name,uuid));
+        caze.updateSave();
         getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Assigned defendant " + name + " to case " + caze.getId());
         return true;
     }
     @Override
-    public void throwOut() {
-        courtSession.addPostCourtAction(new ThrowoutCase(courtSession));
+    public void throwOut(boolean refund) {
+        courtSession.addPostCourtAction(new ThrowoutCase(courtSession,refund));
     }
     public void assignDate(long date) {
-        CourtDate courtDate = new CourtDate(date, courtSession.getJudge(),caze.getCourtDate().getCourtRoom());
+        CourtDate courtDate = new CourtDate(date, courtSession.getJudge().getJudgeId());
         courtSession.addPostCourtAction(new RescheduleCase(courtSession, courtDate));
     }
     @Override
@@ -137,12 +147,6 @@ public class JudgeBaseView extends InventoryView implements AssignCategoryClickI
     public void callVerdict() {
         courtSession.end();
         caze.setLocked(false);
-        Player p = getInventoryGUI().getPlayer();
-        if (p != null) {
-            for (ItemStack itemStack : Courts.getCourts().getCourtsConfig().getJudgementReward()) {
-                p.getInventory().addItem(itemStack);
-            }
-        }
         judgeCourtGUI.close();
     }
 }

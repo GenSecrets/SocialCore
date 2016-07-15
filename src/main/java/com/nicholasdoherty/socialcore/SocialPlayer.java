@@ -42,6 +42,7 @@ public class SocialPlayer {
 		this.playerName = playerName;
 		gender = SocialCore.Gender.UNSPECIFIED;
 		isMarried = false;
+
 	}
 	
 	//setters and getters

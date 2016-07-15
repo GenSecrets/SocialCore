@@ -31,12 +31,27 @@ public class Case implements ConfigurationSerializable{
 
     private CaseMeta caseMeta;
 
-    public Case(int id, ItemStack caseBook) {
+    public Case(int id, CaseStatus caseStatus) {
         this.id = id;
-        this.caseBook = caseBook;
-        caseStatus = CaseStatus.INITIAL;
+        this.caseStatus = caseStatus;
         caseHistory = new CaseHistory();
     }
+
+    public Case(int id, CaseStatus caseStatus, Citizen plantiff, Citizen defendent, ItemStack caseBook, boolean locked, CaseCategory caseCategory, CaseMeta caseMeta) {
+        this.id = id;
+        this.caseStatus = caseStatus;
+        this.plantiff = plantiff;
+        this.defendent = defendent;
+        this.caseBook = caseBook;
+        this.locked = locked;
+        this.caseCategory = caseCategory;
+        this.caseMeta = caseMeta;
+    }
+
+    public void setCaseHistory(CaseHistory caseHistory) {
+        this.caseHistory = caseHistory;
+    }
+
     public boolean isDone() {
         if (caseStatus == CaseStatus.MISTRIAL || caseStatus == CaseStatus.THROWN_OUT || caseStatus == CaseStatus.RESOLVED)
             return true;
@@ -54,8 +69,13 @@ public class Case implements ConfigurationSerializable{
     }
     public void setCaseStatus(CaseStatus caseStatus, String name) {
         this.caseStatus = caseStatus;
-        caseHistory.record(caseStatus,name);
+        caseHistory.record(this, caseStatus, name);
     }
+
+    public void setCaseBook(ItemStack caseBook) {
+        this.caseBook = caseBook;
+    }
+
     private Set<Citizen> participants() {
         Set<Citizen> part = new HashSet<>();
         if (courtDate != null && courtDate.getJudge() != null) {
@@ -90,6 +110,7 @@ public class Case implements ConfigurationSerializable{
                 name = caseHistory.getProcessingEntry().getResponsible();
             }
             setCaseStatus(CaseStatus.PROCESSED,name);
+            this.updateSave();
         }
     }
     public void removeCourtDate() {
@@ -98,19 +119,21 @@ public class Case implements ConfigurationSerializable{
 
     public void setCourtDate(CourtDate courtDate) {
         this.courtDate = courtDate;
-        if (courtDate != null) {
+        if (courtDate != null && Courts.getCourts().getNotificationManager() != null) {
             Notification notification = Courts.getCourts().getNotificationManager().getNotificationTypeNotificationMap().get(NotificationType.CASE_ASSIGNED_TIME);
             if (notification != null) {
                 Set<Citizen> citizenList = participants();
                 notification.sendCitizens(new Object[]{this,courtDate.getJudge()},citizenList);
             }
         }
-        if (courtDate == null && this.getCourtDate() != null) {
-            Courts.getCourts().getDefaultDayGetter().remove(this.getCourtDate());
-        }else {
-            Courts.getCourts().getDefaultDayGetter().update(courtDate);
+        if (Courts.getCourts().getDefaultDayGetter() != null) {
+            if (courtDate == null && this.getCourtDate() != null) {
+                Courts.getCourts().getDefaultDayGetter().remove(this.getCourtDate());
+            }else {
+                Courts.getCourts().getDefaultDayGetter().update(courtDate);
+            }
+            Courts.getCourts().getCourtSessionManager().registerSession(this);
         }
-        Courts.getCourts().getCourtSessionManager().registerSession(this);
     }
 
     public CaseStatus getCaseStatus() {
@@ -219,6 +242,9 @@ public class Case implements ConfigurationSerializable{
         itemStack.setItemMeta(bookMeta);
         itemStack.addUnsafeEnchantment(Enchantment.DURABILITY,1);
         return itemStack;
+    }
+    public void updateSave() {
+        Courts.getCourts().getSqlSaveManager().updateCase(this);
     }
     public Case(Map<String, Object> map) {
         this.id = (int) map.get("id");

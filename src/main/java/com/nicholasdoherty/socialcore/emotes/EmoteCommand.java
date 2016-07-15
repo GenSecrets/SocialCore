@@ -35,7 +35,9 @@ public class EmoteCommand implements CommandExecutor {
 		String base = emotes.getBaseEmoteCommandString();
 		int page = 0;
 		if (strings.length == 1)
-			page = Integer.valueOf(strings[0])-1;
+			try {
+				page = Integer.valueOf(strings[0])-1;
+			}catch (Exception e) {commandSender.sendMessage(ChatColor.RED + "Usage /emotes <page>");}
 		if (page <0)
 			page = 0;
 		base = ChatColor.translateAlternateColorCodes('&', base);

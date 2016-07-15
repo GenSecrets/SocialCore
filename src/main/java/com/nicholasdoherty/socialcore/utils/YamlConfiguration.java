@@ -40,7 +40,7 @@ public class YamlConfiguration extends FileConfiguration {
     public String saveToString() {
         this.yamlOptions.setIndent(this.options().indent());
         this.yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        this.yamlOptions.setAllowUnicode(SYSTEM_UTF);
+        this.yamlOptions.setAllowUnicode(true);
         this.yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         String header = this.buildHeader();
         String dump = this.yaml.dump(this.getValues(false));

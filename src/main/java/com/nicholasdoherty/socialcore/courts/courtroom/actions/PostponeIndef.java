@@ -29,6 +29,7 @@ public class PostponeIndef implements PostCourtAction, OnlyAction,DontChangeStat
         Case caze = Courts.getCourts().getCaseManager().getCase(cazeId);
         caze.setCourtDate(null);
         caze.setCaseStatus(CaseStatus.PROCESSED,judgeName);
+        caze.updateSave();
     }
 
     @Override

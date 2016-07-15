@@ -23,6 +23,9 @@ public class SCLang {
 	public long piggybackCooldown;
 	public double maxConsumeDistanceSquared,maxShareInventDistanceSquared;
 	public String petNameLoginMessage,petNameLogoutMessage,petNameChangeSpouseMessage;
+
+	public long divorceProposeCooldownMillis = 1000*60*60*24*2;
+	public String defaultWorld;
 	public SCLang(SocialCore sc){this.sc=sc;}
 	
 	public void loadConfig() {
@@ -37,7 +40,9 @@ public class SCLang {
 			MarriageGem gem = new MarriageGem(bID,n);
 			marriageGems.add(gem);
 		}
-		
+		if (sc.getConfig().contains("divorce-propose-cooldown")) {
+			divorceProposeCooldownMillis = 50* VoxTimeUnit.getTicks(sc.getConfig().getString("divorce-propose-cooldown"));
+		}
 		priestDistance = sc.getConfig().getInt("priest-marriage-distance");
 		coupleDistance = sc.getConfig().getInt("marriage-couple-distance");
 		
@@ -51,6 +56,7 @@ public class SCLang {
 		petNameLoginMessage = ChatColor.translateAlternateColorCodes('&',sc.getConfig().getString("login-petname-message"));
         petNameLogoutMessage = ChatColor.translateAlternateColorCodes('&',sc.getConfig().getString("logout-petname-message"));
         petNameChangeSpouseMessage = ChatColor.translateAlternateColorCodes('&',sc.getConfig().getString("petname-change-spouse-message"));
+		defaultWorld = sc.getConfig().getString("default-world","world");
     }
 	
 	public String registerColors(String msg){

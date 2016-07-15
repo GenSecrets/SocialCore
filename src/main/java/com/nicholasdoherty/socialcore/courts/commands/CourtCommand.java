@@ -11,7 +11,6 @@ import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
-import com.nicholasdoherty.socialcore.utils.SerializableUUID;
 import com.nicholasdoherty.socialcore.utils.UUIDUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,10 +21,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by john on 1/6/15.
@@ -46,7 +42,7 @@ public class CourtCommand implements CommandExecutor{
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("tp") && commandSender instanceof Player) {
             Player p = (Player) commandSender;
-            Citizen citizen = new Citizen(p);
+            Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
             CourtSession courtSession = courts.getCourtSessionManager().getActiveCourtSession(citizen);
             if (courtSession == null) {
                 p.sendMessage(ChatColor.RED + "You are not a part of any ongoing court sessions.");
@@ -91,7 +87,7 @@ public class CourtCommand implements CommandExecutor{
                     return true;
                 }
                 Player p = (Player) commandSender;
-                Block b = p.getTargetBlock(null,50);
+                Block b = p.getTargetBlock(new HashSet<Material>(Arrays.asList(new Material[]{Material.AIR})),50);
                 if (b == null || b.getType() != Material.CHEST) {
                     p.sendMessage(ChatColor.RED + "Look at a chest.");
                     return true;
@@ -111,7 +107,7 @@ public class CourtCommand implements CommandExecutor{
                     return true;
                 }
                 Player p = (Player) commandSender;
-                Block b = p.getTargetBlock(null,50);
+                Block b = p.getTargetBlock(new HashSet<Material>(Arrays.asList(new Material[]{Material.AIR})),50);
                 if (b == null || b.getType() != Material.CHEST) {
                     p.sendMessage(ChatColor.RED + "Look at a chest.");
                     return true;
@@ -126,7 +122,7 @@ public class CourtCommand implements CommandExecutor{
                     return true;
                 }
                 Player p = (Player) commandSender;
-                Block b = p.getTargetBlock(null,50);
+                Block b = p.getTargetBlock(new HashSet<Material>(Arrays.asList(new Material[]{Material.AIR})),50);
                 if (b == null || b.getType() != Material.CHEST) {
                     p.sendMessage(ChatColor.RED + "Look at a chest.");
                     return true;
@@ -141,7 +137,7 @@ public class CourtCommand implements CommandExecutor{
                     return true;
                 }
                 Player p = (Player) commandSender;
-                Block b = p.getTargetBlock(null,50);
+                Block b = p.getTargetBlock(new HashSet<Material>(Arrays.asList(new Material[]{Material.AIR})),50);
                 if (b == null || b.getType() != Material.CHEST) {
                     p.sendMessage(ChatColor.RED + "Look at a chest.");
                     return true;
@@ -156,7 +152,7 @@ public class CourtCommand implements CommandExecutor{
                     return true;
                 }
                 Player p = (Player) commandSender;
-                Block b = p.getTargetBlock(null,50);
+                Block b = p.getTargetBlock(new HashSet<Material>(Arrays.asList(new Material[]{Material.AIR})),50);
                 if (b == null || b.getType() != Material.CHEST) {
                     p.sendMessage(ChatColor.RED + "Look at a chest.");
                     return true;
@@ -179,7 +175,8 @@ public class CourtCommand implements CommandExecutor{
                 }
                 name = UUIDUtil.prettyName(name,uuid);
                 if (args.length == 3 && args[2].equalsIgnoreCase("judge")) {
-                    ApprovedCitizen approvedCitizen = new ApprovedCitizen(name,uuid,new HashSet<SerializableUUID>(),new HashSet<SerializableUUID>());
+                    Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(name,uuid);
+                    ApprovedCitizen approvedCitizen = Courts.getCourts().getSqlSaveManager().getApprovedCitizen(citizen);
                     int votes = courts.getCourtsConfig().getJudgeRequiredVotes();
                     for (int i = 0; i < votes; i++) {
                         approvedCitizen.vote(UUID.randomUUID(),true);
@@ -208,7 +205,7 @@ public class CourtCommand implements CommandExecutor{
                         commandSender.sendMessage(ChatColor.RED + judgeName + " is not a judge.");
                         return true;
                     }
-                    judge.addSecretary(new Secretary(name,uuid,judge));
+                    judge.addSecretary(Courts.getCourts().getSqlSaveManager().createSecretary(judge,Courts.getCourts().getCitizenManager().toCitizen(name,uuid)));
                     commandSender.sendMessage(ChatColor.GREEN + name + " has been made a secretary for judge " + judge.getName());
                     return true;
                 }

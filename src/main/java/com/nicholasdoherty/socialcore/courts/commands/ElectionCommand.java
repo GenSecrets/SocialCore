@@ -5,9 +5,14 @@ import com.nicholasdoherty.socialcore.courts.elections.Candidate;
 import com.nicholasdoherty.socialcore.courts.elections.Election;
 import com.nicholasdoherty.socialcore.courts.elections.ElectionManager;
 import com.nicholasdoherty.socialcore.courts.elections.gui.ElectionGUI;
+import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
+import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
+import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,12 +43,40 @@ public class ElectionCommand implements CommandExecutor{
             }
             Player p = (Player) commandSender;
             if (electionManager.isElectionActive() && electionManager.getCurrentElection().getCandidateSet().size() < 0) {
-                commandSender.sendMessage(ChatColor.RED + "Nobody is running for judge at the moment.");
+                commandSender.sendMessage(courts.getCourtsLangManager().getElectionNoSlots());
                 return true;
-            }else {
+            }else if (electionManager.isElectionActive()){
+                if (courts.getJudgeManager().isAtMax()) {
+                    commandSender.sendMessage(ChatColor.RED + "The judge roster is currently full.");
+                    return true;
+                }
                 ElectionGUI.createAndOpen(p,electionManager.getCurrentElection());
                 return true;
+            }else {
+                commandSender.sendMessage(ChatColor.RED + "There is no election in progress.");
+                return true;
             }
+        }
+        if (commandSender.isOp() && args.length > 1 && args[0].equalsIgnoreCase("removewithvotes")) {
+            String playerName = args[1];
+            Citizen citizen = courts.getCitizenManager().getCitizen(playerName);
+            if (citizen == null) {
+                commandSender.sendMessage("could not find " + playerName);
+                return true;
+            }
+            Election election =electionManager.getCurrentElection();
+            if (election != null) {
+                Optional<Candidate> cand = election.getCandidateSet().stream().filter(candidate -> candidate.getUuid().equals(citizen.getUuid())).findAny();
+                cand.ifPresent(ApprovedCitizen::resetVotes);
+                cand.ifPresent(election::removeCandiate);
+            }
+            Judge judge = courts.getJudgeManager().getJudge(citizen.getUuid());
+            if (judge != null) {
+                courts.getJudgeManager().demoteJudge(judge);
+            }
+            courts.getSqlSaveManager().removeVotes(citizen);
+            commandSender.sendMessage("removed all votes and elected ranks from " + citizen.getName());
+            return true;
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("run")) {
             if (!commandSender.hasPermission("courts.run")) {
@@ -174,6 +207,9 @@ public class ElectionCommand implements CommandExecutor{
                 commandSender.sendMessage(ChatColor.RED + "You don't have the required permissions");
                 return true;
             }
+            if (!electionManager.requirementsToStartElectionMet() && !Arrays.asList(args).stream().anyMatch(m -> m.equalsIgnoreCase("force"))) {
+                commandSender.sendMessage("Requirements not met... use force to force start");
+            }
             electionManager.startElection();
             commandSender.sendMessage(ChatColor.GREEN + "A new election has begun.");
             return true;
@@ -225,7 +261,17 @@ public class ElectionCommand implements CommandExecutor{
             return;
         }
         Courts.getCourts().getPlugin().getLogger().info(p.getName() + " has been charged "+cost+" voxels to nominate their self to become a judge.");
-        Candidate candidate = new Candidate(p.getName(), uuid);
+        Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
+        try {
+            VaultUtil.give(p,cost);
+        }catch (Exception e) {
+            p.sendMessage(ChatColor.RED + "Error adding you to the election, you may already be running.");
+            p.sendMessage(ChatColor.RED + "You have been refunded.");
+            Courts.getCourts().getPlugin().getLogger().info(p.getName() + " has been refunded "+cost+" voxels because of an error. (Are they already running?)");
+            e.printStackTrace();
+            return;
+        }
+        Candidate candidate = Courts.getCourts().getSqlSaveManager().createCandidate(citizen);
         election.addCandidate(candidate);
         Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_NOMINATED_SELF,new Object[]{p},p);
         //p.sendMessage(ChatColor.GREEN + "You are now running in this election.");

@@ -12,33 +12,74 @@ import com.nicholasdoherty.socialcore.utils.PlayerUtil;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.voxmc.socialcore.libs.org.joda.time.Days;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by john on 1/6/15.
  */
-public class JudgeManager implements ConfigurationSerializable{
+public class JudgeManager{
     private Set<Judge> judges;
     private Map<UUID, Judge> judgesByUUID = new HashMap<>();
-
-    public JudgeManager(Set<Judge> judges) {
-        this.judges = judges;
+    private Courts courts;
+    public JudgeManager(Courts courts) {
+        this.judges = courts.getSqlSaveManager().getJudges();
+        this.courts = courts;
         setupUUID();
         new JudgeListener(this);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                cleanup();
+            }
+        }.runTaskLater(courts.getPlugin(),1);
+    }
+    public void cleanup() {
+        for (Judge judge : judges) {
+            judge.getSecretaries().stream().filter(sec -> sec.getUuid().equals(judge.getUuid()))
+                    .collect(Collectors.toSet()).forEach(judge::removeSecretary);
+            if (judge.getSecretaries().size() > courts.getCourtsConfig().getSecretariesPerJudge()) {
+                int toRemove = judge.getSecretaries().size() - courts.getCourtsConfig().getSecretariesPerJudge();
+                for (int i = 0; i  < toRemove; i++) {
+                    judge.getSecretaries().stream().findAny().ifPresent(judge::removeSecretary);
+                }
+            }
+        }
     }
     public void setupUUID() {
         for (Judge judge : judges) {
             judgesByUUID.put(judge.getUuid(),judge);
         }
     }
-
+    public Judge getJudge(int id) {
+        for (Judge judge : judges) {
+            if (judge.getJudgeId() == id) {
+                return judge;
+            }
+        }
+        return null;
+    }
+    public boolean isAtMax() {
+        int maxJudges = Courts.getCourts().getCourtsConfig().getMaxJudges();
+        int amtJudges = judges.size();
+        return amtJudges >= maxJudges;
+    }
     public Judge promoteJudge(ApprovedCitizen approvedCitizen) {
-        Judge judge = new Judge(approvedCitizen);
+        Judge judge = null;
+        for (Judge judge1 : getJudges()) {
+            if (judge1.getId() == approvedCitizen.getId()) {
+                judge = judge1;
+                break;
+            }
+        }
+        if (judge == null) {
+            judge = courts.getSqlSaveManager().createJudge(approvedCitizen);
+        }
         judges.add(judge);
         judgesByUUID.put(judge.getUuid(),judge);
         setPerms(judge.getUuid());
@@ -46,11 +87,13 @@ public class JudgeManager implements ConfigurationSerializable{
         return judge;
     }
     public void demoteJudge(Judge judge) {
+        courts.getSqlSaveManager().removeJudge(judge);
         judges.remove(judge);
         judgesByUUID.remove(judge.getUuid());
         Courts.getCourts().getCaseManager().onJudgeDemoted(judge);
         setPerms(judge.getUuid());
         setPrefix(judge.getUuid());
+        Courts.getCourts().getElectionManager().checkShouldScheduleFile();
     }
     private Map<UUID, String> setPrefixes = new HashMap<>();
     public void removeSetPrefix(UUID uuid) {
@@ -239,16 +282,5 @@ public class JudgeManager implements ConfigurationSerializable{
 
     public Set<Judge> getJudges() {
         return judges;
-    }
-    public JudgeManager(Map<String, Object> map) {
-        this.judges = new HashSet<>((Set<Judge>) map.get("judges"));
-        setupUUID();
-        new JudgeListener(this);
-    }
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("judges",judges);
-        return map;
     }
 }

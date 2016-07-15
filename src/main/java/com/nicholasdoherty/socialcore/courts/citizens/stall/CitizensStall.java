@@ -3,13 +3,11 @@ package com.nicholasdoherty.socialcore.courts.citizens.stall;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseManager;
-import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -21,16 +19,17 @@ import java.util.*;
 /**
  * Created by john on 1/6/15.
  */
-public class CitizensStall extends Stall implements ConfigurationSerializable {
+public class CitizensStall extends Stall {
 
-    public CitizensStall( VLocation vLocation) {
-        super(StallType.CITIZEN, vLocation);
+    public CitizensStall(int id, VLocation vLocation) {
+        super(id, StallType.CITIZEN, vLocation);
     }
 
     Set<UUID> firstClicks = new HashSet<>();
     Map<UUID, BukkitTask> timeoutRemove = new HashMap<>();
 
     Set<UUID> onCooldown = new HashSet<>();
+
     @Override
     public void onClick(Player p) {
         CaseManager caseManager = Courts.getCourts().getCaseManager();
@@ -51,8 +50,9 @@ public class CitizensStall extends Stall implements ConfigurationSerializable {
                     p.sendMessage(getCaseAlreadyFiled());
                     return;
                 }
-                Case caze = caseManager.newCase(item,p.getName());
-                caze.setPlantiff(new Citizen(p));
+                Case caze = caseManager.newCase(item, p.getName());
+                caze.setPlantiff(Courts.getCourts().getCitizenManager().toCitizen(p));
+                caze.updateSave();
                 p.setItemInHand(null);
                 p.sendMessage(getCaseSubmitted());
                 return;
@@ -62,21 +62,21 @@ public class CitizensStall extends Stall implements ConfigurationSerializable {
         if (!firstClicks.contains(uuid)) {
             p.sendMessage(getConfirmMessage(cost));
             firstClicks.add(uuid);
-            BukkitTask removeTask = new BukkitRunnable(){
+            BukkitTask removeTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     firstClicks.remove(uuid);
                 }
-            }.runTaskLater(Courts.getCourts().getPlugin(),300);
-            timeoutRemove.put(uuid,removeTask);
-        }else {
+            }.runTaskLater(Courts.getCourts().getPlugin(), 300);
+            timeoutRemove.put(uuid, removeTask);
+        } else {
             if (timeoutRemove.containsKey(uuid)) {
                 timeoutRemove.get(uuid).cancel();
                 timeoutRemove.remove(uuid);
                 firstClicks.remove(uuid);
             }
             try {
-                if (!VaultUtil.charge(p,cost)) {
+                if (!VaultUtil.charge(p, cost)) {
                     p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                     return;
                 }
@@ -91,12 +91,12 @@ public class CitizensStall extends Stall implements ConfigurationSerializable {
             p.sendMessage(getGivedMessage());
             long cooldown = Courts.getCourts().getCourtsConfig().getCitizenStallDocumentCooldown();
             onCooldown.add(uuid);
-            new BukkitRunnable(){
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     onCooldown.remove(uuid);
                 }
-            }.runTaskLater(Courts.getCourts().getPlugin(),cooldown);
+            }.runTaskLater(Courts.getCourts().getPlugin(), cooldown);
         }
     }
 
@@ -105,7 +105,7 @@ public class CitizensStall extends Stall implements ConfigurationSerializable {
     }
 
     private String getConfirmMessage(int cost) {
-        return Courts.getCourts().getCourtsLangManager().getCitizenConfirm().replace("{cost}",cost+"");
+        return Courts.getCourts().getCourtsLangManager().getCitizenConfirm().replace("{cost}", cost + "");
     }
 
     private String getCaseSubmitted() {
@@ -131,7 +131,5 @@ public class CitizensStall extends Stall implements ConfigurationSerializable {
         }
         return true;
     }
-    public CitizensStall(Map<String, Object> map) {
-        super(map);
-    }
 }
+

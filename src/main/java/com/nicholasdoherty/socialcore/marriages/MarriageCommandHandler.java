@@ -15,14 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class MarriageCommandHandler implements CommandExecutor {
 	
 	private SocialCore sc;
-
 	public MarriageCommandHandler(SocialCore sc) {
 		this.sc = sc;
 	}
@@ -198,7 +197,10 @@ public class MarriageCommandHandler implements CommandExecutor {
 												if (item.getItemMeta().getDisplayName()!=null) {
 													if (item.getItemMeta().getDisplayName().contains(gem.getName())) {
 														ItemMeta meta = item.getItemMeta();
-														ArrayList<String>l = new ArrayList<String>();
+														ArrayList<String> l = new ArrayList<String>();
+														if (meta.getLore() != null) {
+															l.addAll(meta.getLore());
+														}
 													    l.add(proposeTo.getPlayerName()+" + "+proposeFrom.getPlayerName()+" 4ever");//
 													    l.add("Engaged on "+e.getDate());
 													    meta.setLore(l);
@@ -249,7 +251,29 @@ public class MarriageCommandHandler implements CommandExecutor {
 						
 						SocialPlayer proposeTo = sc.save.getSocialPlayer(player.getName());
 						SocialPlayer proposeFrom = sc.save.getSocialPlayer(p.getName());
-						
+						for (String divorceName : sc.save.getAllDivorces()) {
+							if (divorceName.contains(proposeFrom.getPlayerName()) || divorceName.contains(proposeTo.getPlayerName())) {
+								Divorce divorce = sc.save.getDivorce(divorceName);
+								if (divorce != null) {
+									try {
+										Date date = parserSDF.parse(divorce.getDate());
+										long divorceTime = date.getTime();
+										long currentTime = new Date().getTime();
+										long elapsedMillis = currentTime - divorceTime;
+										if (elapsedMillis < sc.lang.divorceProposeCooldownMillis) {
+											if (divorceName.contains(proposeFrom.getPlayerName())) {
+												player.sendMessage(ChatColor.RED + "You have divorced too recently to propose!");
+											}else {
+												player.sendMessage(ChatColor.RED + "The player you are proposing too has divorced too recently!");
+											}
+											return true;
+										}
+									} catch (ParseException e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}
 						switch (sc.marriages.getStatus(proposeTo)) {
 							case Married :
 								player.sendMessage(ChatColor.RED+"You are already married! This isn't a polygamy state!");
@@ -450,6 +474,10 @@ public class MarriageCommandHandler implements CommandExecutor {
 													if (item.getItemMeta().getDisplayName().contains(gem.getName())) {
 														ItemMeta meta = item.getItemMeta();
 														ArrayList<String>l = new ArrayList<String>();
+														if (meta.getLore() != null) {
+															l.addAll(meta.getLore());
+														}
+														removeLineWith(l,"Engaged on");
 													    l.add(player1.getPlayerName()+" + "+player2.getPlayerName()+" 4ever");//
 													    l.add("Married on "+m.getDate()+" by "+m.getPriest());
 													    meta.setLore(l);
@@ -481,6 +509,10 @@ public class MarriageCommandHandler implements CommandExecutor {
 													if (item.getItemMeta().getDisplayName().contains(gem.getName())) {
 														ItemMeta meta = item.getItemMeta();
 														ArrayList<String>l = new ArrayList<String>();
+														if (meta.getLore() != null) {
+															l.addAll(meta.getLore());
+														}
+														removeLineWith(l,"Engaged on");
 													    l.add(player1.getPlayerName()+" + "+player2.getPlayerName()+" 4ever");//
 													    l.add("Married on "+m.getDate()+" by "+m.getPriest());
 													    meta.setLore(l);
@@ -852,7 +884,6 @@ public class MarriageCommandHandler implements CommandExecutor {
 					p1.openInventory(p2.getInventory());
 					p2.sendMessage(ChatColor.AQUA+p1.getName()+" is viewing your inventory!");
 					p1.sendMessage(ChatColor.AQUA+p2.getName()+"'s inventory");
-
 					if(p2.getOpenInventory() != null) {
 						p2.closeInventory();
 					}
@@ -933,7 +964,14 @@ public class MarriageCommandHandler implements CommandExecutor {
 		}
 		return true;
 	}
-
+	private static void removeLineWith(List<String> l, String with) {
+		for (String s : new ArrayList<>(l)) {
+			if (s.contains(with)) {
+				l.remove(s);
+			}
+		}
+	}
+	private SimpleDateFormat parserSDF=new SimpleDateFormat("MMMMM d, yyyy");
 	
 	private String getMonth() {
 		switch (Calendar.getInstance().get(Calendar.MONTH)) {

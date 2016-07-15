@@ -1,7 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.fines;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -9,22 +8,15 @@ import java.util.*;
 /**
  * Created by john on 2/15/15.
  */
-public class FineManager implements ConfigurationSerializable{
-    List<Fine> fines;
+public class FineManager {
+    Set<Fine> fines;
     Map<UUID,List<Fine>> finesBySenderUUID;
 
-    public FineManager() {
-        fines = new ArrayList<>();
+    public FineManager(Set<Fine> fines) {
+        this.fines = fines;
         finesBySenderUUID = new HashMap<>();
     }
-    public FineManager(Map<String, Object> map) {
-        fines = new ArrayList<>();
-        finesBySenderUUID = new HashMap<>();
-        List<Fine> toProcess = (List<Fine>) map.get("fines");
-        for (Fine fine : toProcess) {
-            addFine(fine);
-        }
-    }
+
     public void startTimer() {
         long interval = Courts.getCourts().getCourtsConfig().getFinePaymentInterval();
         new BukkitRunnable(){
@@ -51,6 +43,7 @@ public class FineManager implements ConfigurationSerializable{
                 finesBySenderUUID.remove(fine.getSender().getUuid());
             }
         }
+        Courts.getCourts().getSqlSaveManager().removeFine(fine);
     }
     public void processFines() {
         if (fines.isEmpty())
@@ -72,12 +65,5 @@ public class FineManager implements ConfigurationSerializable{
                 removeFine(fine);
             }
         }
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("fines",fines);
-        return map;
     }
 }

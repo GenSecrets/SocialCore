@@ -1,5 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
+import com.nicholasdoherty.socialcore.courts.Courts;
+import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.*;
@@ -18,15 +20,45 @@ public class CaseHistory implements ConfigurationSerializable{
         history = new ArrayList<>();
     }
 
-    public void record(CaseStatus caseStatus, String name) {
+    public void record(Case caze, CaseStatus caseStatus, String name) {
         Date date = new Date();
         HistoryEntry historyEntry = new HistoryEntry(date.getTime(),caseStatus,name);
+        Courts.getCourts().getSqlSaveManager().addCaseHistoryEntry(caze,historyEntry);
         history.add(historyEntry);
     }
     public HistoryEntry getProcessingEntry() {
         for (HistoryEntry historyEntry : history) {
             if (historyEntry.getCaseStatus() == CaseStatus.PROCESSED || historyEntry.getCaseStatus() == CaseStatus.THROWN_OUT) {
                 return historyEntry;
+            }
+        }
+        return null;
+    }
+    public String getResolverName() {
+        for (HistoryEntry historyEntry : history) {
+            if (historyEntry.getCaseStatus() == CaseStatus.RESOLVED) {
+                String resp = historyEntry.getResponsible();
+                return resp;
+            }
+        }
+        return null;
+    }
+    public Optional<HistoryEntry> getSubmitterEntry() {
+        return history.stream().filter(historyEntry -> historyEntry.getCaseStatus() == CaseStatus.UNPROCESSED).findFirst();
+    }
+    public Optional<HistoryEntry> getResolveEntry() {
+        return history.stream().filter(historyEntry -> historyEntry.getCaseStatus() == CaseStatus.RESOLVED).findFirst();
+    }
+    public Citizen getSubmitter() {
+        for (HistoryEntry historyEntry : history) {
+            if (historyEntry.getCaseStatus() == CaseStatus.UNPROCESSED) {
+                String resp = historyEntry.getResponsible();
+                if (resp != null) {
+                    Citizen respC = Courts.getCourts().getCitizenManager().getCitizen(resp);
+                    if (respC != null) {
+                        return respC;
+                    }
+                }
             }
         }
         return null;

@@ -15,7 +15,9 @@ public enum NotificationType {
     SECRETARY_REMOVED,
 
     CASE_ASSIGNED_TIME,
-    VOTE_NOTIFICATION,VOTE_SUMMARY;
+    VOTE_NOTIFICATION,VOTE_SUMMARY,
+
+    COURT_SESSION_END;
     public static NotificationType byName(String in) {
         in = in.trim().toLowerCase().replace("_","").replace("-","");
         for (NotificationType notificationType : values()) {

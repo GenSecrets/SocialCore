@@ -1,15 +1,8 @@
 package com.nicholasdoherty.socialcore.courts;
 
 import com.nicholasdoherty.socialcore.SocialCore;
-import com.nicholasdoherty.socialcore.courts.cases.Case;
-import com.nicholasdoherty.socialcore.courts.cases.CaseManager;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSessionManager;
-import com.nicholasdoherty.socialcore.courts.elections.ElectionManager;
-import com.nicholasdoherty.socialcore.courts.fines.FineManager;
-import com.nicholasdoherty.socialcore.courts.judges.Judge;
-import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
-import com.nicholasdoherty.socialcore.courts.stall.Stall;
-import com.nicholasdoherty.socialcore.courts.stall.StallManager;
+import com.nicholasdoherty.socialcore.courts.notifications.BasicQueuedNotification;
 import com.nicholasdoherty.socialcore.utils.CompressedConfigAccessor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -23,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -52,8 +45,6 @@ public class CourtsSaveManager {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        courts.setCaseManager(caseManager());
-
 
         try {
             fileConfiguration = configAccessor.getConfig();
@@ -179,48 +170,6 @@ public class CourtsSaveManager {
         return fileConfiguration;
     }
 
-    public ElectionManager electionManager() {
-        if (!fileConfiguration.contains("election-manager")) {
-            return new ElectionManager(null,null);
-        }
-        return (ElectionManager) fileConfiguration.get("election-manager");
-    }
-    public void saveElectionManager(ElectionManager electionManager) {
-        fileConfiguration.set("election-manager",electionManager);
-    }
-
-    public JudgeManager judgeManager() {
-        if (!fileConfiguration.contains("judge-manager")) {
-            return new JudgeManager(new HashSet<Judge>());
-        }
-        return (JudgeManager) fileConfiguration.get("judge-manager");
-    }
-    public void saveJudgeManager(JudgeManager judgeManager) {
-        fileConfiguration.set("judge-manager",judgeManager);
-    }
-    public StallManager stallManager() {
-        if (!fileConfiguration.contains("stall-manager")) {
-            return new StallManager(new HashSet<Stall>());
-        }
-        return (StallManager) fileConfiguration.get("stall-manager");
-    }
-    public void saveStallManager(StallManager stallManager) {
-        fileConfiguration.set("stall-manager",stallManager);
-    }
-
-    public CaseManager caseManager() throws Exception {
-        if (!casesFileConfiguration.contains("case-manager")) {
-            return new CaseManager(new ArrayList<Case>());
-        }
-        Object o = casesFileConfiguration.get("case-manager");
-        if (o == null) {
-          throw new Exception();
-        }
-        return (CaseManager) o;
-    }
-    public void saveCasemanager(CaseManager caseManager) {
-        casesFileConfiguration.set("case-manager",caseManager);
-    }
 
     public CourtSessionManager courtRoomManager() {
         if (!fileConfiguration.contains("courtroom-manager")) {
@@ -232,33 +181,20 @@ public class CourtsSaveManager {
     public void saveCourtroomManager(CourtSessionManager courtSessionManager) {
         fileConfiguration.set("courtroom-manager", courtSessionManager);
     }
-    //public List<BasicQueuedNotification> queuedNotificationList() {
-    //    if (!fileConfiguration.contains("queued-notifications")) {
-    //        return new ArrayList<>();
-    //    }
-    //    return new ArrayList<>((List<BasicQueuedNotification>)fileConfiguration.get("queued-notifications"));
-    //}
-    //public void saveQueuedNotifications() {
-    //    fileConfiguration.set("queued-notifications",courts.getNotificationManager().getQueuedNotifications());
-    //}
-    public FineManager fineManager() {
-        if (fileConfiguration.contains("fine-manager")) {
-            return (FineManager) fileConfiguration.get("fine-manager");
+    public List<BasicQueuedNotification> queuedNotificationList() {
+        if (!fileConfiguration.contains("queued-notifications")) {
+            return new ArrayList<>();
         }
-        return new FineManager();
+        return new ArrayList<>((List<BasicQueuedNotification>)fileConfiguration.get("queued-notifications"));
     }
-    public void saveFineManager(FineManager fineManager) {
-        fileConfiguration.set("fine-manager",fineManager);
+    public void saveQueuedNotifications() {
+        fileConfiguration.set("queued-notifications",courts.getNotificationManager().getQueuedNotifications());
     }
+
     public void saveAll() {
         long time = new Date().getTime();
-        saveElectionManager(courts.getElectionManager());
-        saveJudgeManager(courts.getJudgeManager());
-        saveStallManager(courts.getStallManager());
-        saveCasemanager(courts.getCaseManager());
         saveCourtroomManager(courts.getCourtSessionManager());
-        //saveQueuedNotifications();
-        saveFineManager(courts.getFineManager());
+        saveQueuedNotifications();
         long time2 = new Date().getTime();
         long diff = time2-time;
         courts.getPlugin().getLogger().info("Took " + diff + "ms to prepare " + courts.getCaseManager().amount() + " cases (sync)");

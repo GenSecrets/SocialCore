@@ -32,6 +32,16 @@ public class GrantDivorce implements PostCourtAction,ConfigurationSerializable {
         SocialPlayer p1 = SocialCore.plugin.save.getSocialPlayer(caze.getDefendent().getName());
         SocialPlayer p2 = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getName());
         Marriage marriage = SocialCore.plugin.save.getMarriage(p1,p2);
+        p1.setMarried(false);
+        p2.setMarried(false);
+        p1.setMarriedTo(null);
+        p2.setMarriedTo(null);
+        p2.setEngagedTo(null);
+        p1.setEngagedTo(null);
+        p1.setPetName(null);
+        p2.setPetName(null);
+        SocialCore.plugin.save.saveSocialPlayer(p1);
+        SocialCore.plugin.save.saveSocialPlayer(p2);
         if (marriage == null) {
             marriage = SocialCore.plugin.save.getMarriage(p2,p1);
         }
@@ -42,10 +52,6 @@ public class GrantDivorce implements PostCourtAction,ConfigurationSerializable {
         if (divorce != null) {
             SocialCore.plugin.save.removeDivorce(divorce);
         }
-        p1.setMarried(false);
-        p2.setMarried(false);
-        p1.setMarriedTo(null);
-        p2.setEngagedTo(null);
     }
 
     @Override

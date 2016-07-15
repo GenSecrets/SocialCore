@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,9 @@ public class AssignTimeClickItem implements ClickItem {
         CalendarGUI.createAndOpen(p, new CalanderRunnable() {
             @Override
             public void run(long time) {
+                if (Courts.getCourts().getDefaultDayGetter().hasCorutDate(new DateTime(time))) {
+                    return;
+                }
                 judgeCaseView.assignDate(time);
                 judgeCaseView.getInventoryGUI().open();
             }
@@ -48,6 +52,12 @@ public class AssignTimeClickItem implements ClickItem {
             public boolean isValid(DateTime dateTime) {
                 if (dateTime.isAfter(DateTime.now().plusMinutes(20))) {
                     return true;
+                }
+                if (Courts.getCourts().getDefaultDayGetter().calendarEvents(new LocalDate(dateTime)).length > 1) {
+                    return false;
+                }
+                if (Courts.getCourts().getDefaultDayGetter().hasCorutDate(dateTime)) {
+                    return false;
                 }
                 return false;
             }

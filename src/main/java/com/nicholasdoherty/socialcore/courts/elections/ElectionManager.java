@@ -1,32 +1,110 @@
 package com.nicholasdoherty.socialcore.courts.elections;
 
+import com.google.common.io.Files;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import com.nicholasdoherty.socialcore.time.condition.RealTimeCondition;
+import com.nicholasdoherty.socialcore.time.condition.TimeCondition;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Date;
 
 /**
  * Created by john on 1/6/15.
  */
-public class ElectionManager implements ConfigurationSerializable{
+public class ElectionManager{
     private Election currentElection;
-    private Election previousElection;
 
-    public ElectionManager(Election currentElection, Election previousElection) {
+    public ElectionManager(Election currentElection) {
         this.currentElection = currentElection;
-        this.previousElection = previousElection;
-        if (currentElection == null)
-            startElection();
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                checkShouldScheduleFile();
+            }
+        }.runTaskLater(Courts.getCourts().getPlugin(),5);
+    }
+    public void tryStartElection() {
+        if (!requirementsForScheduleElectionMet()) {
+            return;
+        }
+        if (currentElection != null) {
+            return;
+        }
+        startElection();
+    }
+    public long judgeNeededTime() {
+        File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        boolean flagSet = file.exists();
+        if (!flagSet) {
+            return -1;
+        }
+        if (!requirementsForScheduleElectionMet()) {
+            file.delete();
+        }
+        try {
+            return Long.parseLong(Files.readFirstLine(file, Charset.defaultCharset()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    public void deleteJudgeNeededFile() {
+        File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+    public void setJudgeNeededFile() {
+        if (!requirementsForScheduleElectionMet()) {
+            return;
+        }
+        File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        if (file.exists()) {
+            file.delete();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            Files.write(new Date().getTime() +"",file,Charset.defaultCharset());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void checkShouldScheduleFile() {
+        if (requirementsForScheduleElectionMet() && judgeNeededTime() == -1) {
+            setJudgeNeededFile();
+        }
     }
 
-    public void startElection() {
-        if (currentElection != null) {
-            previousElection = currentElection;
+    public boolean requirementsForScheduleElectionMet() {
+          return Courts.getCourts().getJudgeManager().getJudges().size() < Courts.getCourts().getCourtsConfig().getMaxJudges() && currentElection == null;
+    }
+    public boolean isScheduled() {
+        return judgeNeededTime() != -1 && requirementsForScheduleElectionMet();
+    }
+    public boolean hasBeenWaitTime() {
+        long judgeNeededTime = judgeNeededTime();
+        if (judgeNeededTime == -1) {
+            return false;
         }
+        return new Date().getTime() - judgeNeededTime >= Courts.getCourts().getCourtsConfig().getMinElectionWaitMillis() - 100;
+    }
+    public boolean requirementsToStartElectionMet() {
+        return Courts.getCourts().getJudgeManager().getJudges().size() < Courts.getCourts().getCourtsConfig().getMaxJudges() && currentElection == null
+                && hasBeenWaitTime();
+    }
+    public void startElection() {
+        Courts.getCourts().getSqlSaveManager().startElection();
         currentElection = new Election();
+        deleteJudgeNeededFile();
         //if (previousElection != null) {
         //    for (Candidate candidate : previousElection.getCandidateSet()) {
         //        if (!candidate.isElected()) {
@@ -52,8 +130,8 @@ public class ElectionManager implements ConfigurationSerializable{
         return true;
     }
     public void endCurrentElection() {
-        previousElection = currentElection;
         currentElection = null;
+        Courts.getCourts().getSqlSaveManager().endElection();
     }
     public void checkWin(Election election, Candidate candidate) {
         if (Courts.getCourts().getJudgeManager().getJudges().size() >= Courts.getCourts().getCourtsConfig().getMaxJudges()) {
@@ -69,17 +147,5 @@ public class ElectionManager implements ConfigurationSerializable{
         }
         election.removeCandiate(candidate);
     }
-    public ElectionManager(Map<String, Object> map) {
-        currentElection = (Election) map.get("currentElection");
-        previousElection = (Election) map.get("prevElection");
-        if (currentElection == null)
-            startElection();
-    }
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("currentElection",currentElection);
-        map.put("prevElection",previousElection);
-        return map;
-    }
+
 }

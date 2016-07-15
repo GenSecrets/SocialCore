@@ -1,20 +1,28 @@
 package com.nicholasdoherty.socialcore.courts.commands;
 
+import com.nicholasdoherty.socialcore.SCLang;
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.CaseLocation;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
+import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.TextUtil;
+import com.nicholasdoherty.socialcore.utils.UUIDUtil;
 import com.nicholasdoherty.socialcore.utils.VLocation;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import com.nicholasdoherty.socialcore.utils.title.TitleUtil;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by john on 2/15/15.
@@ -44,7 +52,7 @@ public class JudgeCommand implements CommandExecutor{
         }
         CourtSession courtSession = null;
         for (CourtSession courtSession1 : courts.getCourtSessionManager().getInSession()) {
-            if (courtSession1.getJudge().equals(judge)) {
+            if (courtSession1.getJudge() != null && courtSession1.getJudge().equals(judge)) {
                 courtSession = courtSession1;
                 break;
             }
@@ -60,6 +68,11 @@ public class JudgeCommand implements CommandExecutor{
             return true;
         }
         if (args.length == 0 || courtSession == null) {
+            if (args.length >= 1 && (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("mark")
+                    || args[0].equalsIgnoreCase("mute") || args[0].equalsIgnoreCase("unmute")
+                    || args[0].equalsIgnoreCase("contempt") || args[0].equalsIgnoreCase("fine"))) {
+                p.sendMessage(courts.getCourtsLangManager().getCourtNotInSession());
+            }
             sendHelp(p,judge,courtSession);
             return true;
         }
@@ -70,12 +83,20 @@ public class JudgeCommand implements CommandExecutor{
                 return true;
             }
             if (args.length == 2) {
-                Location loc = locFromString(args[1],p.getWorld());
+                Location loc = locFromString(args[1],Bukkit.getWorld(SocialCore.plugin.lang.defaultWorld));
                 if (loc == null) {
                     p.sendMessage(ChatColor.RED + "Invalid location");
                     return true;
                 }
                 courtSession.teleportParticipants(loc);
+                if (courts.getCourtsConfig().getJudgeTeleportEffects() != null) {
+                    Map<String, String> replacements = new HashMap<>();
+                    replacements.put("{judge-name}",courtSession.getJudge().getName());
+                    replacements.put("{location}",loc.getWorld().getName() + "," + loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ());
+                    courts.getCourtsConfig().getJudgeTeleportEffects().play(courtSession.getCourtRoom()
+                            .getJudgeChairLoc().getLocation(),courtSession.participants().stream()
+                            .map(Citizen::getPlayer).filter(c -> c != null).collect(Collectors.toList()),replacements);
+                }
                 p.sendMessage(ChatColor.GREEN + "Participants teleported.");
                 return true;
             }
@@ -94,6 +115,93 @@ public class JudgeCommand implements CommandExecutor{
             VLocation vLocation = new VLocation(loc);
             courtSession.getCaze().getCaseMeta().setCaseLocation(new CaseLocation("Marked location",vLocation));
             p.sendMessage(ChatColor.GREEN + "Marked location " + vLocation.toString());
+            return true;
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("mute")) {
+            String name = args[1];
+            Player toMute = Bukkit.getPlayer(name);
+            if (toMute == null) {
+                p.sendMessage(ChatColor.RED + "Could not find player: " + name);
+                return true;
+            }
+            if (courtSession.getMuted().contains(toMute.getUniqueId())) {
+                p.sendMessage(ChatColor.RED + name + " is already muted.");
+                return true;
+            }
+            courtSession.getMuted().add(toMute.getUniqueId());
+            p.sendMessage(ChatColor.GREEN + "Muted " + toMute.getName());
+            return true;
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("unmute")) {
+            String name = args[1];
+            Player toMute = Bukkit.getPlayer(name);
+            if (toMute == null) {
+                p.sendMessage(ChatColor.RED + "Could not find player: " + name);
+                return true;
+            }
+            if (!courtSession.getMuted().contains(toMute.getUniqueId())) {
+                p.sendMessage(ChatColor.RED + name + " is not muted.");
+                return true;
+            }
+            courtSession.getMuted().remove(toMute.getUniqueId());
+            p.sendMessage(ChatColor.GREEN + "Unmuted " + toMute.getName());
+            return true;
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("contempt")) {
+            String name = args[1];
+            Player toMute = Bukkit.getPlayer(name);
+            if (toMute == null) {
+                p.sendMessage(ChatColor.RED + "Could not find player: " + name);
+                return true;
+            }
+            if (courtSession.getCourtRoom().isInRoom(toMute.getLocation())) {
+                toMute.teleport(toMute.getWorld().getSpawnLocation());
+            }
+            if (courtSession.getContempt().contains(toMute.getUniqueId())) {
+                courtSession.getContempt().remove(toMute.getUniqueId());
+                p.sendMessage(ChatColor.GREEN + toMute.getName() + " will now be allowed in the court room.");
+                return true;
+            }else {
+                courtSession.getContempt().add(toMute.getUniqueId());
+                p.sendMessage(ChatColor.GREEN + toMute.getName() + " will now "+ChatColor.RED+"NOT"+ ChatColor.GREEN+" be allowed in the court room.");
+                return true;
+            }
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("fine")) {
+            String name = args[1];
+            UUID uuid=  UUIDUtil.getUUID(name);
+            if (uuid == null) {
+                p.sendMessage(ChatColor.RED + "Could not find player: " + name);
+                return true;
+            }
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+            if (offlinePlayer == null) {
+                p.sendMessage(ChatColor.RED + "Could not find player: " + name);
+                return true;
+            }
+            double amount = 0;
+            try {
+                amount = Math.round(Double.parseDouble(args[2]));
+            }catch (Exception e) {
+                p.sendMessage(ChatColor.RED + "Failed to parse amount: " + args[2]);
+            }
+            double maxFine = Courts.getCourts().getCourtsConfig().getMaxFine();
+            if (amount > maxFine) {
+                p.sendMessage(ChatColor.RED +"Could not fine because the maximum fine allowed is " + maxFine);
+                return true;
+            }
+            boolean didIt = false;
+            try {
+                didIt = VaultUtil.charge(offlinePlayer,amount);
+            } catch (VaultUtil.NotSetupException e) {
+                e.printStackTrace();
+            }
+            if (didIt) {
+                p.sendMessage(ChatColor.GREEN + "Fined " + args[1] + " " + amount + " voxels.");
+            }else {
+                p.sendMessage(ChatColor.RED + "Could not fine " + args[1] + " " + amount + " voxels.");
+            }
+            Courts.getCourts().getPlugin().getLogger().info("Judge " + judge.getName()  +" fined " + args[1] + " " +  amount + " voxels.");
             return true;
         }
         sendHelp(p,judge,courtSession);
@@ -142,5 +250,9 @@ public class JudgeCommand implements CommandExecutor{
         p.sendMessage(formHelpLine("/judge mark [world],x,y,z","Marks defined location for the ongoing court session"));
         p.sendMessage(formHelpLine("/judge tp [world],x,y,z","Teleports you, the plaintiff, and the defendant to defined location"));
         p.sendMessage(formHelpLine("/judge tp court","Teleports you, the plaintiff, and the defendant back to the court room"));
+        p.sendMessage(formHelpLine("/judge mute <player>","Mutes a player in the court room"));
+        p.sendMessage(formHelpLine("/judge unmute <player>","Unmutes a player in the court room"));
+        p.sendMessage(formHelpLine("/judge contempt <player>","Prevents player from entering courtroom"));
+        p.sendMessage(formHelpLine("/judge fine <player> <amount>","Fines a player specified amount of voxels"));
     }
 }

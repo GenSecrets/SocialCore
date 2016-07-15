@@ -62,6 +62,12 @@ public class Notification {
         }
         if (relevantObjects != null) {
             for (Object o : relevantObjects) {
+                if (o instanceof CourtSession) {
+                    CourtSession courtSession = (CourtSession) o;
+                    if (courtSession.getJudge() != null) {
+                        cusMessage = cusMessage.replace("{judge-name}",courtSession.getJudge().getName());
+                    }
+                }
                 if (o instanceof Judge) {
                     Judge judge = (Judge) o;
                     cusMessage = cusMessage.replace("{judge-name}",judge.getName());
@@ -74,6 +80,23 @@ public class Notification {
                             dateTime = TextUtil.formatDate(caze.getCourtDate().getTime());
                         }
                         cusMessage = cusMessage.replace("{case-datetime}",dateTime);
+                    }
+                    if (cusMessage.contains("{case-category}")) {
+                        String caseCategory = "none";
+                        if (caze.getCaseCategory() != null) {
+                            caseCategory = caze.getCaseCategory().getName();
+                        }
+                        cusMessage = cusMessage.replace("{case-category}",caseCategory);
+                    }
+                    if (cusMessage.contains("{case-number}")) {
+                        cusMessage = cusMessage.replace("{case-number}",caze.getId()+"");
+                    }
+                    if (cusMessage.contains("{case-plaintiff}")) {
+                        String casePlaintiff = "none";
+                        if (caze.getPlantiff() != null) {
+                            casePlaintiff = caze.getPlantiff().getName();
+                        }
+                        cusMessage = cusMessage.replace("{case-plaintiff}",casePlaintiff);
                     }
                 }else if (o instanceof Player) {
                     Player p = (Player) o;
@@ -113,7 +136,7 @@ public class Notification {
         String basic = getBasicMessage(rele, null);
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (notSend != null && !notSend.contains(p.getUniqueId())) {
-                sendBasedOnType(new Citizen(p),personalizeRec(p, basic));
+                sendBasedOnType(Courts.getCourts().getCitizenManager().toCitizen(p),personalizeRec(p, basic));
             }
         }
     }
@@ -136,7 +159,7 @@ public class Notification {
         return true;
     }
     public boolean sendBasedOnType(Player p, String message) {
-        Citizen citizen = new Citizen(p);
+        Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
         return sendBasedOnType(citizen,message);
     }
 
@@ -193,7 +216,7 @@ public class Notification {
             for (CourtSession courtSession : ongoing) {
                 Case caze = courtSession.getCaze();
                 Object[] relevant = {caze};
-                if (notificationType == NotificationType.ONGOING_CASE_PARTICIPANT && courtSession.isParticipant(new Citizen(p))) {
+                if (notificationType == NotificationType.ONGOING_CASE_PARTICIPANT && courtSession.isParticipant(Courts.getCourts().getCitizenManager().toCitizen(p))) {
                     sendBasedOnType(p, personalizeRec(p, getBasicMessage(relevant)));
                 }else if (notificationType == NotificationType.ONGOING_CASE_ALL) {
                     sendBasedOnType(p, personalizeRec(p, getBasicMessage(relevant)));

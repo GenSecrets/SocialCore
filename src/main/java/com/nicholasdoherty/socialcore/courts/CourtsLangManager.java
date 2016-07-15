@@ -18,11 +18,13 @@ public class CourtsLangManager {
     private String secretaryRequestingMessage,secretaryRequestedConfirmMessage, secretaryRequestedAcceptMessage, secretaryRequestedDenyMessage,
         secretaryRequesterAcceptedMessage,secretaryRequesterDeniedMessage,secretaryRemovedMessage,notSecretaryMessage;
     private String judgePrefix,courtSessionPlaintiffPrefix,courtSessionDefendantPrefix;
+    private String electionNoSlots;
+    private String courtNotInSession;
     public CourtsLangManager(ConfigurationSection langSection) {
         if (langSection.contains("case-category-descriptions")) {
             ConfigurationSection caseCategoryDescripitonsSection = langSection.getConfigurationSection("case-category-descriptions");
             for (String key : caseCategoryDescripitonsSection.getKeys(false)) {
-                CaseCategory caseCategory = CaseCategory.valueOf(key.toUpperCase());
+                CaseCategory caseCategory = CaseCategory.fromString(key.toUpperCase());
                 if (caseCategory != null) {
                     caseCategoryDescriptions.put(caseCategory, VoxStringUtils.color(caseCategoryDescripitonsSection.getString(key)));
                 }
@@ -37,6 +39,9 @@ public class CourtsLangManager {
         citizenCooldown = VoxStringUtils.color(citizenStallSection.getString("on-cooldown"));
         citizenSubmitted = VoxStringUtils.color(citizenStallSection.getString("submitted"));
         judgePrefix = color(langSection,"judge-prefix");
+        electionNoSlots = color(langSection,"election-no-slots");
+
+
         courtSessionPlaintiffPrefix = color(langSection, "court-session-plaintiff-prefix");
         courtSessionDefendantPrefix = color(langSection, "court-session-defendant-prefix");
         ConfigurationSection secretarySection = langSection.getConfigurationSection("secretary");
@@ -48,6 +53,7 @@ public class CourtsLangManager {
         secretaryRequesterDeniedMessage = color(secretarySection,"requester-denied-message");
         secretaryRemovedMessage = color(secretarySection,"removed-message");
         notSecretaryMessage = color(secretarySection,"not-secretary-message");
+        courtNotInSession = color(langSection,"command-not-in-session");
     }
     public String caseCategoryDescription(CaseCategory caseCategory) {
         if (caseCategoryDescriptions.containsKey(caseCategory)) {
@@ -57,6 +63,14 @@ public class CourtsLangManager {
     }
     private String color(ConfigurationSection configurationSection, String key) {
         return VoxStringUtils.color(configurationSection.getString(key));
+    }
+
+    public String getCourtNotInSession() {
+        return courtNotInSession;
+    }
+
+    public String getElectionNoSlots() {
+        return electionNoSlots;
     }
 
     public String getJudgePrefix() {

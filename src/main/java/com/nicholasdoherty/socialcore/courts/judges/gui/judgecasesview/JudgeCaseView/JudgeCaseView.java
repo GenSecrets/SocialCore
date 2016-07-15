@@ -1,8 +1,11 @@
 package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCaseView;
 
+import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.*;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
+import com.nicholasdoherty.socialcore.courts.courtroom.actions.SexChange;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.PostCourtActionHolder;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items.ModifyPostActionsClickItem;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items.PostCourtActionsClickItem;
@@ -15,16 +18,21 @@ import com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeProc
 import com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeStallGUI;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.AssignCategoryClickItem;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.AssignDefendentClickItem;
+import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.SecCaseView;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.ThrowoutClickItem;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
 import com.nicholasdoherty.socialcore.utils.UUIDUtil;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +62,13 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         update();
     }
     public void addPostCourtAction(PostCourtAction postCourtAction) {
+        if (postCourtAction instanceof SexChange) {
+            for (PostCourtAction postCourtAction1 : new HashSet<>(postCourtActions)) {
+                if (postCourtAction1 instanceof SexChange) {
+                    postCourtActions.remove(postCourtAction1);
+                }
+            }
+        }
         postCourtActions.add(postCourtAction);
     }
 
@@ -72,7 +87,7 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         caseInfoClickItem = new CaseInfoBookClickItem(caze,this);
         addActiveItem(0, caseInfoClickItem);
         addActiveItem(7, new AssignDefendentClickItem(this,this,caze));
-        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE) {
+        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE || caze.getCaseCategory() == CaseCategory.SEX_CHANGE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             addActiveItem(9, new ChangeViewClickItem(new CategorySpecificNoCourtActionsView(this,caze)) {
                 @Override
                 public ItemStack itemstack() {
@@ -98,7 +113,20 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
 
     @Override
     public void assignCategory(CaseCategory caseCategory) {
+        if (caseCategory == CaseCategory.DIVORCE) {
+            if (caze.getPlantiff() == null || caze.getDefendent() == null) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant are required to assign a case to divorce!");
+                return;
+            }
+            String plaintiffName = caze.getPlantiff().getName();
+            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(plaintiffName);
+            if (socialPlayer == null || !socialPlayer.isMarried() || !socialPlayer.getMarriedTo().equalsIgnoreCase(caze.getDefendent().getName())) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant must be married assign a case to divorce!");
+                return;
+            }
+        }
         caze.setCaseCategory(caseCategory);
+        postCourtActions.clear();
         getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Assigned case " + caze.getId() + " to category " + caseCategory.getName());
         update(caseInfoClickItem);
     }
@@ -108,21 +136,43 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         if (uuid == null)
             return false;
         name = UUIDUtil.prettyName(name,uuid);
-        caze.setDefendent(new Citizen(name, uuid));
-        getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Assigned defendant " + name + " to case " + caze.getId());
+        caze.setDefendent(Courts.getCourts().getCitizenManager().toCitizen(name,uuid));
+        caze.updateSave();
+        getInventoryGUI().sendViewersMessage(SecCaseView.replaceNouns(ChatColor.GREEN + "Assigned defendant " + name + " to case " + caze.getId(),caze.getCaseCategory()));
         return true;
     }
     @Override
-    public void throwOut() {
-        caze.setCaseStatus(CaseStatus.THROWN_OUT, this.getInventoryGUI().getPlayer().getName());
+    public void throwOut(boolean refund) {
+        caze.setCaseStatus(CaseStatus.THROWN_OUT, getInventoryGUI().getPlayer().getName());
+        if (refund) {
+            boolean refundWork = false;
+            Citizen submitter = caze.getCaseHistory().getSubmitter();
+            if (submitter != null) {
+                OfflinePlayer sO = submitter.toOfflinePlayer();
+                if (sO != null) {
+                    try {
+                        refundWork = VaultUtil.give(sO, Courts.getCourts().getCourtsConfig().getCaseFilingCost());
+                    } catch (VaultUtil.NotSetupException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (refundWork) {
+                getInventoryGUI().getPlayer().sendMessage(ChatColor.GREEN + "Refunded");
+            }else {
+                getInventoryGUI().getPlayer().sendMessage(ChatColor.RED + "Was unable to refund");
+            }
+        }
         getInventoryGUI().sendViewersMessage(ChatColor.RED + "Threw out case " + caze.getId());
         backToPage();
+        caze.updateSave();
     }
     public void assignDate(long date) {
         JudgeStallGUI judgeStallGUI = (JudgeStallGUI) judgeProcessedCasesView.getInventoryGUI();
-        CourtDate courtDate = new CourtDate(date,judgeStallGUI.getJudge(), Courts.getCourts().getCourtsConfig().getDefaultCourtRoom());
+        CourtDate courtDate = new CourtDate(date,judgeStallGUI.getJudge().getJudgeId());
         caze.setCaseStatus(CaseStatus.COURT_DATE_SET,courtDate.getJudge().getName());
         caze.setCourtDate(courtDate);
+        caze.updateSave();
     }
     private void backToPage() {
         onClose();
@@ -138,14 +188,29 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         for (PostCourtAction postCourtAction : postCourtActions) {
             postCourtAction.doAction();
         }
+        if (postCourtActions.size() > 0) {
+            String actionsString = VoxStringUtils.formatToString(VoxStringUtils.toStringList(postCourtActions, new VoxStringUtils.ToStringConverter() {
+                @Override
+                public String convertToString(Object o) {
+                    PostCourtAction postCourtAction = (PostCourtAction) o;
+                    return postCourtAction.prettyDescription();
+                }
+            }));
+            getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "The following actions have been performed: ");
+            getInventoryGUI().sendViewersMessage(ChatColor.GREEN + actionsString);
+        }
     }
 
     public List<PostCourtAction> getPostCourtActions() {
         return postCourtActions;
     }
     public void resolveWithAction() {
-        doPostCourtActions();
+        if (caze.getCaseStatus() == CaseStatus.RESOLVED) {
+            backToPage();
+            return;
+        }
         caze.setCaseStatus(CaseStatus.RESOLVED, this.getInventoryGUI().getPlayer().getName());
+        doPostCourtActions();
         caze.setLocked(false);
         caze.setResolve(Resolve.fromPost(postCourtActions));
         Player p = getInventoryGUI().getPlayer();
@@ -154,6 +219,7 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
                 p.getInventory().addItem(itemStack);
             }
         }
+        caze.updateSave();
         backToPage();
     }
     public void notifyAndUpdate() {

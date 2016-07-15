@@ -10,8 +10,9 @@ import org.bukkit.configuration.ConfigurationSection;
  * Created by john on 1/8/15.
  */
 public enum CaseCategory{
-    DIVORCE(Material.REDSTONE,"Divorce"), TRESPASSING(Material.DIRT,"Trespassing"), ABANDONED(Material.STONE, "Abandoned House/Town"),OTHER(Material.BOOK,"Other"),
-    SAMESEX_MARRIAGE(Material.EMERALD,"SameSex Marriage");
+    DIVORCE(Material.REDSTONE,"Divorce"), TRESPASSING(Material.DIRT,"Trespassing"), ABANDONED(Material.STONE, "Abandoned House/Town"),OTHER(Material.BOOK,"Lawsuit"),
+    SAMESEX_MARRIAGE(Material.EMERALD,"SameSex Marriage"),SEX_CHANGE(Material.APPLE, "Sex Change"),CIVIL_MARRIAGE(Material.GOLD_BLOCK,"Civil Marriage"),
+    ABANDONED_CHEST(Material.ENDER_CHEST,"Abandoned Chest");
     private Material mat;
     private String name;
 
@@ -38,13 +39,17 @@ public enum CaseCategory{
                 return new AbandonedCategoryConfig(section);
             case SAMESEX_MARRIAGE:
                 return new SameSexCategoryConfig(section);
+            case ABANDONED_CHEST:
+                return new AbandonedCategoryConfig(section);
         }
         return new CategoryConfig(section,this);
     }
     public static CaseCategory fromString(String in) {
         in = in.toUpperCase().replace("_","").replace("-","").replace(" ","");
         for (CaseCategory caseCategory: values()) {
-            if (caseCategory.toString().equals(in) || caseCategory.getName().toUpperCase().replace(" ","").equals(in)) {
+            String caseCategoryString = caseCategory.toString().replace("_","");
+            String cleanedString = caseCategory.getName().toUpperCase().replace(" ","");
+            if (in.equals(caseCategoryString) || in.equals(cleanedString)) {
                 return caseCategory;
             }
         }

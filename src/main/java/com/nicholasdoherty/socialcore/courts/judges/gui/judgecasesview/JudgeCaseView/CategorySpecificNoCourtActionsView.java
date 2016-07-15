@@ -2,8 +2,7 @@ package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCas
 
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
-import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.categoryspecific.GrantDivorceItem;
-import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.categoryspecific.GrantSameSexMarriageItem;
+import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.categoryspecific.*;
 import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.ChangeViewClickItem;
 import com.nicholasdoherty.socialcore.courts.inventorygui.views.PaginatedItemView;
@@ -40,6 +39,14 @@ public class CategorySpecificNoCourtActionsView extends PaginatedItemView{
         }
         if (caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE) {
             clickItemList.add(new GrantSameSexMarriageItem(processedCasesView));
+        }
+        if (caze.getCaseCategory() == CaseCategory.SEX_CHANGE) {
+            clickItemList.add(new UngenderedSexChangeItem(processedCasesView));
+            clickItemList.add(new FemaleSexChangeItem(processedCasesView));
+            clickItemList.add(new MaleSexChangeItem(processedCasesView));
+        }
+        if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
+            clickItemList.add(new GrantCivilMarriageItem(processedCasesView));
         }
         this.setPaginatedItems(clickItemList);
         addActiveItem(0, new ChangeViewClickItem(processedCasesView) {

@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 
+import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
 import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
@@ -21,6 +22,9 @@ public class EndRecessClickItem implements ClickItem {
     public void click(boolean right) {
         if (right)
             return;
+        CourtSession courtSession = judgeBaseView.getCourtSession();
+        courtSession.setInRecess(false);
+        courtSession.getCourtRoom().sendMessage(ChatColor.YELLOW + "Judge " + courtSession.getJudge().getName() + " has called the court back together.");
     }
 
     @Override

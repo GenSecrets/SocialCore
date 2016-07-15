@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.courtroom;
 
+import com.mewin.WGRegionEvents.events.RegionEnterEvent;
 import com.mewin.WGRegionEvents.events.RegionEnteredEvent;
 import com.mewin.WGRegionEvents.events.RegionLeftEvent;
 import com.nicholasdoherty.socialcore.courts.Courts;
@@ -8,9 +9,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -23,6 +27,56 @@ public class CourtRoomListener implements Listener {
         this.courtSessionManager = courtSessionManager;
         Bukkit.getServer().getPluginManager().registerEvents(this, Courts.getCourts().getPlugin());
     }
+
+    @EventHandler
+    public void contempt(RegionEnterEvent event) {
+        Player p = event.getPlayer();
+        for (CourtSession courtSession : courtSessionManager.getInSession()) {
+            CourtRoom courtRoom = courtSession.getCourtRoom();
+            if (courtRoom != null) {
+                if (courtSession.getContempt().contains(p.getUniqueId())) {
+                    if (event.getRegion().equals(courtSession.getCourtRoom().getRegion())) {
+                        p.teleport(p.getWorld().getSpawnLocation());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void mute(AsyncPlayerChatEvent event) {
+        Player sender = event.getPlayer();
+        for (CourtSession courtSession : courtSessionManager.getInSession()) {
+            CourtRoom courtRoom = courtSession.getCourtRoom();
+            if (courtRoom == null)
+                continue;
+            if (courtSession.isSilenced()) {
+                if (!Courts.getCourts().getJudgeManager().isJudge(sender.getUniqueId())) {
+                    Set<Player> remove = new HashSet<>();
+                    for (Player rec : event.getRecipients()) {
+                        if (courtRoom.isInRoom(rec.getLocation())) {
+                            remove.add(rec);
+                        }
+                    }
+                    for (Player rec : remove) {
+                        event.getRecipients().remove(rec);
+                    }
+                }
+            }
+            if (courtSession.getMuted().contains(sender.getUniqueId())) {
+                Set<Player> remove = new HashSet<>();
+                for (Player rec : event.getRecipients()) {
+                    if (courtRoom.isInRoom(rec.getLocation())) {
+                        remove.add(rec);
+                    }
+                }
+                for (Player rec : remove) {
+                    event.getRecipients().remove(rec);
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void enter(RegionEnteredEvent event) {
         //rly hap
@@ -61,7 +115,7 @@ public class CourtRoomListener implements Listener {
     public void judgeLogin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         for (CourtSession courtSession : courtSessionManager.getInSession()) {
-            if (courtSession != null && courtSession.isJudgeOffline()) {
+            if (courtSession != null && courtSession.isJudgeOffline() && courtSession.getJudge() != null) {
                 if (courtSession.getJudge().getUuid().equals(uuid)) {
                     courtSession.stopJudgeOfflineTime();
                 }
@@ -73,7 +127,7 @@ public class CourtRoomListener implements Listener {
     public void judgeLogout(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         for (CourtSession courtSession : courtSessionManager.getInSession()) {
-            if (courtSession != null && courtSession.getJudge().getUuid().equals(uuid)) {
+            if (courtSession != null && courtSession.getJudge() != null && courtSession.getJudge().getUuid() != null && courtSession.getJudge().getUuid().equals(uuid)) {
                 courtSession.startJudgeOfflineTime();
             }
         }

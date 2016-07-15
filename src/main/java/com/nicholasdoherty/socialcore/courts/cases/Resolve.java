@@ -32,16 +32,8 @@ public class Resolve implements ConfigurationSerializable{
     public Resolve(Map<String, Object> map)  {
         stringPostCourtActions = new ArrayList<>();
         if (map.containsKey("post-court-actions")) {
-            List postCourtActionList = (List) map.get("post-court-actions");
-            if (!postCourtActionList.isEmpty()) {
-                for (Object o : postCourtActionList) {
-                    if (o instanceof PostCourtAction) {
-                        stringPostCourtActions.add(((PostCourtAction) o).prettyDescription());
-                    }else {
-                        stringPostCourtActions.add(o.toString());
-                    }
-                }
-            }
+            List<String> postCourtS = (List<String>) map.get("post-court-actions");
+            stringPostCourtActions.addAll(postCourtS);
         }
     }
     @Override

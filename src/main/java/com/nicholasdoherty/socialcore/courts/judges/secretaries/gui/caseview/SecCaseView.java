@@ -1,5 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview;
 
+import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
@@ -11,8 +13,10 @@ import com.nicholasdoherty.socialcore.courts.inventorygui.views.PaginatedItemVie
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.SecretaryCasePaginatedView;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.UUIDUtil;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -55,11 +59,24 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
 
         addActiveItem(7, new AssignDefendentClickItem(this,this,caze));
         addActiveItem(8, new ProcessClickItem(this));
+        addActiveItem(52, new RefundClickItem(this));
         addActiveItem(53, new ThrowoutClickItem(this));
         super.update();
     }
 
     public void assignCategory(CaseCategory caseCategory) {
+        if (caseCategory == CaseCategory.DIVORCE) {
+            if (caze.getPlantiff() == null || caze.getDefendent() == null) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant are required to assign a case to divorce!");
+                return;
+            }
+            String plaintiffName = caze.getPlantiff().getName();
+            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(plaintiffName);
+            if (socialPlayer == null || !socialPlayer.isMarried() || !socialPlayer.getMarriedTo().equalsIgnoreCase(caze.getDefendent().getName())) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "A plaintiff and defendant must be married assign a case to divorce!");
+                return;
+            }
+        }
         caze.setCaseCategory(caseCategory);
         getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Assigned case " + caze.getId() + " to category " + caseCategory.getName());
         update(caseInfoClickItem);
@@ -69,7 +86,7 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
         if (uuid == null)
             return false;
         name = UUIDUtil.prettyName(name,uuid);
-        caze.setDefendent(new Citizen(name,uuid));
+        caze.setDefendent(Courts.getCourts().getCitizenManager().toCitizen(name,uuid));
         getInventoryGUI().sendViewersMessage(replaceNouns(ChatColor.GREEN + "Assigned defendant " + name + " to case " + caze.getId(),caze.getCaseCategory()));
         return true;
     }
@@ -85,15 +102,55 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
     private String secName() {
         return getInventoryGUI().getPlayer().getName();
     }
-    public void throwOut() {
+    public void throwOut(boolean refund) {
+        if (caze.getCaseStatus() == CaseStatus.THROWN_OUT) {
+            backToPageView();
+            return;
+        }
         caze.setCaseStatus(CaseStatus.THROWN_OUT, secName());
+        if (refund) {
+            boolean refundWork = false;
+            Citizen submitter = caze.getCaseHistory().getSubmitter();
+            if (submitter != null) {
+                OfflinePlayer sO = submitter.toOfflinePlayer();
+                if (sO != null) {
+                    try {
+                        refundWork = VaultUtil.give(sO, Courts.getCourts().getCourtsConfig().getCaseFilingCost());
+                    } catch (VaultUtil.NotSetupException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (refundWork) {
+                getInventoryGUI().getPlayer().sendMessage(ChatColor.GREEN + "Refunded");
+            }else {
+                getInventoryGUI().getPlayer().sendMessage(ChatColor.RED + "Was unable to refund");
+            }
+        }
         getInventoryGUI().sendViewersMessage(ChatColor.RED + "Threw out case " + caze.getId());
         backToPageView();
+        caze.updateSave();
     }
     public void process() {
+        if (caze.getCaseStatus() == CaseStatus.PROCESSED) {
+            backToPageView();
+            return;
+        }
         if (caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE && caze.getDefendent() == null){
             getInventoryGUI().sendViewersMessage(ChatColor.RED + "You must select a spouse to process this case.");
             return;
+        }
+        if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE && caze.getDefendent() == null){
+            getInventoryGUI().sendViewersMessage(ChatColor.RED + "You must select a significant other to process this case.");
+            return;
+        }
+        if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
+            Citizen defendant = caze.getDefendent();
+            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(defendant.getName());
+            if (socialPlayer == null || !socialPlayer.isEngaged() || !socialPlayer.getEngagedTo().equalsIgnoreCase(caze.getPlantiff().getName())) {
+                getInventoryGUI().sendViewersMessage(ChatColor.RED + "Players must be engaged in order to go through a civil marriage.");
+                return;
+            }
         }
         caze.setCaseStatus(CaseStatus.PROCESSED, secName());
         getInventoryGUI().sendViewersMessage(ChatColor.GREEN + "Processed case " + caze.getId());
@@ -104,6 +161,7 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
             }
         }
         backToPageView();
+        caze.updateSave();
     }
     public Case getCaze() {
         return caze;
@@ -115,6 +173,9 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
     public static String replaceNouns(String message, CaseCategory caseCategory) {
         if (message == null)
             return message;
+        if (caseCategory == CaseCategory.CIVIL_MARRIAGE) {
+            return message.replace("defendant","significant other").replace("Defendant","Significant Other").replace("plaintiff","petitioner").replace("Plaintiff", "Petitioner");
+        }
         if (caseCategory != CaseCategory.SAMESEX_MARRIAGE)
             return message;
         return message.replace("defendant","spouse").replace("Defendant","Spouse").replace("plaintiff","petitioner").replace("Plaintiff","Petitioner");

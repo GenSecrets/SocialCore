@@ -56,6 +56,19 @@ public class DefaultDayGetter implements DayGetter{
             }
         }
     }
+    public boolean hasCorutDate(DateTime dateTime) {
+        if (dateTime == null) {
+            return false;
+        }
+        for (CourtDate courtDate : currentCourtDate.keySet()) {
+            if (courtDate != null) {
+                if (Math.abs(dateTime.toDate().getTime() - courtDate.getTime()) < 1800000) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public CalendarEvent[] calendarEvents(LocalDate localDate) {

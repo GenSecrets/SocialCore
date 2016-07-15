@@ -69,14 +69,15 @@ public class DivorceManager {
         UUID defendantUUID = UUIDUtil.getUUID(defendantName);
         if (defendantUUID == null)
             return;
-        Citizen plaintiff = new Citizen(plaintiffName,plaintiffUUID);
-        Citizen defendant = new Citizen(defendantName,defendantUUID);
+        Citizen plaintiff = Courts.getCourts().getCitizenManager().toCitizen(plaintiffName,plaintiffUUID);
+        Citizen defendant = Courts.getCourts().getCitizenManager().toCitizen(defendantName,defendantUUID);
         ItemStack updatedBook = defaultDivorceBook(divorce.getExhusband().getPlayerName(),divorce.getExwife().getPlayerName(),Case.baseItemStack());
         Case caze = courts.getCaseManager().newCase(updatedBook,plaintiffName);
         caze.setPlantiff(plaintiff);
         caze.setDefendent(defendant);
         caze.setCaseCategory(CaseCategory.DIVORCE);
         caze.setCaseStatus(CaseStatus.PROCESSED,"Divorce Command");
+        caze.updateSave();
     }
     public Case getCase(Divorce divorce) {
         String husbandName = divorce.getExhusband().getPlayerName();

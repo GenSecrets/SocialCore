@@ -111,11 +111,12 @@ public abstract class Vote implements ConfigurationSerializable {
         }
     }
     public void removeVote(UUID uuid) {
-        if (approvals.contains(uuid)) {
-            approvals.remove(uuid);
+        SerializableUUID serializableUUID = new SerializableUUID(uuid);
+        if (approvals.contains(serializableUUID)) {
+            approvals.remove(serializableUUID);
         }
-        if (disapprovals.contains(uuid)) {
-            disapprovals.remove(uuid);
+        if (disapprovals.contains(serializableUUID)) {
+            disapprovals.remove(serializableUUID);
         }
     }
     public void clear() {

@@ -4,6 +4,7 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import com.nicholasdoherty.socialcore.utils.VoxEffects;
 import com.nicholasdoherty.socialcore.utils.title.TitleUtil;
+import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,15 +17,14 @@ import java.util.List;
  * Created by john on 1/11/15.
  */
 public class CourtRoom {
-    String name;
-    ProtectedRegion region;
-    VLocation tpLocation;
-    VLocation center;
-    VLocation judgeChairLoc;
-
-    public CourtRoom(String name,ProtectedRegion region, VLocation tpLocation, VLocation center, VLocation judgeChairLoc) {
+    private String name;
+    private String regionName;
+    private VLocation tpLocation;
+    private VLocation center;
+    private VLocation judgeChairLoc;
+    public CourtRoom(String name,String regionName, VLocation tpLocation, VLocation center, VLocation judgeChairLoc) {
         this.name = name;
-        this.region = region;
+        this.regionName = regionName;
         this.tpLocation = tpLocation;
         this.center = center;
         this.judgeChairLoc = judgeChairLoc;
@@ -39,7 +39,10 @@ public class CourtRoom {
     }
 
     public ProtectedRegion getRegion() {
-        return region;
+        return WGBukkit.getRegionManager(center.getLocation().getWorld()).getRegion(regionName);
+    }
+    public void onEnter(Player p) {
+
     }
 
     public VLocation getTpLocation() {
@@ -70,21 +73,31 @@ public class CourtRoom {
         }
     }
     public void silence() {
-        int length = Courts.getCourts().getCourtsConfig().getSilenceLength();
+        long length = Courts.getCourts().getCourtsConfig().getSilenceLength();
         VoxEffects voxEffects = Courts.getCourts().getCourtsConfig().getSilenceCourtEffects();
         voxEffects.play(center.getLocation());
+        ProtectedRegion region = getRegion();
+        if (region == null) {
+            System.out.println("Could not find region: " + regionName);
+            return;
+        }
         for (Player p : center.getLocation().getWorld().getPlayers()) {
             Location pLoc = p.getLocation();
             int x = pLoc.getBlockX();
             int y = pLoc.getBlockY();
             int z = pLoc.getBlockZ();
             if (region.contains(x,y,z)) {
-                TitleUtil.sendTitle(p, ChatColor.RED + "Order!","Quiet in the court!",5,length,10);
+                TitleUtil.sendTitle(p, ChatColor.RED + "Order!","Quiet in the court!",5, (int) length,10);
             }
         }
     }
     public List<Player> playersInRoom() {
         List<Player> inRoom = new ArrayList<>();
+        ProtectedRegion region = getRegion();
+        if (region == null) {
+            System.out.println("Could not find region: " + regionName);
+            return inRoom;
+        }
         if (center != null && center.getLocation() != null) {
             for (Player p : center.getLocation().getWorld().getPlayers()) {
                 if (p != null && p.isOnline() && p.getLocation() != null) {
@@ -108,6 +121,7 @@ public class CourtRoom {
         }
     }
     public boolean isInRoom(Location location) {
+        ProtectedRegion region = getRegion();
         if (region == null) {
             System.out.println("region for " + name + " is null");
             return false;

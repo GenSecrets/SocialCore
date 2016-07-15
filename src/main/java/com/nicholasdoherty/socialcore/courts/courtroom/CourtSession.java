@@ -17,11 +17,16 @@ import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.time.condition.TickCondition;
 import com.nicholasdoherty.socialcore.time.condition.TimeCondition;
+import com.nicholasdoherty.socialcore.utils.SerializableUUID;
 import com.nicholasdoherty.socialcore.utils.VoxEffects;
+import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -37,12 +42,17 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
     private com.nicholasdoherty.socialcore.courts.courtroom.voting.Vote vote;
     private long judgeOfflineTime;
     private TimeCondition judgeOfflineCondition;
+    private Set<UUID> muted,unmuted,contempt;
+    private boolean isSilenced = false;
 
     public CourtSession(Case caze, Judge judge, CourtRoom courtRoom) {
         this.caseId = caze.getId();
         this.judge = judge;
         this.courtRoom = courtRoom;
         judgeOfflineTime = 0;
+        muted = new HashSet<>();
+        unmuted = new HashSet<>();
+        contempt = new HashSet<>();
     }
     public long judgeOfflineTimeLeft() {
         if (judgeOfflineCondition == null) {
@@ -52,11 +62,26 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
             return Courts.getCourts().getCourtsConfig().getMaxJudgeOfflineTicks() - judgeOfflineTime - elapsed;
         }
     }
+    public void silence() {
+        courtRoom.silence();
+        isSilenced = true;
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                isSilenced = false;
+            }
+        }.runTaskLater(Courts.getCourts().getPlugin(),Courts.getCourts().getCourtsConfig().getSilenceMuteLength());
+    }
+
+    public boolean isSilenced() {
+        return isSilenced;
+    }
+
     public void startSession() {
         Case caze = Courts.getCourts().getCaseManager().getCase(caseId);
         Courts.getCourts().getCourtSessionManager().addInSession(this);
         NotificationManager notificationManager = Courts.getCourts().getNotificationManager();
-        Object[] rele = new Case[]{caze};
+        Object[] rele = new Object[]{caze,judge,this};
         for (Citizen part : participants()) {
             if (part.isOnline()) {
                 Player p = part.getPlayer();
@@ -85,7 +110,7 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
             courtRoom.sendMessage(ChatColor.YELLOW + "Defendant: " + caze.getDefendent().getName());
         }
     }
-    private Set<Citizen> participants() {
+    public Set<Citizen> participants() {
         Case caze = Courts.getCourts().getCaseManager().getCase(caseId);
         Set<Citizen> part = new HashSet<>();
         Set<UUID> uuidsAdded = new HashSet<>();
@@ -133,8 +158,16 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
         return judgeOfflineCondition != null;
     }
     public void timeoutCase() {
+        if (Courts.getCourts() == null || Courts.getCourts().getCaseManager() == null) {
+            System.out.println("[Courts] Case manager not loaded... Error 01");
+            return;
+        }
         Case caze = Courts.getCourts().getCaseManager().getCase(caseId);
-        addPostCourtAction(new PostponeIndef(caze,judge.getName()));
+        if (judge != null) {
+            addPostCourtAction(new PostponeIndef(caze,judge.getName()));
+        }else {
+            addPostCourtAction(new PostponeIndef(caze,"none"));
+        }
         end();
     }
 
@@ -159,6 +192,28 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
     public void addPostCourtAction(PostCourtAction postCourtAction) {
         if (postCourtAction instanceof OnlyAction) {
             clearPostCourtActions();
+        }
+        if (postCourtAction != null && postCourtAction instanceof GrantBuildingPermit) {
+            GrantBuildingPermit permit1 = (GrantBuildingPermit) postCourtAction;
+            for (PostCourtAction postCourtAction1 : postCourtActions) {
+                if (postCourtAction1 != null && postCourtAction1 instanceof GrantBuildingPermit) {
+                    GrantBuildingPermit permit2 = (GrantBuildingPermit) postCourtAction1;
+                    if (permit1.prettyDescription() != null && permit2.prettyDescription() != null && permit1.prettyDescription().equals(permit2.prettyDescription())) {
+                        return;
+                    }
+                }
+            }
+        }
+        if (postCourtAction != null && postCourtAction instanceof GrantChestPermit) {
+            GrantChestPermit permit1 = (GrantChestPermit) postCourtAction;
+            for (PostCourtAction postCourtAction1 : postCourtActions) {
+                if (postCourtAction1 != null && postCourtAction1 instanceof GrantChestPermit) {
+                    GrantChestPermit permit2 = (GrantChestPermit) postCourtAction1;
+                    if (permit1.prettyDescription() != null && permit2.prettyDescription() != null && permit1.prettyDescription().equals(permit2.prettyDescription())) {
+                        return;
+                    }
+                }
+            }
         }
         if (postCourtAction instanceof JailDefendent) {
             removeAllPostCourtAction(JailPlantiff.class);
@@ -221,6 +276,22 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
                 changeStatus = false;
             postCourtAction.doAction();
         }
+
+        if (postCourtActions.size() > 0 && judge != null) {
+            Player judgePlayer = judge.getPlayer();
+            if (judgePlayer != null && judgePlayer.isOnline()) {
+                String actionsString = VoxStringUtils.formatToString(VoxStringUtils.toStringList(postCourtActions, new VoxStringUtils.ToStringConverter() {
+                    @Override
+                    public String convertToString(Object o) {
+                        PostCourtAction postCourtAction = (PostCourtAction) o;
+                        return postCourtAction.prettyDescription();
+                    }
+                }));
+                judgePlayer.sendMessage(ChatColor.GREEN + "The following actions have been performed: ");
+                judgePlayer.sendMessage(ChatColor.GREEN + actionsString);
+            }
+
+        }
         return  changeStatus;
     }
 
@@ -280,19 +351,60 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
     }
     public void end() {
         Case caze = Courts.getCourts().getCaseManager().getCase(caseId);
+        String judgeName = "none";
+        if (judge != null) {
+            judgeName = judge.getName();
+        }
+        CaseStatus origStatus = caze.getCaseStatus();
 
         Courts.getCourts().getCourtSessionManager().removeInSession(this);
         Courts.getCourts().getCourtSessionManager().endAll();
-        System.out.println("size of in session before ending: " + Courts.getCourts().getCourtSessionManager().getInSession().size());
+        Optional<TimeCondition> timeout = Courts.getCourts().getPlugin().getTimeConditionManager().getNotDone().stream()
+                .filter(c -> c != null).filter(c -> c == judgeOfflineCondition).findAny();
+        timeout.ifPresent(c -> Courts.getCourts().getPlugin().getTimeConditionManager().remove(c));
         boolean changeStatus = doPostCourtActions();
         sendPostCourtActionMessages();
         if (changeStatus) {
-            caze.setCaseStatus(CaseStatus.RESOLVED,judge.getName());
+            caze.setCaseStatus(CaseStatus.RESOLVED,judgeName);
             caze.setResolve(Resolve.fromPost(postCourtActions));
+            caze.updateSave();
+            if (judge != null) {
+                Player judgeP = judge.getPlayer();
+                if (judgeP != null) {
+                    List<ItemStack> judgementAward = Courts.getCourts().getCourtsConfig().getJudgementReward();
+                    if (judgementAward == null || judgementAward.isEmpty()) {
+                        Courts.getCourts().getPlugin().getLogger().warning("No judgement award defined in config");
+                    }else {
+                        for (ItemStack itemStack : judgementAward) {
+                            judgeP.getInventory().addItem(itemStack);
+                        }
+                    }
+                }
+            }
+            Courts.getCourts().getNotificationManager().notification(NotificationType.COURT_SESSION_END,new Object[]{caze,judge,this});
+            VoxEffects end = Courts.getCourts().getCourtsConfig().getEndSessionEffects();
+            if (end != null) { end.play(courtRoom.getCenter().getLocation());}
+            List<Player> inRoom = courtRoom.playersInRoom();
+            VoxEffects voxEffects = Courts.getCourts().getCourtsConfig().getEndSessionEffects();
+            if (voxEffects != null) {
+                Map<String, String> replacements = new HashMap<>();
+                replacements.put("{judge-name}",judgeName);
+                replacements.put("{case-name}",caze.caseName());
+                voxEffects.play(courtRoom.getJudgeChairLoc().getLocation(),courtRoom.playersInRoom(),replacements);
+            }
+            List<ItemStack> sesionReward = Courts.getCourts().getCourtsConfig().getSessionReward();
+            if (origStatus != CaseStatus.RESOLVED) {
+                if (sesionReward != null && !sesionReward.isEmpty()) {
+                    for (Player p : inRoom) {
+                        for (ItemStack itemStack : sesionReward) {
+                            p.getInventory().addItem(itemStack);
+                        }
+                    }
+                }
+            }
         }else {
             caze.backToProcessed();
         }
-        System.out.println("size of in session before after: " + Courts.getCourts().getCourtSessionManager().getInSession().size());
     }
     public void sendPostCourtActionMessages() {
         courtRoom.sendMessage(ChatColor.GREEN + "The judge has ended the session, ruling to perform the following actions:");
@@ -309,6 +421,17 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
         }
     }
 
+    public synchronized Set<UUID> getContempt() {
+        return contempt;
+    }
+
+    public synchronized Set<UUID> getUnmuted() {
+        return unmuted;
+    }
+
+    public synchronized Set<UUID> getMuted() {
+        return muted;
+    }
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
@@ -319,6 +442,9 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
         map.put("court-room-id",courtRoom.getName());
         map.put("vote",vote);
         map.put("judge-offline-time",judgeOfflineTime);
+        map.put("muted", SerializableUUID.toSerializableSet(muted));
+        map.put("unmuted",SerializableUUID.toSerializableSet(unmuted));
+        map.put("contempt",SerializableUUID.toSerializableSet(contempt));
         return map;
     }
 
@@ -344,8 +470,23 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
                 judgeOfflineTime = 0;
             }
         }
-        if (!judge.isOnline()) {
+        if (judge == null || !judge.isOnline()) {
             startJudgeOfflineTime();
+        }
+        if (map.containsKey("muted")) {
+            muted = SerializableUUID.fromSerializableSet((Set<SerializableUUID>) map.get("muted"));
+        }else {
+            muted = new HashSet<>();
+        }
+        if (map.containsKey("unmuted")) {
+            unmuted = SerializableUUID.fromSerializableSet((Set<SerializableUUID>) map.get("unmuted"));
+        }else {
+            unmuted = new HashSet<>();
+        }
+        if (map.containsKey("contempt")) {
+             contempt = SerializableUUID.fromSerializableSet((Set<SerializableUUID>) map.get("contempt"));
+        }else {
+            contempt = new HashSet<>();
         }
     }
 }
