@@ -5,8 +5,10 @@ import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.CaseLocation;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
+import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeCourtGUI;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
+import com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeStallGUI;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.utils.TextUtil;
 import com.nicholasdoherty.socialcore.utils.UUIDUtil;
@@ -67,6 +69,19 @@ public class JudgeCommand implements CommandExecutor{
             p.sendMessage(ChatColor.GREEN + "Teleported you to your judge chair");
             return true;
         }
+        if (args.length == 1 && args[0].equalsIgnoreCase("menu")){
+        	if(courtSession == null){
+        		// p.sendMessage(ChatColor.RED + "There is no active court session."); // Should this be here?
+        		JudgeStallGUI.createAndOpen(p, judge);
+        	}else{
+        		// Using JudgeStall.java as my guide here
+        		JudgeCourtGUI judgeCourtGUI = new JudgeCourtGUI(courtSession);
+                judgeCourtGUI.setPlayer(p);
+                judgeCourtGUI.open();
+        	}
+        	
+        }
+        
         if (args.length == 0 || courtSession == null) {
             if (args.length >= 1 && (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("mark")
                     || args[0].equalsIgnoreCase("mute") || args[0].equalsIgnoreCase("unmute")
