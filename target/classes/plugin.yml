@@ -1,11 +1,30 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 1.3-Z54
+version: 1.3-Z124
 authors: [theMightyChain,pascoej@murri.ca]
 loadafter: [Werewolf,Vampires]
-softdepend: [ProtocolLib,WorldGuard,TownyChat
-]
+softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
 commands:
+    ifelection:
+        usage: /ifelection <command>
+        description: runs command if election is scheduled
+        permission: sc.utility
+    reloadtitles:
+        usage: /reloadtitles
+        description: reloads titles
+        permission: sc.admin
+    title:
+        usage: /title <title> or /title off
+        descripiton: Changes your title
+        permission: sc.titles
+    titles:
+        usage: /titles
+        description: Lists the titles you may use
+        permission: sc.titles
+    forceemote:
+        usage: /forceemote <player> <emote> [target]
+        description: Forces a player to do an emote
+        permission: sc.forceemote
     petname:
         usage: /petname [name]
         description: Give your significant other a pet name
@@ -20,18 +39,25 @@ commands:
         permission: sc.status
     ttc:
         usage: /ttc
+        permission: sc.admin
     court:
         usage: /court
+        permission: sc.defaultperm
     judges:
         usage: /judges
+        permission: sc.defaultperm
     judge:
         usage: /judge
+        permission: sc.defaultperm
     election:
         usage: /election
+        permission: sc.defaultperm
     share:
         usage: /<command>.
+        permission: sc.defaultperm
     secretary:
         usage: /secretary
+        permission: sc.defaultperm
     socialcore:
         description: Displays the current version of social core
         usage: /<command>.
@@ -98,6 +124,18 @@ commands:
         description: View your permissions
         permission: sc.admin
 permissions:
+    sc.utility:
+        description: Used for autocommand
+        default: op
+    sc.titles:
+        description: Required to use title commands
+        default: true
+    sc.defaultperm:
+        description: all have
+        default: true
+    sc.forceemote:
+        description: allows using forcemmote
+        default: op
     sc.status:
         description: allows use of status command
         default: true

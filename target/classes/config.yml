@@ -12,6 +12,7 @@ marriage-couple-distance: 5
 marriage-xp-bonus-distance: 30
 #The percent of the killer's xp to give to their significant other (0.0 - 1.0)
 marriage-xp-bonus-percent: 0.5
+divorce-propose-cooldown: 5d
 #Kissing cool-down (in seconds):
 kiss-cooldown: 2
 piggyback-cooldown: 10s
@@ -21,6 +22,7 @@ kiss-heal-amount: 1
 login-petname-message: "{pet-name} has signed in"
 logout-petname-message: "{pet-name} has signed out"
 petname-change-spouse-message: "Your {spouse-petname} has given you the name {new-petname}"
+default-world: world
 #
 sql:
  host: localhost
@@ -30,6 +32,8 @@ sql:
 
 courts:
    category-config:
+     abandoned-chest:
+        permit-item: "paper 1 Unbreaking:1 name:&Chest_Permit lore:&6Awarded_to:_{citzen-name}|&5by_Judge:_{judge-name}|&2Permission_to_loot_chest|&2at_{location}|&7Permit|&3Bind On Pickup"
      abandoned:
         permit-item: "paper 1 Unbreaking:1 name:&9Building_Permit lore:&6Awarded_to:_{citzen-name}|&5by_Judge:_{judge-name}|&2Permission_to_build/destroy|&2at_{location}|&7Permit|&3Bind On Pickup"
      samesex-marriage:
@@ -82,6 +86,9 @@ courts:
           approval: "{new-approvals} have newly approved of you {approval-rating}"
           disapproval: "{new-disapprovals} have newly disapproved of you {approval-rating}"
           both: "{new-approvals} have newly approved of you and {new-disapprovals} have disapproved of you "
+       court-session-end:
+          base-message: "{case-name} is now adorned by {judge-name}"
+
    silence-court-effects:
         particles:
                 HEART:
@@ -109,15 +116,31 @@ courts:
    fine-payment-percentage: 5
    fine-payment-interval: 5m
    citizen-stall-document-cooldown: 15s
+   silence-mute-length: 10s
+   max-fine: 10000
    judge-permissions:
       - "judge.test"
    secretary-permissions:
       - "sec.test"
    time-between-vote-messages: 30s
+   court-session-teleport-effects:
+         title:
+           title: "&aJudge {judge-name} teleported to {location}"
+           subtitle: "~~"
+           fade-in: 1s
+           stay: 40t
+           fade-out: 10t
    court-session-start-effects:
       title:
         title: "&aJudge {judge-name} presiding over {case-name}"
         subtitle: "Quiet in the court"
+        fade-in: 1s
+        stay: 40t
+        fade-out: 10t
+   court-session-end-effects:
+      title:
+        title: "&aJudge {judge-name} has adorned {case-name}"
+        subtitle: "~~"
         fade-in: 1s
         stay: 40t
         fade-out: 10t
@@ -128,7 +151,13 @@ courts:
         - gold_nugget 1 name:&aName
       judgment:
         - gold_block 1
+      session:
+        - redstone 1
+   elections:
+    wait-time: 7d
    lang:
+      command-not-in-session: "This command can only be used while court is in session"
+      election-no-slots: "There are no judge slots"
       judge-prefix: "<J>"
       court-session-plaintiff-prefix: "<Plaintiff>"
       court-session-defendant-prefix: "<Defendant>"
@@ -137,6 +166,7 @@ courts:
           DIVORCE: "Divorce is when a married couple wishes to end their union."
           ABANDONED: "Cases concerning abandoned houses or towns"
           OTHER: "Cases which do not fit in any other category"
+
       confirm-nominate-self: "Typing /election nominateself again will nominate you in this election and charge you {cost} voxels"
       citizen-stall:
         case-already-filed: "Case has already been filed"

@@ -1,5 +1,20 @@
 package com.nicholasdoherty.socialcore;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inputlib.InputLib;
 import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUIManager;
@@ -9,7 +24,12 @@ import com.nicholasdoherty.socialcore.emotes.Emotes;
 import com.nicholasdoherty.socialcore.emotes.ForceEmoteCommand;
 import com.nicholasdoherty.socialcore.genders.GenderCommandHandler;
 import com.nicholasdoherty.socialcore.genders.Genders;
-import com.nicholasdoherty.socialcore.marriages.*;
+import com.nicholasdoherty.socialcore.marriages.MarriageCommandHandler;
+import com.nicholasdoherty.socialcore.marriages.Marriages;
+import com.nicholasdoherty.socialcore.marriages.PetnameCommand;
+import com.nicholasdoherty.socialcore.marriages.PurgeInvalidCommand;
+import com.nicholasdoherty.socialcore.marriages.StatusCommand;
+import com.nicholasdoherty.socialcore.misc.GlobalMute;
 import com.nicholasdoherty.socialcore.races.Race;
 import com.nicholasdoherty.socialcore.races.Races;
 import com.nicholasdoherty.socialcore.store.SQLStore;
@@ -17,16 +37,6 @@ import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
 import com.nicholasdoherty.socialcore.titles.TitleManager;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.*;
-import java.util.HashMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
 
 
 
@@ -51,6 +61,10 @@ public class SocialCore extends JavaPlugin {
 	//marriages
 	public Marriages marriages;
 	public static SocialCore plugin;
+	
+	// globalmute
+	public GlobalMute globalMute;
+	
 	//emotes
 	public Emotes emotes;
 	public SQLStore store;
@@ -90,6 +104,7 @@ public class SocialCore extends JavaPlugin {
 		marriages = new Marriages(this);
 		store = new SQLStore();
         courts = new Courts(this);
+        globalMute = new GlobalMute(this);
         //commands
 				SCCommandHandler scCommandHandler = new SCCommandHandler(this);
 		MarriageCommandHandler marriageCommandHandler = new MarriageCommandHandler(this);
