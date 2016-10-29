@@ -164,6 +164,12 @@ permissions:
     sc.marriage:
         description: Required to view all marriage commands
         default: true
+    sc.marriage.share:
+        description: Required to use the share command
+        default: false
+    sc.marriage.sharefood:
+        description: Required for married couples to share food with each other
+        default: false
     sc.unengage:
         description: Required to unengage
         default: true

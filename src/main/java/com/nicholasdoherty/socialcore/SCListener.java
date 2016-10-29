@@ -150,6 +150,7 @@ public class SCListener implements Listener {
 	public void onPlayerItemConsume(FoodLevelChangeEvent e) {
 		if(!(e.getEntity() instanceof Player)) return;
 		Player p1 =(Player) e.getEntity();
+		if(!p1.hasPermission("sc.marriage.sharefood")) return;
 		if (e.getFoodLevel() < p1.getFoodLevel()) {
 			return;
 		}

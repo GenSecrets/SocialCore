@@ -860,13 +860,16 @@ public class MarriageCommandHandler implements CommandExecutor {
 					player.sendMessage(ChatColor.RED+"You do not have permission to force a marriage");
 				}
 			}else if(cmd.getName().equalsIgnoreCase("share")) {
-				
 				Player p1 = (Player) sender;
 				SocialPlayer sp1 = sc.save.getSocialPlayer(p1.getName());
 
 
 				Player p2 =Bukkit.getServer().getPlayer(sp1.getMarriedTo());
 				
+				if(!p1.hasPermission("sc.marriage.share")){
+					p1.sendMessage(ChatColor.RED + "You do not have permission to the sharing mechanic.");
+					return true;
+				}
 				if(!sp1.isMarried()) {
 					player.sendMessage(ChatColor.RED+"You are not married!");
 					return true;
