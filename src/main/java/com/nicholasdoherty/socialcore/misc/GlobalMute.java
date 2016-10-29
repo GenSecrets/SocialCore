@@ -23,8 +23,8 @@ import com.nicholasdoherty.socialcore.SocialCore;
  */
 public class GlobalMute implements CommandExecutor, Listener {
 	
-	public static final String PERM_USE = "socialcore.globalmute.use";
-	public static final String PERM_BYPASS = "socialcore.globalmute.bypass";
+	public static final String PERM_USE = "sc.globalmute.use";
+	public static final String PERM_BYPASS = "sc.globalmute.bypass";
 	
 	// Commands here will be blocked if a mute is active. Don't include the slash.
 	private final List<String> blacklistedCommands = Arrays.asList("");
@@ -67,6 +67,7 @@ public class GlobalMute implements CommandExecutor, Listener {
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent event){
 		if(this.active){
+			if(event.getPlayer().hasPermission(PERM_BYPASS)) return;
 			// Check for blacklisted commands and block whatever is necessary.
 			if(event.getMessage().startsWith("/")){
 				String check = event.getMessage().replaceFirst("/", "");

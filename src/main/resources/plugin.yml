@@ -123,6 +123,10 @@ commands:
     getpermissions:
         description: View your permissions
         permission: sc.admin
+    globalmute:
+        description: Toggle a global mute
+        permission: sc.globalmute.use
+        aliases: [muteall,silence,shutuppls]
 permissions:
     sc.utility:
         description: Used for autocommand
@@ -202,6 +206,12 @@ permissions:
     sc.viewspouseinventory:
         description: Allows player to view their spouse's inventory.
         default: true
+    sc.globalmute.use:
+        description: Allows a player to toggle a global mute
+        default: op
+    sc.globalmute.bypass:
+        description: Allows a player to still chat even when a global mute is active
+        default: op
     courts.admin:
         description: Allows use of courts admin commands
         default: op
