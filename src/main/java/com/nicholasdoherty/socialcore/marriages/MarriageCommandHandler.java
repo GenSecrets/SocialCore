@@ -866,12 +866,12 @@ public class MarriageCommandHandler implements CommandExecutor {
 
 				Player p2 =Bukkit.getServer().getPlayer(sp1.getMarriedTo());
 				
-				if(!p1.hasPermission("sc.marriage.share")){
-					p1.sendMessage(ChatColor.RED + "You do not have permission to the sharing mechanic.");
+				if(!p1.hasPermission("sc.marriage.share") && !p2.hasPermission("sc.marriage.share")){
+					p1.sendMessage(ChatColor.RED + "Your couple does not have permission to the sharing mechanic.");
 					return true;
 				}
 				if(!sp1.isMarried()) {
-					player.sendMessage(ChatColor.RED+"You are not married!");
+					player.sendMessage(ChatColor.RED+"You are not married.");
 					return true;
 				}
 				if(p2 == null || !p2.isOnline()) {

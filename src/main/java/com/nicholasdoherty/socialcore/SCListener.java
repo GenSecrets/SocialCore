@@ -150,7 +150,7 @@ public class SCListener implements Listener {
 	public void onPlayerItemConsume(FoodLevelChangeEvent e) {
 		if(!(e.getEntity() instanceof Player)) return;
 		Player p1 =(Player) e.getEntity();
-		if(!p1.hasPermission("sc.marriage.sharefood")) return;
+		
 		if (e.getFoodLevel() < p1.getFoodLevel()) {
 			return;
 		}
@@ -158,24 +158,24 @@ public class SCListener implements Listener {
 		SocialPlayer sp = sc.save.getSocialPlayer(p1.getName());
 		if(!sp.isMarried()) return;
 		Player p2 = Bukkit.getPlayer(sp.getMarriedTo());
-		if(p2 == null) {
-			return;
-		}
-		double distanceSquared = sc.lang.maxConsumeDistanceSquared;
-		if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName())&&p1.getLocation().distanceSquared(p2.getLocation()) <= distanceSquared) {
-			if (p1.hasMetadata("last-ate")) {
-				ItemStack lastAte = (ItemStack) p1.getMetadata("last-ate").get(0).value();
-				if (lastAte != null && !VampWWUtil.canEat(p2,lastAte)) {
-					return;
+		if(p2 == null) return;
+		
+		// If either partner in the marriage has the permission node, let it happen.
+		if(p1.hasPermission("sc.marriage.sharefood") || p2.hasPermission("sc.marriage.sharefood")){
+			double distanceSquared = sc.lang.maxConsumeDistanceSquared;
+			if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName())&&p1.getLocation().distanceSquared(p2.getLocation()) <= distanceSquared) {
+				if (p1.hasMetadata("last-ate")) {
+					ItemStack lastAte = (ItemStack) p1.getMetadata("last-ate").get(0).value();
+					if (lastAte != null && !VampWWUtil.canEat(p2,lastAte)) return;
 				}
-			}
-			e.setCancelled(true);
-			p1.setFoodLevel(p1.getFoodLevel() + (changeby)/2);
-			p2.setFoodLevel(p2.getFoodLevel() + (changeby)/2);
-			p1.sendMessage(ChatColor.AQUA+"You shared your food with "+p2.getName());
+				e.setCancelled(true);
+				p1.setFoodLevel(p1.getFoodLevel() + (changeby)/2);
+				p2.setFoodLevel(p2.getFoodLevel() + (changeby)/2);
+				p1.sendMessage(ChatColor.AQUA+"You shared your food with "+p2.getName());
 
-			p2.sendMessage(ChatColor.AQUA+ p1.getName()+ " shared their food with you");
-		}
+				p2.sendMessage(ChatColor.AQUA+ p1.getName()+ " shared their food with you");
+			}
+		}else return;
 	}
 	@EventHandler
 	public void onExpChange(PlayerExpChangeEvent e) {
@@ -298,12 +298,12 @@ public class SCListener implements Listener {
 			SocialPlayer player2 = sc.save.getSocialPlayer(p2.getName());
 			
 			if (player1.getMarriedTo().equalsIgnoreCase(player2.getPlayerName())) {
-				if(!p.hasPermission("sc.marriage.piggyback")){
-					p.sendMessage(ChatColor.RED + "You do not have permission to piggyback.");
+				if(!p.hasPermission("sc.marriage.piggyback") && !p2.hasPermission("sc.marriage.piggyback")){
+					p.sendMessage(ChatColor.RED + "Your couple does not have permission to piggyback.");
 					return;
 				}
 				if(!SocialCore.plugin.whitelistPiggybackWorlds.contains(p.getWorld().getName())){
-					p.sendMessage(ChatColor.RED + "Piggybacking is disabled in this world.");
+					p.sendMessage(ChatColor.RED + "Piggybacking is disabled in your world.");
 					return;
 				}
 				
