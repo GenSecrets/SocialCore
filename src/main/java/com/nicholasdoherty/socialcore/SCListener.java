@@ -298,14 +298,25 @@ public class SCListener implements Listener {
 			SocialPlayer player2 = sc.save.getSocialPlayer(p2.getName());
 			
 			if (player1.getMarriedTo().equalsIgnoreCase(player2.getPlayerName())) {
+				if(!p.hasPermission("sc.marriage.piggyback")){
+					p.sendMessage(ChatColor.RED + "You do not have permission to piggyback.");
+					return;
+				}
+				if(!SocialCore.plugin.whitelistPiggybackWorlds.contains(p.getWorld().getName())){
+					p.sendMessage(ChatColor.RED + "Piggybacking is disabled in this world.");
+					return;
+				}
+				
 				if (isOnPiggybackcooldown(p)) {
 					p.sendMessage(ChatColor.RED + "Piggy-back is currently on cooldown.");
-				}else {
+				}else{
 					p2.setPassenger(p);
 					p2.sendMessage(ChatColor.AQUA+"You are giving "+p.getName()+" a piggy-back ride!.");
 					p.sendMessage(ChatColor.AQUA+p2.getName()+" is giving you a piggy-back ride.");
 					riding.put(p.getName(), p2.getName());
 				}
+			}else{
+				p.sendMessage(ChatColor.RED + "You can only ride your significant other.");
 			}
 			
 			return;

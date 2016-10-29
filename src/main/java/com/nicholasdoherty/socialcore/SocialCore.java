@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -60,6 +61,7 @@ public class SocialCore extends JavaPlugin {
 	
 	//marriages
 	public Marriages marriages;
+	public List<String> whitelistPiggybackWorlds;
 	public static SocialCore plugin;
 	
 	// globalmute
@@ -105,6 +107,7 @@ public class SocialCore extends JavaPlugin {
 		store = new SQLStore();
         courts = new Courts(this);
         globalMute = new GlobalMute(this);
+        whitelistPiggybackWorlds = this.getConfig().getStringList("piggyback-world-whitelist"); // Putting this here so I don't have to read from config a lot
         //commands
 				SCCommandHandler scCommandHandler = new SCCommandHandler(this);
 		MarriageCommandHandler marriageCommandHandler = new MarriageCommandHandler(this);

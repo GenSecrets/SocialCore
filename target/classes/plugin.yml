@@ -164,6 +164,9 @@ permissions:
     sc.marriage:
         description: Required to view all marriage commands
         default: true
+    sc.marriage.piggyback:
+        description: Required to ride your spouse
+        default: false
     sc.marriage.share:
         description: Required to use the share command
         default: false

@@ -16,6 +16,7 @@ divorce-propose-cooldown: 5d
 #Kissing cool-down (in seconds):
 kiss-cooldown: 2
 piggyback-cooldown: 10s
+piggyback-world-whitelist: []
 marriage-food-share-distance: 5
 marriage-inventory-share-distance: 5
 kiss-heal-amount: 1
