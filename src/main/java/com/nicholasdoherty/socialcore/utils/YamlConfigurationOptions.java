@@ -7,7 +7,7 @@ package com.nicholasdoherty.socialcore.utils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfigurationOptions;
 
-class YamlConfigurationOptions extends FileConfigurationOptions {
+public class YamlConfigurationOptions extends FileConfigurationOptions {
     private int indent = 2;
 
     protected YamlConfigurationOptions(YamlConfiguration configuration) {

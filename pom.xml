@@ -10,7 +10,7 @@
     <repositories>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <url>https://ci.drtshock.net/plugin/repository/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -22,6 +22,21 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>com.garbagemule</groupId>
+            <artifactId>mobarena</artifactId>
+            <version>0.97.2-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>craftbukkit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -94,7 +109,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
-            <version>6.0</version>
+            <version>6.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -107,9 +122,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>vampires</groupId>
-            <artifactId>vampires</artifactId>
-            <version>2.7.4</version>
+            <groupId>com.massivecraft.vampire</groupId>
+            <artifactId>Vampire</artifactId>
+            <version>2.8.22-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -127,6 +142,11 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>com.massivecraft.massivecore</groupId>
+            <artifactId>MassiveCore</artifactId>
+            <version>2.8.22-SNAPSHOT</version>
+        </dependency>
+        <!-- dependency>
             <groupId>mcore</groupId>
             <artifactId>mcore</artifactId>
             <version>2.7.4</version>
@@ -144,7 +164,7 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency -->
         <dependency>
             <groupId>vanish</groupId>
             <artifactId>vanish</artifactId>
@@ -163,7 +183,6 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -197,7 +216,7 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.voxmc</groupId>
+            <groupId>org.voxmc</groupId>
             <artifactId>logfilter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -225,9 +244,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>essentials</groupId>
+            <groupId>com.earth2me.essentials</groupId>
             <artifactId>essentials</artifactId>
-            <version>1.0</version>
+            <version>2.x</version>
             <exclusions>
                 <exclusion>
                   <groupId>org.spigotmc</groupId>

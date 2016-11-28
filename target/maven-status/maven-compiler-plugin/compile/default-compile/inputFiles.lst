@@ -1,261 +1,283 @@
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VLocation.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/mastercases/MasterCaseView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmPlaintiffGuilty.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxParticle.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/EmoteCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallYayNayVoteClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SupernaturalUtils.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/ItemStackBuilder.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmNay.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteNotification.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallType.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/PostCourtActionsClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/MessageEventType.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/PostCourtActionHolder.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CurrentDayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/EconomyManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/races/Races.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/JudgeStall.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FindDefendantGuiltyClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/TestCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/ElectionCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FindPlantiffGuiltyClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/CourtsTickLater.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationMessageType.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/approvalgui/JudgeApprovalView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/BookView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/DivorceManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecCaseClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/FineDefendent.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/UUIDFetcher.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ThrowOutCaseClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FinePlaintiffClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/Citizen.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/Secretary.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TickCondition.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/genders/GenderCommandHandler.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/CopyFileVisitor.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxSound.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/MonthView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/Marriage.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/JailPlantiff.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecretaryCasePaginatedView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/VanishWrapper.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/SecretaryStall.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/RecessClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/YayNayVote.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/ItemUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/Fixer.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/BlockUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FineDefendantClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/GulityInnocentVote.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecretaryGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SCLang.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalendarEventType.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/VoxTimeUnit.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/ChatVote.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtRoomListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CurrentMonthClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SCListener (Johns-Mac-Pro's conflicted copy 2014-03-17).java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/BackClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VampWWUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/UUIDUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/Emote.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteSummaryQueued.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/ChangeViewClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/PlayerUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryGUIManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SCCommandHandler.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallVerdictClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationsListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/BookPageItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantSameSexMarriageItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/Restricter.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/listeners/InventoryGUIListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/ThrowoutCase.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/SingleLineFormatter.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/Engagement.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/Candidate.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallGuiltyInnocentVoteClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseLocation.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/CategorySpecificView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/title/TellRawConverterLite.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CourtDate.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/ProtocolLibHook.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/AssignDefendentClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/NextDayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CancelAction.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalendarEvent.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/Test.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/CaseInfoClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/IntegerInputRunnable.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/condition/RealTimeCondition.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/TallyVotesClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/ViewPermissionsCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/NextMonthClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/QuietCourtClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/ProcessClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputLib.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/AssignCategoryClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/ApprovedCitizen.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/CaseInfoBookClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/CourtCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/AffirmNayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/ElectionManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/ConfigAccessor.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/PurgeInvalidCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalanderRunnable.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtRoom.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/CourtParticipate.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TimeConditionManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/JudgeListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/ResolveWithActionsClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/JudgeCaseView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/JailDefendent.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/fines/FineManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/ValidTimeSelector.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseMeta.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/SerializableUUID.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/GMUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SocialCore.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxEffects.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VaultUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantDivorceItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/CompressedConfigAccessor.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/Courts.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeStallGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantBuildingPermit.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/QueuedNotification.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationType.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/ClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TimeCondition.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteSummary.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/Marriages.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/MarriageCommandHandler.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtSessionManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/store/Store.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/libraries/ReflectionUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputRunnable.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/DontChangeStatus.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/VotingListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/PostponeIndef.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/Notification.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/CategorySpecificNoCourtActionsView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/BackEnabled.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/NextPageClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsLangManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantSameSexMarriage.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/ElectionGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/Vote.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/prefix/PrefixListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/ThrowoutClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/mastercases/MasterCaseGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/Replacement.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/StartSessionRunnable.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/UpdateClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/EmoteListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/store/SQLStore.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/FixerCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/JudgeCourtGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/VotingManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseHistory.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/JailPlaintiffClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/EndRecessClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CategorySpecificClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/libraries/ConfigAccessor.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/SecCaseView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/SecretaryAddRequest.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/CitizensStall.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/JudgeCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SCListener.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/Case.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/approvalgui/JudgesApprovalGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/MarriageGem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/JailDefendantClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/libraries/ParticleEffect.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/PreviousMonthClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ModifyPostActionsClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/Resolve.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/ElectionJudgeView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/BasicQueuedNotification.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeProcessedCasesView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayGetter.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/RescheduleCourtDateClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/SimpleScoreboard.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/RegionUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/TextUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmDefendantGuilty.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/PrevPageClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsConfig.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/Judge.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/CompressedFileConfiguration.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/PostCourtAction.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantDivorce.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/AssignTimeClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/SameSexCategoryConfig.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/YamlConfgurationOptions.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/Divorce.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/OnlyAction.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/emotes/Emotes.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/YamlConfiguration.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/PetnameCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsSaveManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/Election.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/CalendarGUI.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/FileUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/AbandonedCategoryConfig.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmYay.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ClearVotesClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SaveHandler.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/ApprovalItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/prefix/PrefixManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/PostActionsView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/PaginatedItemView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/Stall.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseStatus.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/DefaultDayGetter.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantBuildingPermitItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/EmptyClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/MasterListStall.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/SocialPlayer.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/items/PostActionRemoveClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/HourClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/AffirmYayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/PreviousDayClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/genders/Genders.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/races/Race.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/races/RaceCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/FaceUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseCategory.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/Clock.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxStringUtils.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/SecretaryCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/races/RaceCommand (Johns-Mac-Pro's conflicted copy 2014-03-17).java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/SerializationHelper.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtSession.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/RescheduleCase.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/marriages/StatusCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/title/TitleUtil.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/CategoryConfig.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/JudgeBaseView.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/time/ClockNotStartedException.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/JudgesCommand.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/RegionRestricted.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/GiveItemClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/CategorySpecificNoCourtActionClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/JudgeApprovalItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/utils/title/VoxTitle.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/items/RemoveAllClickItem.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/fines/Fine.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/JudgeManager.java
-/Users/john/Dropbox/Intellij Projects/SocialCore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/FinePlantiff.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/IntegerInputRunnable.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/SecretaryAddRequest.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtRoomListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantBuildingPermitItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FinePlaintiffClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/JudgesCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/SqlSaveManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationsListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsSaveManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/SexChange.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/Fixer.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/Courts.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/genders/Genders.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxStringUtils.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/EmoteCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantBuildingPermit.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/AbandonedChestCategoryConfig.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/fines/Fine.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/AffirmNayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/SerializationUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/NearbyAPI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/QueuedNotification.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/listeners/InventoryGUIListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/PetnameCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/JailDefendantClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/CategoryConfig.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseMeta.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtSessionManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/Divorce.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteNotification.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/OnlyAction.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/SimpleScoreboard.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/FileUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/FineDefendent.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/ResolveWithActionsClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/mastercases/MasterCaseView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/ClockNotStartedException.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/ThrowoutCase.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/EndRecessClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseCategory.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/RecessClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/JailPlantiff.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecretaryCasePaginatedView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/genders/GenderCommandHandler.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/ClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/IfElectionCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/CategorySpecificView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CourtDate.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/races/Race.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/CopyFileVisitor.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/SingleLineFormatter.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/Vote.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/PostponeIndef.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtRoom.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/libraries/ReflectionUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/Clock.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantSameSexMarriage.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/Restricter.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/UngenderedSexChangeItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/UUIDUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/TestCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/ConfigAccessor.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseHistory.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/MaleSexChangeItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/PrevPageClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallVerdictClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/StatusCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/ProcessClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/races/Races.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantCivilMarriage.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/Marriages.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/Citizen.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/CategorySpecificNoCourtActionClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/VanishWrapper.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/SerializationHelper.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmYay.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/CourtsTickLater.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/title/VoxTitle.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/ForceEmoteCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/JailDefendent.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/CitizenListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/FinePlantiff.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxSound.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/DivorceManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/Emote.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/CaseInfoBookClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/CourtCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/ItemStackBuilder.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ClearVotesClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/store/Store.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CurrentDayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/store/SQLStore.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/AbandonedCategoryConfig.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputRunnable.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/FaceUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/BookView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ModifyPostActionsClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/MonthView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SocialPlayer.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/libraries/ConfigAccessor.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/GMUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VaultUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/fines/FineManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/ElectionJudgeView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantChestPermitItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/BasicQueuedNotification.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantCivilMarriageItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/GulityInnocentVote.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/libraries/ParticleEffect.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/MasterListStall.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantDivorce.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/CategorySpecificNoCourtActionsView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TickCondition.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/mastercases/MasterCaseGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/PostActionsView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CategorySpecificClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/PaginatedItemView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/HourClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/Test.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/Resolve.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/approvalgui/JudgeApprovalView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/ItemUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/NextPageClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FineDefendantClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/EmoteListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxEffects.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/ViewPermissionsCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/Replacement.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryGUIManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/prefix/PrefixManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/RefundClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/BookPageItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FindPlantiffGuiltyClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/AssignDefendentClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecretaryGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/emotes/Emotes.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/UUIDFetcher.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalendarEvent.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/AffirmYayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/misc/GlobalMute.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/Judge.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/ChatVote.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/FindDefendantGuiltyClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SaveHandler.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/titles/Title.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmDefendantGuilty.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/ElectionManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/BlockUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SupernaturalUtils.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/CitizensStall.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmPlaintiffGuilty.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/condition/RealTimeCondition.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/FemaleSexChangeItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/Marriage.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/DefaultDayGetter.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/RegionRestricted.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationType.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VampWWUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/Notification.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/JudgeApprovalItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SCLang.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputLib.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CurrentMonthClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CancelAction.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/approvalgui/JudgesApprovalGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TimeCondition.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/AssignCategoryClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SCCommandHandler.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VLocation.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/MarriageCommandHandler.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/ValidTimeSelector.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/PostCourtActionsClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/CompressedConfigAccessor.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/gui/ElectionGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/CaseInfoClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantDivorceItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteSummaryQueued.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/titles/TitleCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/CalendarGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseStatus.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/VotingListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/MessageEventType.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/NextDayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/ThrowOutCaseClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/JudgeCourtGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/GrantChestPermit.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsConfig.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/items/PostActionRemoveClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/RescheduleCase.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/PlayerUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/JudgeStall.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/BackClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/ThrowoutClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/VoteSummary.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/TextUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/titles/TitleListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/condition/TimeConditionManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/races/RaceCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/Engagement.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/EmptyClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/YayNayVote.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/categoryspecific/GrantSameSexMarriageItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/QuietCourtClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/SecretaryCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/ProtocolLibHook.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/MarriageGem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SocialCore.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/GiveItemClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/Case.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/PreviousDayClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/DontChangeStatus.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/StartSessionRunnable.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/YamlConfiguration.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalendarEventType.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/AssignTimeClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/Candidate.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/RefundCaseClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/stall/SecretaryStall.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/JudgeManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/CalanderRunnable.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/ApprovalItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayGetter.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallYayNayVoteClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationMessageType.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/gui/clickitems/ChangeViewClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/JudgeListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/InventoryGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallType.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/PostCourtAction.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/title/TitleUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/RegionUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/DayView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/JudgeBaseView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/VoxParticle.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/PreviousMonthClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/CourtSession.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/JudgeCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/TallyVotesClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/CallGuiltyInnocentVoteClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeProcessedCasesView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/commands/ElectionCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/prefix/PrefixListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/CaseLocation.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/CompressedFileConfiguration.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/citizens/CitizenManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/Stall.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/notifications/NotificationManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/UpdateClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/CourtParticipate.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/cases/category/SameSexCategoryConfig.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/Secretary.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/YamlConfigurationOptions.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseView/JudgeCaseView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/RescheduleCourtDateClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/postactionsview/items/RemoveAllClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/SecCaseClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/EconomyManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/SerializableUUID.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/marriages/PurgeInvalidCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/ColoredTagsUtil.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/time/VoxTimeUnit.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/CourtsLangManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/stall/StallManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/elections/Election.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inputlib/InputListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/PostCourtActionHolder.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/FixerCommand.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/SCListener.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/views/calander/NextMonthClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/actions/AffirmNay.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/voting/VotingManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/titles/TitleManager.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/objects/ApprovedCitizen.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/secretaries/gui/caseview/SecCaseView.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeStallGUI.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/utils/title/TellRawConverterLite.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/judges/gui/judgecasesview/JudgeCaseClickItem.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/inventorygui/BackEnabled.java
+/ssd/Projects/voxpop/socialcore/src/main/java/com/nicholasdoherty/socialcore/courts/courtroom/judgeview/items/JailPlaintiffClickItem.java

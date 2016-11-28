@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.earth2me.essentials:essentials:2.x">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/earth2me/essentials/essentials/2.x/essentials-2.x.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/earth2me/essentials/essentials/2.x/essentials-2.x-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/earth2me/essentials/essentials/2.x/essentials-2.x-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
