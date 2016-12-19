@@ -33,6 +33,9 @@ public final class SupernaturalUtils {
     }
     
     public static boolean isHuman(final String name) {
+        if(name == null) {
+            return true;
+        }
         final SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(name);
         if(socialPlayer == null) {
             SocialCore.plugin.getLogger().warning("Could not get social player for: " + name);
