@@ -8,4 +8,7 @@ import org.bukkit.inventory.ItemStack;
 public interface ClickItem{
     public void click(boolean right);
     public ItemStack itemstack();
+    public default boolean valid() {
+        return true;
+    }
 }

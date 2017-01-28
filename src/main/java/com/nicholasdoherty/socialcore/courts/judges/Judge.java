@@ -70,4 +70,5 @@ public class Judge extends ApprovedCitizen{
         secretaries.add(secretary);
         Courts.getCourts().getJudgeManager().setPerms(secretary.getUuid());
     }
+
 }

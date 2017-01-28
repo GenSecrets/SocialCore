@@ -26,11 +26,41 @@ default-world: world
 #
 sql:
  host: localhost
- dbname: socialcore
- user: changme
- pass: changeme
+ dbname: minecraft
+ user: root
+ pass: test
 
 courts:
+   policy:
+     judges-required-to-confirm: 3
+     policy-approval-rate-removed: 40
+     policy-approval-rate-required: 60
+     character-max: 300
+     policy-required-votes: 100
+     #Instructions are added to end automatically.
+     unpassed-policy-icon-base-item: "book 1 name:Policy_{policy-number} lore:&9{policy-text}|{vote-status}|Approval_Rating:_{approval-rating}|Vote_Progress:_{vote-progress}|{policy-status-description}"
+     passed-policy-icon-base-item: "book 1 name:Policy_{policy-number} lore:&9{policy-text}|{vote-status}|{policy-status-description}"
+     policy-check-interval: 4m # How often to force check of  if should autopass, etc.
+     policy-autopass-time: 3d # How long to wait before auto approving in main voting.
+     policy-confirm-timeout: 1d # How long before failing if didn't get the confirmations.
+     lang:
+      state-descriptions:
+        UNCONFIRMED: "This has not yet been confirmed by all the judges"
+        MAIN_VOTING: "This policy is currently under vote by all players."
+        IN_EFFECT: "This policy is in effect"
+        FAILED: "This policy failed to become in effect"
+      policy-draft-already-pending: "&6[&eCourt&6]&c There is already a policy awaiting approval."
+      policy-new: "&6[&eCourt&6]&c You have received a book for which you should write your intended policy. You have a 300 character limit, and should include wether are not a punishment is applicable to ths policy."
+      policy-finish-characters: "&6[&eCourt&6]&c This policy exceeds the max character count. Try simplifying the policy or splitting into into multiple policies."
+      policy-finish: "&6[&eCourt&6]&c You have published your policy for review. Three other judges will be required to approve the policy before it is made public."
+      policy-official-votes: "&6[&eCourt&6]&c The policy {policy-number} has been approved by the community, and is now official."
+      policy-official-auto: "&6[&eCourt&6]&c The policy {policy-number} has been approved by default."
+      vote-status:
+        unconfirmed: You have not confirmed this policy.
+        confirmed: You have confirmed this policy.
+        approved: You have approved of this policy.
+        disapproved: You have disapproved of this policy.
+        abstained: You have not yet voted on this policy.
    category-config:
      abandoned-chest:
         permit-item: "paper 1 Unbreaking:1 name:&Chest_Permit lore:&6Awarded_to:_{citzen-name}|&5by_Judge:_{judge-name}|&2Permission_to_loot_chest|&2at_{location}|&7Permit|&3Bind On Pickup"
@@ -89,14 +119,7 @@ courts:
        court-session-end:
           base-message: "{case-name} is now adorned by {judge-name}"
 
-   silence-court-effects:
-        particles:
-                HEART:
-                  data: 0
-        sounds:
-          ANVIL_USE:
-            volume: 1
-            pitch: 1
+   silence-court-effects: {}
    court-rooms:
       test-courtroom:
         region: "test-courtroom"

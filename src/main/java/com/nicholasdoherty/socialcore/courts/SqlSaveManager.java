@@ -1,5 +1,7 @@
 package com.nicholasdoherty.socialcore.courts;
 
+import com.github.davidmoten.rx.jdbc.Database;
+import com.github.davidmoten.rx.jdbc.tuple.Tuple2;
 import com.nicholasdoherty.socialcore.courts.cases.*;
 import com.nicholasdoherty.socialcore.courts.elections.Candidate;
 import com.nicholasdoherty.socialcore.courts.elections.Election;
@@ -8,24 +10,20 @@ import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.Secretary;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.nicholasdoherty.socialcore.courts.prefix.PrefixListener;
+import com.nicholasdoherty.socialcore.courts.policies.Policy;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.SerializationUtil;
-import com.nicholasdoherty.socialcore.utils.UUIDFetcher;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 
-import javax.persistence.PrePersist;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
-import java.util.concurrent.Exchanger;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Created by john on 3/4/15.
@@ -68,6 +66,93 @@ public class SqlSaveManager {
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8;");
             preparedStatement.execute();
         }catch (Exception e) {}
+    }
+
+    public Optional<Policy> setJudgeConfirmation(Judge judge, Policy policy, boolean approve) {
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement("REPLACE INTO courts_policies_judge_confirmations (judge_citizen_id,policy_id,approve) VALUES (?,?,?)");
+            preparedStatement.setInt(1,judge.getId());
+            preparedStatement.setInt(2,policy.getId());
+            preparedStatement.setBoolean(3,approve);
+            preparedStatement.execute();
+            return updatePolicy(policy);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+    public Optional<Policy> createPolicy(String text, Citizen author) {
+        int id = getDatabase().update("INSERT INTO courts_policies (`text`,author_citizen_id,state,creation_time) VALUES(?,?,?,?)")
+                .parameters(text,author.getId(), Policy.State.UNCONFIRMED.toString(), new Timestamp(new Date().getTime()))
+                .returnGeneratedKeys()
+                .getAs(Integer.class).toBlocking().single();
+        return getPolicy(id);
+    }
+    public Optional<Policy> updatePolicyState(Policy policy, Policy.State state) {
+        getDatabase().update("UPDATE courts_policies SET state = ? WHERE id = ?")
+                .parameters(state.toString(),policy.getId())
+                .count().toBlocking().single();
+        if (state == Policy.State.MAIN_VOTING) {
+            getDatabase().update("UPDATE courts_policies SET confirm_time = ? WHERE id = ?")
+                    .parameters(state,new Timestamp(new Date().getTime()))
+                    .count().toBlocking().single();
+        }
+        return updatePolicy(policy);
+    }
+    public Optional<Policy> setCitizenVote(Citizen citizen, Policy policy, boolean approve) {
+        getDatabase()
+                .update("REPLACE INTO courts_policies_votes (voter_citizen_id,policy_id,approve) VALUES (?,?,?)")
+                .parameters(citizen.getId(),policy.getId(),approve)
+                .count().toBlocking().single();
+        return updatePolicy(policy);
+    }
+    public Optional<Policy> updatePolicy(Policy policy) {
+        policy.setStale(true);
+        return getPolicy(policy.getId());
+    }
+    public Optional<Policy> getPolicy(int policyId) {
+        try {
+            PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_policies WHERE id = ?");
+            preparedStatement.setInt(1,policyId);
+            ResultSet policyResult = preparedStatement.executeQuery();
+            if (policyResult.next()) {
+                String text = policyResult.getString("text");
+                Citizen author = getCitizen(policyResult.getInt("author_citizen_id"));
+                Policy.State state = Policy.State.valueOf(policyResult.getString("state"));
+                Timestamp creationTime = policyResult.getTimestamp("creation_time");
+                Optional<Timestamp> confirmTime = Optional.ofNullable(policyResult.getTimestamp("confirm_time"));
+                List<Tuple2<Citizen,Boolean>> votes = getDatabase()
+                        .select("SELECT voter_citizen_id,approve FROM courts_policies_votes WHERE policy_id = ?")
+                        .parameter(policyId).getAs(Integer.class,Boolean.class)
+                        .map(uuidS -> new Tuple2<Citizen,Boolean>(courts.getCitizenManager().getCitizen(uuidS._1()),uuidS._2()))
+                        .toList().toBlocking().single();
+                Set<Citizen> approvals = votes.stream().filter(Tuple2::value2)
+                        .map(Tuple2::_1).collect(Collectors.toSet());
+                Set<Citizen> disapprovals = votes.stream().filter(vote -> !vote._2())
+                        .map(Tuple2::_1).collect(Collectors.toSet());
+                Set<Citizen> confirmApprovals = getDatabase()
+                        .select("SELECT judge_citizen_id from courts_policies_judge_confirmations WHERE policy_id = ? AND approve = 1")
+                        .parameter(policyId).getAs(Integer.class)
+                        .map(courts.getCitizenManager()::getCitizen)
+                        .toList().toBlocking().single().stream().collect(Collectors.toSet());
+                return Optional.of(new Policy(policyId,
+                        text,
+                        author,
+                        confirmApprovals,
+                        approvals,
+                        disapprovals,
+                        state,
+                        creationTime,
+                        confirmTime));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+    public List<Long> allPoliciesIds() {
+        return getDatabase().select("SELECT id from courts_policies")
+                .getAs(Long.TYPE).toList().toBlocking().single();
     }
     public void clean() {
         //remove invalid secretaries
@@ -191,6 +276,9 @@ public class SqlSaveManager {
 
     private Connection getConnection() {
         return courts.getPlugin().store.getConnection();
+    }
+    private Database getDatabase() {
+        return Database.from(getConnection());
     }
 
     public Citizen getCitizen(int id) {
@@ -406,7 +494,8 @@ public class SqlSaveManager {
     public CaseHistory getCaseHistory(Case caze) {
         List<CaseHistory.HistoryEntry> historyEntries = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * from courts_case_history WHERE case_id = 1 ORDER BY date ASC");
+            PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * from courts_case_history WHERE case_id = ? ORDER BY date ASC");
+            preparedStatement.setInt(1,caze.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 long date = resultSet.getTimestamp("date").getTime();

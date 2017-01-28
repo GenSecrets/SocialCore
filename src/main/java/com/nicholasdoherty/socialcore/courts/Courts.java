@@ -20,6 +20,7 @@ import com.nicholasdoherty.socialcore.courts.notifications.NotificationManager;
 import com.nicholasdoherty.socialcore.courts.notifications.VoteSummaryQueued;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
+import com.nicholasdoherty.socialcore.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.courts.prefix.PrefixManager;
 import com.nicholasdoherty.socialcore.courts.stall.StallManager;
 import com.nicholasdoherty.socialcore.utils.SerializableUUID;
@@ -51,6 +52,7 @@ public class Courts {
     private DivorceManager divorceManager;
     private SqlSaveManager sqlSaveManager;
     private CitizenManager citizenManager;
+    private PolicyManager policyManager;
     public Courts(SocialCore plugin) {
         courts = this;
         this.plugin = plugin;
@@ -83,6 +85,7 @@ public class Courts {
         notificationManager = new NotificationManager(this);
         fineManager = new FineManager(sqlSaveManager.getFines());
         fineManager.startTimer();
+        policyManager = new PolicyManager(this);
         long time2 = new Date().getTime();
         long diff =time2-time1;
         plugin.getLogger().info("Took " + diff +"ms to deserialize " + caseManager.amount() + " cases");
@@ -195,6 +198,10 @@ public class Courts {
 
         ConfigurationSerialization.registerClass(BasicQueuedNotification.class);
         ConfigurationSerialization.registerClass(VoteSummaryQueued.class);
+    }
+
+    public PolicyManager getPolicyManager() {
+        return policyManager;
     }
 
     public void setCaseManager(CaseManager caseManager) {

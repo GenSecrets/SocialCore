@@ -68,7 +68,7 @@ public class SQLStore extends Store {
 				}catch (Exception e) {}
                 try {
                     String sql = "-- Create syntax for TABLE 'courts_case_history'\n" +
-                            "CREATE TABLE `courts_case_history` (\n" +
+                            "CREATE TABLE  `courts_case_history` (\n" +
                             "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
                             "  `case_id` int(11) DEFAULT NULL,\n" +
                             "  `date` datetime DEFAULT NULL,\n" +
@@ -177,6 +177,43 @@ public class SQLStore extends Store {
                     }
 
                 }catch (Exception e) {}
+                try {
+                	String sql = "CREATE TABLE `courts_policies` (\n" +
+							"  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+							"  `text` text,\n" +
+							"  `author_citizen_id` int(11) NOT NULL,\n" +
+							"  `state` varchar(16) NOT NULL DEFAULT '',\n" +
+							"  `creation_time` timestamp NULL DEFAULT NULL,\n" +
+							"  `confirm_time` timestamp NULL DEFAULT NULL,\n" +
+							"  PRIMARY KEY (`id`)\n" +
+							") ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;";
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.execute();
+				}catch (Exception e) {}
+				try {
+					String sql = "CREATE TABLE `courts_policies_judge_confirmations` (\n" +
+							"  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+							"  `judge_citizen_id` int(11) DEFAULT NULL,\n" +
+							"  `policy_id` int(11) DEFAULT NULL,\n" +
+							"  `approve` tinyint(1) DEFAULT NULL,\n" +
+							"  PRIMARY KEY (`id`),\n" +
+							"  UNIQUE KEY `judge_citizen_id` (`judge_citizen_id`,`policy_id`)\n" +
+							") ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;";
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.execute();
+				}catch (Exception e) {}
+				try {
+					String sql = "CREATE TABLE `courts_policies_votes` (\n" +
+							"  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\n" +
+							"  `policy_id` int(11) DEFAULT NULL,\n" +
+							"  `voter_citizen_id` int(11) DEFAULT NULL,\n" +
+							"  `approve` tinyint(1) DEFAULT NULL,\n" +
+							"  PRIMARY KEY (`id`),\n" +
+							"  UNIQUE KEY `one_vote_per_citizen` (`policy_id`,`voter_citizen_id`)\n" +
+							") ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;";
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.execute();
+				}catch (Exception e) {}
 				return connection;
 			}else {
 				return connection;
@@ -187,6 +224,7 @@ public class SQLStore extends Store {
 		}
 		return null;
 	}
+
 	public void fixTables() {
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement("alter table SocialCore_engagements modify name VARCHAR(70)");

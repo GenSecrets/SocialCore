@@ -27,6 +27,10 @@ public class CitizenManager {
         Citizen citizen = sqlSaveManager.getCitizen(name);
         return citizen;
     }
+    public Citizen getCitizen(int id) {
+        Citizen citizen = sqlSaveManager.getCitizen(id);
+        return citizen;
+    }
     public Citizen toCitizen(OfflinePlayer p) {
         String name = p.getName();
         UUID uuid = p.getUniqueId();

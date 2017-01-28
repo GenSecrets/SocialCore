@@ -20,6 +20,7 @@ public class CourtsLangManager {
     private String judgePrefix,courtSessionPlaintiffPrefix,courtSessionDefendantPrefix;
     private String electionNoSlots;
     private String courtNotInSession;
+    private String policyIcon;
     public CourtsLangManager(ConfigurationSection langSection) {
         if (langSection.contains("case-category-descriptions")) {
             ConfigurationSection caseCategoryDescripitonsSection = langSection.getConfigurationSection("case-category-descriptions");
@@ -54,6 +55,7 @@ public class CourtsLangManager {
         secretaryRemovedMessage = color(secretarySection,"removed-message");
         notSecretaryMessage = color(secretarySection,"not-secretary-message");
         courtNotInSession = color(langSection,"command-not-in-session");
+
     }
     public String caseCategoryDescription(CaseCategory caseCategory) {
         if (caseCategoryDescriptions.containsKey(caseCategory)) {

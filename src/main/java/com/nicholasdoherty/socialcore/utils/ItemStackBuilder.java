@@ -58,6 +58,7 @@ public class ItemStackBuilder {
         itemStack.setType(mat);
         return this;
     }
+
     public ItemStackBuilder addLore(String... lore) {
         List<String> curLore;
         if (itemStack.getItemMeta().hasLore()) {
