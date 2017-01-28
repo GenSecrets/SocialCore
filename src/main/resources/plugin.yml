@@ -1,6 +1,6 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 1.3-Z124
+version: 1.3-Z130
 authors: [theMightyChain,pascoej@murri.ca]
 loadafter: [Werewolf,Vampires]
 softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
@@ -123,6 +123,10 @@ commands:
     getpermissions:
         description: View your permissions
         permission: sc.admin
+    globalmute:
+        description: Toggle a global mute
+        permission: sc.globalmute.use
+        aliases: [muteall,silence,shutuppls]
 permissions:
     sc.utility:
         description: Used for autocommand
@@ -160,6 +164,15 @@ permissions:
     sc.marriage:
         description: Required to view all marriage commands
         default: true
+    sc.marriage.piggyback:
+        description: Required to ride your spouse
+        default: false
+    sc.marriage.share:
+        description: Required to use the share command
+        default: false
+    sc.marriage.sharefood:
+        description: Required for married couples to share food with each other
+        default: false
     sc.unengage:
         description: Required to unengage
         default: true
@@ -202,6 +215,12 @@ permissions:
     sc.viewspouseinventory:
         description: Allows player to view their spouse's inventory.
         default: true
+    sc.globalmute.use:
+        description: Allows a player to toggle a global mute
+        default: op
+    sc.globalmute.bypass:
+        description: Allows a player to still chat even when a global mute is active
+        default: op
     courts.admin:
         description: Allows use of courts admin commands
         default: op

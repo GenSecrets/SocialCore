@@ -1,46 +1,39 @@
 package com.nicholasdoherty.socialcore.utils;
 
 import com.massivecraft.vampire.entity.UPlayer;
-import com.nicholasdoherty.werewolf.Lang;
-import com.nicholasdoherty.werewolf.WPlayer;
-import com.nicholasdoherty.werewolf.WStore;
+import com.nicholasdoherty.werewolf.core.WPlayer;
+import com.nicholasdoherty.werewolf.core.storage.WStore;
+import com.nicholasdoherty.werewolf.util.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by john on 2/1/15.
  */
-public class VampWWUtil {
-    public static boolean canEat(Player p, ItemStack food) {
-        if (isVampire(p))
-            return false;
-        if (food == null)
-            return false;
-        if (isTransformedWerewolf(p) && isWWDisabledFood(food)) {
-            return false;
-        }
-        return true;
+public final class VampWWUtil {
+    private VampWWUtil() {
     }
-    public static boolean isVampire(Player p) {
-        UPlayer uPlayer = UPlayer.get(p);
-        if (uPlayer == null)
-            return false;
-        return uPlayer.isVampire();
+    
+    public static boolean canEat(final Player p, final ItemStack food) {
+        return !isVampire(p) && food != null && !(isTransformedWerewolf(p) && isWWDisabledFood(food));
     }
-    public static boolean isTransformedWerewolf(Player p) {
-        WPlayer wPlayer = WStore.getWPlayerFromPlayer(p.getName());
-        if (wPlayer == null || wPlayer.attributes == null)
-            return false;
-        if (!wPlayer.attributes.isWerewolf())
-            return false;
-        if (!wPlayer.attributes.isTransformed())
-            return false;
-        return true;
+    
+    public static boolean isVampire(final Player p) {
+        final UPlayer uPlayer = UPlayer.get(p);
+        return uPlayer != null && uPlayer.isVampire();
     }
-    public static boolean isWWDisabledFood(ItemStack itemStack) {
-        int item = itemStack.getType().getId();
-        for (int i = 0; i < Lang.disabledFood.length; i++) {
-            if (item == Lang.disabledFood[i]) {
+    
+    @SuppressWarnings("TypeMayBeWeakened")
+    public static boolean isTransformedWerewolf(final Player p) {
+        final WPlayer wPlayer = WStore.getWPlayerFromPlayer(p.getName());
+        return !(wPlayer == null || wPlayer.attributes == null) && wPlayer.attributes.isWerewolf() && wPlayer.attributes.isTransformed();
+    }
+    
+    @SuppressWarnings("deprecation")
+    public static boolean isWWDisabledFood(final ItemStack itemStack) {
+        final int item = itemStack.getType().getId();
+        for(int i = 0; i < Lang.disabledFood.length; i++) {
+            if(item == Lang.disabledFood[i]) {
                 return true;
             }
         }

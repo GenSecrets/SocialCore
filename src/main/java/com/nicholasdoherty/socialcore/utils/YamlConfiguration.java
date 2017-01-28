@@ -11,7 +11,6 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfigurationOptions;
 import org.bukkit.configuration.file.YamlConstructor;
 import org.bukkit.configuration.file.YamlRepresenter;
 import org.yaml.snakeyaml.DumperOptions;
@@ -161,12 +160,12 @@ public class YamlConfiguration extends FileConfiguration {
         }
     }
 
-    public YamlConfigurationOptions options() {
+    public org.bukkit.configuration.file.YamlConfigurationOptions options() {
         if(this.options == null) {
-            this.options = new com.nicholasdoherty.socialcore.utils.YamlConfigurationOptions(this);
+            this.options = new YamlConfigurationOptions(this);
         }
 
-        return (YamlConfigurationOptions)this.options;
+        return (org.bukkit.configuration.file.YamlConfigurationOptions)this.options;
     }
 
     public static YamlConfiguration loadConfiguration(File file) {

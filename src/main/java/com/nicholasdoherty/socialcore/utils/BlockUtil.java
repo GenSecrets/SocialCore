@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.utils;
 
-import net.minecraft.server.v1_10_R1.Block;
+import net.minecraft.server.v1_11_R1.Block;
 import org.bukkit.Material;
 
 import java.lang.reflect.Field;
