@@ -249,6 +249,30 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.22</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.22</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.davidmoten/rxjava-extras -->
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rxjava-extras</artifactId>
+            <version>0.8.0.6</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -262,6 +286,11 @@
                             <include>joda-time:joda-time</include>
                             <include>com.googlecode.json-simple:json-simple</include>
                             <include>com.voxmc:voxlib</include>
+                            <include>com.github.davidmoten:rxjava-jdbc</include>
+                            <include>com.github.davidmoten:rxjava-extras</include>
+                            <include>io.reactivex:rxjava</include>
+                            <include>org.slf4j:slf4j-api</include>
+                            <include>org.slf4j:slf4j-simple</include>
                         </includes>
                     </artifactSet>
                     <relocations>
