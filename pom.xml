@@ -269,10 +269,7 @@
                             <pattern>org.joda</pattern>
                             <shadedPattern>com.voxmc.socialcore.libs.org.joda</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>com.voxmc.voxlib</pattern>
-                            <shadedPattern>com.voxmc.socialcore.libs.com.voxmc.voxlib</shadedPattern>
-                        </relocation>
+
                         <relocation>
                             <pattern>org.json</pattern>
                             <shadedPattern>com.voxmc.socialcore.libs.org.json</shadedPattern>
