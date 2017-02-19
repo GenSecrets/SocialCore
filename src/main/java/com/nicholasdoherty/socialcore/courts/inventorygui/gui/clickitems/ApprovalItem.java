@@ -41,7 +41,9 @@ public class ApprovalItem implements ClickItem {
            Player p = Bukkit.getPlayer(uuid);
             if (p != null && p.isOnline()) {
                 for (ItemStack itemStack : Courts.getCourts().getCourtsConfig().getCourtVoteReward()) {
-                    p.getInventory().addItem(itemStack);
+                    if (itemStack != null) {
+                        p.getInventory().addItem(itemStack);
+                    }
                 }
             }
         }
