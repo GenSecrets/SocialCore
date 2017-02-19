@@ -135,6 +135,7 @@ public class ElectionManager{
         }
         if (candidate.electPercentage() >= 100 && candidate.approvalPercentage() > Courts.getCourts().getCourtsConfig().getJudgeApprovalRateRequired()) {
             final Judge judge = Courts.getCourts().getJudgeManager().promoteJudge(candidate);
+            candidate.resetVotes();
             Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_ELECTED_ALL,new Object[]{judge});
         }
         election.removeCandiate(candidate);

@@ -288,6 +288,7 @@ public class ElectionCommand implements CommandExecutor {
             //helpCommands.add(formHelpLine("/election start", "Start a new election"));
             //helpCommands.add(formHelpLine("/election end", "Ends current election"));
             helpCommands.add(formHelpLine("/election remove [name]", "Removes a candidate from the current election"));
+            helpCommands.add(formHelpLine("/election removewithvotes [name]", "Removes a candidate from the current election including their votes"));
             helpCommands.add(formHelpLine("/election addvotes <name> <approve/disapprove> <amount>", "Removes a candidate from the current election"));
             helpCommands.add(formHelpLine("/election resetvotes <name>", "Removes a candidate from the current election"));
         }
