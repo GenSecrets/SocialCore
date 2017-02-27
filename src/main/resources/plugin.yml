@@ -1,8 +1,8 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 1.3-Z136
+version: 1.3-Z138
 authors: [theMightyChain,pascoej@murri.ca]
-loadafter: [Werewolf,Vampires]
+loadafter: [Werewolf,Vampires,Essentials]
 softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
 commands:
     ifelection:

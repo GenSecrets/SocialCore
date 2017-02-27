@@ -7,10 +7,12 @@ import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.ItemUtil;
 import com.nicholasdoherty.socialcore.utils.VLocation;
 import com.nicholasdoherty.socialcore.utils.VoxEffects;
+import com.voxmc.voxlib.EssentialsItem;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by john on 1/3/15.
@@ -19,7 +21,7 @@ public class CourtsConfig {
     private int maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeApprovalRateRequired,
          judgeApprovalRateDemoted,judgeRequiredVotes,caseFilingCost,silenceLength;
     private long maxJudgeOfflineTicks,autoSaveInterval,finePaymentInterval,citizenStallDocumentCooldown;
-    private List<ItemStack> processReward,courtVoteReward,judgementReward,sessionReward;
+    private List<EssentialsItem> processReward,courtVoteReward,judgementReward,sessionReward;
     private VoxEffects silenceCourtEffects;
     private Map<String, CourtRoom> courtRoomMap;
     private double nominateSelfCost,finePaymentPercentage;
@@ -35,13 +37,13 @@ public class CourtsConfig {
 
 
     public CourtsConfig(int maxJudges, int secretariesPerJudge, int judgeInactiveDaysAllowed, int judgeApprovalRateRequired,
-                        int judgeApprovalRateDemoted, int judgeRequiredVotes, int caseFilingCost, List<ItemStack> processReward,
-                        List<ItemStack> courtVoteReward, List<ItemStack> judgementReward,VoxEffects silenceCourtEffects,
+                        int judgeApprovalRateDemoted, int judgeRequiredVotes, int caseFilingCost, List<EssentialsItem> processReward,
+                        List<EssentialsItem> courtVoteReward, List<EssentialsItem> judgementReward,VoxEffects silenceCourtEffects,
                         int silenceLength, Map<String, CourtRoom> courtRoomMap, long maxJudgeOfflineTicks, long autoSaveInterval,
                         double nominateSelfCost, Map<CaseCategory, CategoryConfig> categoryConfigMap, long finePaymentInterval,
                         double finePaymentPercentage, long citizenStallDocumentCooldown, long timeBetweenVoteMessages,
                         Set<String> judgePermissions, Set<String> secretaryPermissions, VoxEffects startSessionEffects,
-                        VoxEffects endSessionEffects, List<ItemStack> sessionReward, long silenceMuteLength,
+                        VoxEffects endSessionEffects, List<EssentialsItem> sessionReward, long silenceMuteLength,
                         double maxFine, long supportVoteDecayTick, VoxEffects judgeTeleportEffects, long minElectionWaitMillis) {
         this.maxJudges = maxJudges;
         this.secretariesPerJudge = secretariesPerJudge;
@@ -132,11 +134,11 @@ public class CourtsConfig {
     }
 
     public List<ItemStack> getProcessReward() {
-        return processReward;
+        return processReward.stream().map(EssentialsItem::getItemStack).collect(Collectors.toList());
     }
 
     public List<ItemStack> getCourtVoteReward() {
-        return courtVoteReward;
+        return courtVoteReward.stream().map(EssentialsItem::getItemStack).collect(Collectors.toList());
     }
 
     public long getCitizenStallDocumentCooldown() {
@@ -144,7 +146,7 @@ public class CourtsConfig {
     }
 
     public List<ItemStack> getJudgementReward() {
-        return judgementReward;
+        return judgementReward.stream().map(EssentialsItem::getItemStack).collect(Collectors.toList());
     }
 
     public long getFinePaymentInterval() {
@@ -198,7 +200,7 @@ public class CourtsConfig {
     }
 
     public List<ItemStack> getSessionReward() {
-        return sessionReward;
+        return sessionReward.stream().map(EssentialsItem::getItemStack).collect(Collectors.toList());
     }
 
     public long getSilenceMuteLength() {
@@ -213,10 +215,10 @@ public class CourtsConfig {
         int judgeApprovalRateDemoted = section.getInt("judge-approval-rate-demoted");
         int judgeRequiredVotes = section.getInt("judge-required-votes");
         ConfigurationSection rewardsSection = section.getConfigurationSection("rewards");
-        List<ItemStack> processReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("process"));
-        List<ItemStack> courtVoteReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("court-vote"));
-        List<ItemStack> judgementReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("judgement"));
-        List<ItemStack> sessionReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("session"));
+        List<EssentialsItem> processReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("process"));
+        List<EssentialsItem> courtVoteReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("court-vote"));
+        List<EssentialsItem> judgementReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("judgement"));
+        List<EssentialsItem> sessionReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("session"));
         int caseFilingCost = section.getInt("case-filing-cost");
         VoxEffects voxEffects = VoxEffects.fromConfig(section.getConfigurationSection("silence-court-effects"));
         int silenceLength = section.getInt("silence-ticks", 100);

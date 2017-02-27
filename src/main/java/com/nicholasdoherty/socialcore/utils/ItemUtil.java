@@ -1,6 +1,7 @@
 package com.nicholasdoherty.socialcore.utils;
 
 import com.earth2me.essentials.MetaItemStack;
+import com.voxmc.voxlib.EssentialsItem;
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -12,12 +13,12 @@ import java.util.List;
  * Created by john on 6/29/14.
  */
 public class ItemUtil {
-    public static List<ItemStack> itemsFromSection(List<String> rawList) {
-        List<ItemStack> items = new ArrayList<>();
+    public static List<EssentialsItem> itemsFromSection(List<String> rawList) {
+        List<EssentialsItem> items = new ArrayList<>();
         if (rawList == null || rawList.isEmpty())
             return items;
         for (String rawItem : rawList) {
-            items.add(getFromEssentialsString(rawItem));
+            items.add(new EssentialsItem(rawItem));
         }
         return items;
     }
