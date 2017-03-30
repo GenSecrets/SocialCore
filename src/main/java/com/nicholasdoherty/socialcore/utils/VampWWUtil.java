@@ -1,9 +1,10 @@
 package com.nicholasdoherty.socialcore.utils;
 
 import com.massivecraft.vampire.entity.UPlayer;
-import com.nicholasdoherty.werewolf.core.WPlayer;
-import com.nicholasdoherty.werewolf.core.storage.WStore;
-import com.nicholasdoherty.werewolf.util.Lang;
+
+import com.nicholasdoherty.werewolf.Lang;
+import com.nicholasdoherty.werewolf.WPlayer;
+import com.nicholasdoherty.werewolf.WStore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

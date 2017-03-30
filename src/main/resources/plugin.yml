@@ -1,6 +1,6 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 1.3-Z138
+version: 1.3-Z139
 authors: [theMightyChain,pascoej@murri.ca]
 loadafter: [Werewolf,Vampires,Essentials]
 softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
