@@ -3,7 +3,7 @@ package com.nicholasdoherty.socialcore;
 import com.massivecraft.vampire.entity.UPlayer;
 import com.massivecraft.vampire.event.EventVampirePlayerInfectionChange;
 import com.nicholasdoherty.socialcore.utils.VampWWUtil;
-import com.nicholasdoherty.werewolf.customevents.WerewolveInfectionEvent;
+import com.nicholasdoherty.werewolf.event.WerewolfInfectionEvent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +31,7 @@ public class SCListener implements Listener {
     }
     
     @EventHandler
-    public void werewolfChange(final WerewolveInfectionEvent event) {
+    public void werewolfChange(final WerewolfInfectionEvent event) {
         final String name = event.getpName();
         if(SupernaturalUtils.isVampire(name)) {
             event.setCancelled(true);

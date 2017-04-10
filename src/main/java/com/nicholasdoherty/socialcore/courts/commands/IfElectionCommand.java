@@ -2,30 +2,26 @@ package com.nicholasdoherty.socialcore.courts.commands;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.elections.ElectionManager;
-import com.voxmc.logfilter.LogFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.jline.internal.Log;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * Created by john on 4/18/16.
  */
-public class IfElectionCommand implements CommandExecutor{
-    private Courts courts;
+public class IfElectionCommand implements CommandExecutor {
     ElectionManager electionManager;
+    private Courts courts;
+    
     public IfElectionCommand(Courts courts, ElectionManager electionManager) {
         this.courts = courts;
         this.electionManager = electionManager;
         courts.getPlugin().getCommand("ifelection").setExecutor(this);
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("LogFilter")) {
+        /*if (Bukkit.getServer().getPluginManager().isPluginEnabled("LogFilter")) {
             LogFilter plugin = (LogFilter) Bukkit.getServer().getPluginManager().getPlugin("LogFilter");
             try {
                 Set<Pattern> patterns = (Set<Pattern>) LogFilter.class.getDeclaredField("patterns").get(plugin);
@@ -35,32 +31,33 @@ public class IfElectionCommand implements CommandExecutor{
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
+    
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (strings.length == 1 && strings[0].equalsIgnoreCase("throw")) {
-            if (!electionManager.requirementsForScheduleElectionMet()) {
+        if(strings.length == 1 && strings[0].equalsIgnoreCase("throw")) {
+            if(!electionManager.requirementsForScheduleElectionMet()) {
                 throw new CommandException("Throwing exception because requirements not met... (harmless)");
             }
             return true;
         }
-        if (strings.length == 2 && strings[0].equalsIgnoreCase("shouldwait")) {
-            if (electionManager.isScheduled()) {
+        if(strings.length == 2 && strings[0].equalsIgnoreCase("shouldwait")) {
+            if(electionManager.isScheduled()) {
                 long time = Long.parseLong(strings[1]);
-                if (time - electionManager.judgeNeededTime() <= courts.getCourtsConfig().getMinElectionWaitMillis()) {
+                if(time - electionManager.judgeNeededTime() <= courts.getCourtsConfig().getMinElectionWaitMillis()) {
                     throw new CommandException("Should delay be an interval");
                 }
             }
             return true;
         }
-        if (strings.length < 1) {
+        if(strings.length < 1) {
             commandSender.sendMessage("No command");
             return true;
         }
-        String[] args = Arrays.copyOfRange(strings,1,strings.length);
-        String commandString = strings[0] + " "+String.join(" ", args);
-        if (electionManager.requirementsForScheduleElectionMet()) {
+        String[] args = Arrays.copyOfRange(strings, 1, strings.length);
+        String commandString = strings[0] + " " + String.join(" ", args);
+        if(electionManager.requirementsForScheduleElectionMet()) {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), commandString);
         }
         return true;

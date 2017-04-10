@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore;
 
 import com.massivecraft.vampire.entity.UPlayer;
-import com.nicholasdoherty.werewolf.WStore;
+import com.nicholasdoherty.werewolf.core.storage.WStore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
