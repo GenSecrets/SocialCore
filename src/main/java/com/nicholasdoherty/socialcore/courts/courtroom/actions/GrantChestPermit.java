@@ -18,30 +18,42 @@ import java.util.Map;
 /**
  * Created by john on 2/15/15.
  */
+@SuppressWarnings("unused")
 public class GrantChestPermit implements PostCourtAction,ConfigurationSerializable {
-    private CaseLocation caseLocation;
-    private Judge judge;
+    private final CaseLocation caseLocation;
+    private final Judge judge;
     private int cazeId;
 
-    public GrantChestPermit(Case caze, CaseLocation caseLocation, Judge judge) {
-        this.cazeId = caze.getId();
+    public GrantChestPermit(final Case caze, final CaseLocation caseLocation, final Judge judge) {
+        cazeId = caze.getId();
         this.caseLocation = caseLocation;
         this.judge = judge;
     }
 
     @Override
     public void doAction() {
-        Case caze = Courts.getCourts().getCaseManager().getCase(cazeId);
-        Player plaintiffPlayer = caze.getPlantiff().getPlayer();
+        final Case caze = Courts.getCourts().getCaseManager().getCase(cazeId);
+        final Player plaintiffPlayer = caze.getPlantiff().getPlayer();
         if (plaintiffPlayer == null || !plaintiffPlayer.isOnline()) {
             return;
         }
-        AbandonedChestCategoryConfig abandonedCategoryConfig = (AbandonedChestCategoryConfig) Courts.getCourts().getCourtsConfig().getCategoryConfgi(CaseCategory.ABANDONED);
-        if (abandonedCategoryConfig == null)
+        AbandonedChestCategoryConfig abandonedCategoryConfig;
+        try {
+            abandonedCategoryConfig = (AbandonedChestCategoryConfig) Courts.getCourts().getCourtsConfig().getCategoryConfgi(CaseCategory.ABANDONED);
+        } catch(final ClassCastException e) {
+            try {
+                abandonedCategoryConfig = (AbandonedChestCategoryConfig) Courts.getCourts().getCourtsConfig().getCategoryConfgi(CaseCategory.ABANDONED_CHEST);
+            } catch(Throwable f) {
+                throw new RuntimeException(f);
+            }
+        }
+        if (abandonedCategoryConfig == null) {
             return;
-        ItemStack item = abandonedCategoryConfig.permitItem(caseLocation.getvLocation(),caze.getPlantiff(),judge);
-        if (item == null)
+        }
+        final ItemStack item = abandonedCategoryConfig.permitItem(caseLocation.getvLocation(),caze.getPlantiff(),judge);
+        if (item == null) {
             return;
+        }
         plaintiffPlayer.getInventory().addItem(item);
     }
 
@@ -49,19 +61,19 @@ public class GrantChestPermit implements PostCourtAction,ConfigurationSerializab
     public String prettyDescription() {
         return ChatColor.GREEN + "A chest permit will be granted to the plaintiff at " + caseLocation.getvLocation().toPrettyString();
     }
-    public GrantChestPermit(Map<String, Object> map) {
+    public GrantChestPermit(final Map<String, Object> map) {
         if (map.containsKey("case")) {
-            Case caze = (Case) map.get("case");
+            final Case caze = (Case) map.get("case");
             cazeId = caze.getId();
         }else if (map.containsKey("case-id")) {
             cazeId = (int) map.get("case-id");
         }
-        this.caseLocation = (CaseLocation) map.get("case-location");
-        this.judge = (Judge) map.get("judge");
+        caseLocation = (CaseLocation) map.get("case-location");
+        judge = (Judge) map.get("judge");
     }
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>();
         map.put("case-id",cazeId);
         map.put("case-location",caseLocation);
         map.put("judge",judge);

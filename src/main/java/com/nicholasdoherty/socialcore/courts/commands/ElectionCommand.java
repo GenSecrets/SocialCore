@@ -262,21 +262,24 @@ public class ElectionCommand implements CommandExecutor {
         Courts.getCourts().getPlugin().getLogger().info(p.getName() + " has been charged " + cost + " voxels to nominate their self to become a judge.");
         final Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
         try {
-            VaultUtil.give(p, cost);
+            final Candidate candidate = Courts.getCourts().getSqlSaveManager().createCandidate(citizen);
+            election.addCandidate(candidate);
+            Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_NOMINATED_SELF, new Object[] {p}, p);
+            //p.sendMessage(ChatColor.GREEN + "You are now running in this election.");
+            final Set<UUID> notSend = new HashSet<>();
+            notSend.add(p.getUniqueId());
+            courts.getNotificationManager().notification(NotificationType.JUDGE_NOMINATED_ALL, new Object[] {p}, notSend);
         } catch(final Exception e) {
+            try {
+                VaultUtil.give(p, cost);
+            } catch(NotSetupException e1) {
+                e1.printStackTrace();
+            }
             p.sendMessage(ChatColor.RED + "Error adding you to the election, you may already be running.");
             p.sendMessage(ChatColor.RED + "You have been refunded.");
             Courts.getCourts().getPlugin().getLogger().info(p.getName() + " has been refunded " + cost + " voxels because of an error. (Are they already running?)");
             e.printStackTrace();
-            return;
         }
-        final Candidate candidate = Courts.getCourts().getSqlSaveManager().createCandidate(citizen);
-        election.addCandidate(candidate);
-        Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_NOMINATED_SELF, new Object[] {p}, p);
-        //p.sendMessage(ChatColor.GREEN + "You are now running in this election.");
-        final Set<UUID> notSend = new HashSet<>();
-        notSend.add(p.getUniqueId());
-        courts.getNotificationManager().notification(NotificationType.JUDGE_NOMINATED_ALL, new Object[] {p}, notSend);
     }
     
     private void sendHelp(final CommandSender commandSender) {

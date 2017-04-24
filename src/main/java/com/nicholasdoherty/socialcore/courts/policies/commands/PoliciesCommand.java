@@ -11,19 +11,26 @@ import org.bukkit.entity.Player;
 /**
  * Created by john on 9/12/16.
  */
-public class PoliciesCommand implements CommandExecutor{
-    private Courts courts;
-    private PolicyManager policyManager;
-
-    public PoliciesCommand(Courts courts, PolicyManager policyManager) {
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
+public class PoliciesCommand implements CommandExecutor {
+    private final Courts courts;
+    private final PolicyManager policyManager;
+    
+    public PoliciesCommand(final Courts courts, final PolicyManager policyManager) {
         this.courts = courts;
         this.policyManager = policyManager;
         courts.getPlugin().getCommand("policies").setExecutor(this);
     }
-
+    
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        PolicyGUI.createAndOpen((Player) commandSender);
+    public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
+        boolean failed = false;
+        if(strings.length > 0) {
+            if(strings[0].equalsIgnoreCase("failed")) {
+                failed = true;
+            }
+        }
+        PolicyGUI.createAndOpen((Player) commandSender, failed);
         return true;
     }
 }

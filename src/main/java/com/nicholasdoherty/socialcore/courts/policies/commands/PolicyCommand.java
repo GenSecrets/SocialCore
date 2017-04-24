@@ -1,9 +1,9 @@
 package com.nicholasdoherty.socialcore.courts.policies.commands;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.policies.Policy;
+import com.nicholasdoherty.socialcore.courts.policies.Policy.State;
 import com.nicholasdoherty.socialcore.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.courts.policies.gui.UnconfirmedPolicyGUI;
 import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
@@ -23,76 +23,74 @@ import java.util.Optional;
  * Created by john on 9/12/16.
  */
 public class PolicyCommand implements CommandExecutor {
-    private Courts courts;
-    private PolicyManager policyManager;
-
-    public PolicyCommand(Courts courts, PolicyManager policyManager) {
+    private final Courts courts;
+    private final PolicyManager policyManager;
+    
+    public PolicyCommand(final Courts courts, final PolicyManager policyManager) {
         this.courts = courts;
         this.policyManager = policyManager;
         courts.getPlugin().getCommand("policy").setExecutor(this);
     }
-
-    private boolean isDraftBook(ItemStack itemStack) {
-        if (itemStack == null) {
+    
+    private boolean isDraftBook(final ItemStack itemStack) {
+        if(itemStack == null) {
             return false;
         }
-        if (itemStack.getType() != Material.BOOK_AND_QUILL) {
+        if(itemStack.getType() != Material.BOOK_AND_QUILL) {
             return false;
         }
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null || !itemMeta.hasDisplayName() || !itemMeta.getDisplayName().equalsIgnoreCase("Policy Draft")) {
-            return false;
-        }
-        return true;
+        final ItemMeta itemMeta = itemStack.getItemMeta();
+        return !(itemMeta == null || !itemMeta.hasDisplayName() || !itemMeta.getDisplayName().equalsIgnoreCase("Policy Draft"));
     }
-
-    private void finishBook(Player p, ItemStack itemStack, Citizen citizen) {
-        BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
-        String text = String.join(" ", bookMeta.getPages()).trim();
-        if (text.length() > policyManager.getPolicyConfig().getPolicyMaxCharacters()) {
+    
+    @SuppressWarnings("TypeMayBeWeakened")
+    private void finishBook(final Player p, final ItemStack itemStack, final Citizen citizen) {
+        final BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
+        final String text = ChatColor.DARK_AQUA + ChatColor.stripColor(String.join(" ", bookMeta.getPages()).trim());
+        if(text.length() > policyManager.getPolicyConfig().getPolicyMaxCharacters()) {
             p.sendMessage(policyManager.getPolicyConfig().getPolicyFinishCharactersMessage());
             return;
         }
-        Optional<Policy> policyId = courts.getSqlSaveManager().createPolicy(text, citizen);
-        if (policyId.isPresent()) {
+        final Optional<Policy> policyId = courts.getSqlSaveManager().createPolicy(text, citizen);
+        if(policyId.isPresent()) {
             p.sendMessage(policyManager.getPolicyConfig().getPolicyFinishMessage());
             p.getInventory().remove(itemStack);
         } else {
             p.sendMessage(ChatColor.RED + "An error occurred while creating your policy... Error Code: 900");
         }
     }
-
+    
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            Citizen citizen = courts.getCitizenManager().toCitizen(p);
-            if (courts.getJudgeManager().isJudge(citizen.getUuid())) {
-                Optional<Policy> currentPolicy =
+    public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
+        if(sender instanceof Player) {
+            final Player p = (Player) sender;
+            final Citizen citizen = courts.getCitizenManager().toCitizen(p);
+            if(courts.getJudgeManager().isJudge(citizen.getUuid())) {
+                final Optional<Policy> currentPolicy =
                         Courts.getCourts().getPolicyManager().allPolicies()
-                                .stream().filter(policy -> policy.getState() == Policy.State.UNCONFIRMED)
+                                .stream().filter(policy -> policy.getState() == State.UNCONFIRMED)
                                 .findFirst();
-                if (args.length == 0) {
-                    if (currentPolicy.isPresent()) {
+                if(args.length == 0) {
+                    if(currentPolicy.isPresent()) {
                         UnconfirmedPolicyGUI.createAndOpen(p, citizen, currentPolicy.get());
                     } else {
                         sender.sendMessage(ChatColor.GRAY + "/policy new - Creates a book to draft a new policy in.");
                         sender.sendMessage(ChatColor.GRAY + "/policy finish - Finalizes the policy book you're holding.");
                     }
                 } else {
-                    if (args[0].equalsIgnoreCase("new")) {
-                        ItemStack give = new ItemStackBuilder(Material.BOOK_AND_QUILL).setName("Policy Draft")
+                    if(args[0].equalsIgnoreCase("new")) {
+                        final ItemStack give = new ItemStackBuilder(Material.BOOK_AND_QUILL).setName("Policy Draft")
                                 .toItemStack();
                         p.getInventory().addItem(give);
                         p.sendMessage(policyManager.getPolicyConfig().getPolicyNewMessage());
                         return true;
-                    } else if (args[0].equalsIgnoreCase("finish")) {
-                        if (currentPolicy.isPresent()) {
+                    } else if(args[0].equalsIgnoreCase("finish")) {
+                        if(currentPolicy.isPresent()) {
                             p.sendMessage(policyManager.getPolicyConfig().getPolicyDraftAlreadyPendingMessage());
                             return true;
                         }
-                        ItemStack itemInHand = p.getInventory().getItemInMainHand();
-                        if (isDraftBook(itemInHand)) {
+                        final ItemStack itemInHand = p.getInventory().getItemInMainHand();
+                        if(isDraftBook(itemInHand)) {
                             finishBook(p, itemInHand, citizen);
                             return true;
                         }
@@ -106,5 +104,4 @@ public class PolicyCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.RED + "This command is only for judges, try /policies.");
         return true;
     }
-
 }

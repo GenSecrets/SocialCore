@@ -4,6 +4,7 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.policies.Policy;
+import com.nicholasdoherty.socialcore.courts.policies.Policy.State;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,18 +13,22 @@ import java.util.stream.Collectors;
  * Created by john on 9/12/16.
  */
 public class MainPolicyView extends PolicyView {
-    public MainPolicyView(InventoryGUI inventoryGUI, Citizen viewer) {
+    private final boolean failed;
+    
+    public MainPolicyView(final InventoryGUI inventoryGUI, final Citizen viewer, final boolean failed) {
         super(inventoryGUI, viewer);
+        this.failed = failed;
     }
-
+    
     @Override
     List<Policy> getPolicies() {
         return Courts.getCourts().getPolicyManager().allPolicies().stream()
-                .filter(policy -> policy.getState() != Policy.State.UNFINISHED
-                && policy.getState() != Policy.State.UNCONFIRMED)
-                .sorted((policy1,policy2) -> {
-                    if (policy1.getState() == Policy.State.FAILED) {
-                        if (policy2.getState() == Policy.State.FAILED) {
+                .filter(policy -> policy.getState() != State.UNFINISHED
+                        && policy.getState() != State.UNCONFIRMED)
+                .filter(e -> failed ? e.getState() == State.FAILED : e.getState() == State.IN_EFFECT)
+                .sorted((policy1, policy2) -> {
+                    if(policy1.getState() == State.FAILED) {
+                        if(policy2.getState() == State.FAILED) {
                             return policy1.getId() - policy2.getId();
                         }
                         return -1;

@@ -8,18 +8,21 @@ import org.bukkit.entity.Player;
 /**
  * Created by john on 9/13/16.
  */
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class PolicyGUI extends InventoryGUI {
     private MainPolicyView mainPolicyView;
-    private Citizen citizen;
-
-    public PolicyGUI(Citizen citizen) {
+    private final Citizen citizen;
+    private final boolean failed;
+    
+    public PolicyGUI(final Citizen citizen, final boolean failed) {
         this.citizen = citizen;
-        setCurrentView(new MainPolicyView(this,citizen));
+        this.failed = failed;
+        setCurrentView(new MainPolicyView(this, citizen, failed));
     }
-
-    public static void createAndOpen(Player p) {
-        Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
-        PolicyGUI policyGUI = new PolicyGUI(citizen);
+    
+    public static void createAndOpen(final Player p, final boolean failed) {
+        final Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(p);
+        final PolicyGUI policyGUI = new PolicyGUI(citizen, failed);
         policyGUI.setPlayer(p);
         policyGUI.open();
     }

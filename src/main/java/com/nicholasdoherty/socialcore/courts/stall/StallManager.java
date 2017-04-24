@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by john on 1/6/15.
@@ -32,11 +33,14 @@ public class StallManager {
     }
     
     private void loadMoreStalls() {
+        int id = stalls.size();
         for(final String key : stallStore.getConfig().getKeys(false)) {
             final ConfigurationSection section = stallStore.getConfig().getConfigurationSection(key);
             final VLocation loc = VLocation.fromString(section.getString("location"));
             final StallType stallType = StallType.valueOf(section.getString("type"));
-            final Stall stall = Stall.createStall(Integer.parseInt(key.replace("stall-", "")), stallType, loc);
+            final Stall stall = Stall.createStall(/*Integer.parseInt(key.replace("stall-", "")
+                    .replaceAll("_(.*)", ""))*/id, stallType, loc);
+            id++;
             stalls.add(stall);
         }
     }
@@ -87,7 +91,7 @@ public class StallManager {
     public Stall createStall(final Location loc, final StallType stallType) {
         final Stall stall = Courts.getCourts().getSqlSaveManager().addStall(stallType, new VLocation(loc));
         addStall(stall);
-        final ConfigurationSection section = stallStore.getConfig().createSection("stall-" + stall.getId());
+        final ConfigurationSection section = stallStore.getConfig().createSection("stall-" + stall.getId() + '_' + UUID.randomUUID());
         section.set("location", new VLocation(loc).toString());
         section.set("type", stallType.toString());
         stallStore.saveConfig();
