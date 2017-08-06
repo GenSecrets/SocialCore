@@ -43,7 +43,7 @@ public class GrantChestPermit implements PostCourtAction,ConfigurationSerializab
         } catch(final ClassCastException e) {
             try {
                 abandonedCategoryConfig = (AbandonedChestCategoryConfig) Courts.getCourts().getCourtsConfig().getCategoryConfgi(CaseCategory.ABANDONED_CHEST);
-            } catch(Throwable f) {
+            } catch(final Throwable f) {
                 throw new RuntimeException(f);
             }
         }

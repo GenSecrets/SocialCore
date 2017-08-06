@@ -15,88 +15,97 @@ import java.util.Date;
  * Created by john on 1/6/15.
  */
 @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
-public class ElectionManager{
+public class ElectionManager {
     private Election currentElection;
-
+    
     public ElectionManager(final Election currentElection) {
         this.currentElection = currentElection;
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkShouldScheduleFile();
             }
-        }.runTaskLater(Courts.getCourts().getPlugin(),5);
+        }.runTaskLater(Courts.getCourts().getPlugin(), 5);
     }
+    
     public void tryStartElection() {
-        if (!requirementsForScheduleElectionMet()) {
+        if(!requirementsForScheduleElectionMet()) {
             return;
         }
-        if (currentElection != null) {
+        if(currentElection != null) {
             return;
         }
         startElection();
     }
+    
     public long judgeNeededTime() {
         final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
         final boolean flagSet = file.exists();
-        if (!flagSet) {
+        if(!flagSet) {
             return -1;
         }
-        if (!requirementsForScheduleElectionMet()) {
+        if(!requirementsForScheduleElectionMet()) {
             file.delete();
         }
         try {
             return Long.parseLong(Files.readFirstLine(file, Charset.defaultCharset()));
-        } catch (final IOException e) {
+        } catch(final IOException e) {
             e.printStackTrace();
         }
         return -1;
     }
+    
     public void deleteJudgeNeededFile() {
         final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
-        if (file.exists()) {
+        if(file.exists()) {
             file.delete();
         }
     }
+    
     public void setJudgeNeededFile() {
-        if (!requirementsForScheduleElectionMet()) {
+        if(!requirementsForScheduleElectionMet()) {
             return;
         }
         final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
-        if (file.exists()) {
+        if(file.exists()) {
             file.delete();
             try {
                 file.createNewFile();
-            } catch (final IOException e) {
+            } catch(final IOException e) {
                 e.printStackTrace();
             }
         }
         try {
-            Files.write(new Date().getTime() +"",file,Charset.defaultCharset());
-        } catch (final IOException e) {
+            Files.write(new Date().getTime() + "", file, Charset.defaultCharset());
+        } catch(final IOException e) {
             e.printStackTrace();
         }
     }
+    
     public void checkShouldScheduleFile() {
-        if (requirementsForScheduleElectionMet() && judgeNeededTime() == -1) {
+        if(requirementsForScheduleElectionMet() && judgeNeededTime() == -1) {
             setJudgeNeededFile();
         }
     }
-
+    
     public boolean requirementsForScheduleElectionMet() {
-          return Courts.getCourts().getJudgeManager().getJudges().size() < Courts.getCourts().getCourtsConfig().getMaxJudges() && currentElection == null;
+        return Courts.getCourts().getJudgeManager().getJudges().size() < Courts.getCourts().getCourtsConfig().getMaxJudges() && currentElection == null;
     }
+    
     public boolean isScheduled() {
         return judgeNeededTime() != -1 && requirementsForScheduleElectionMet();
     }
+    
     public boolean hasBeenWaitTime() {
         final long judgeNeededTime = judgeNeededTime();
         return judgeNeededTime != -1 && new Date().getTime() - judgeNeededTime >= Courts.getCourts().getCourtsConfig().getMinElectionWaitMillis() - 100;
     }
+    
     public boolean requirementsToStartElectionMet() {
         return Courts.getCourts().getJudgeManager().getJudges().size() < Courts.getCourts().getCourtsConfig().getMaxJudges() && currentElection == null
                 && hasBeenWaitTime();
     }
+    
     public void startElection() {
         Courts.getCourts().getSqlSaveManager().startElection();
         currentElection = new Election();
@@ -111,34 +120,37 @@ public class ElectionManager{
         //    }
         //}
     }
+    
     public boolean isElectionActive() {
         return currentElection != null;
     }
-
+    
     public Election getCurrentElection() {
         return currentElection;
     }
+    
     public boolean hasConditionsForWin(final Candidate candidate) {
         return candidate.electPercentage() >= 100 && candidate.approvalPercentage() >= Courts.getCourts().getCourtsConfig().getJudgeApprovalRateRequired();
     }
+    
     public void endCurrentElection() {
         currentElection = null;
         Courts.getCourts().getSqlSaveManager().endElection();
     }
+    
     public void checkWin(final Election election, final Candidate candidate) {
-        if (Courts.getCourts().getJudgeManager().getJudges().size() >= Courts.getCourts().getCourtsConfig().getMaxJudges()) {
+        if(Courts.getCourts().getJudgeManager().getJudges().size() >= Courts.getCourts().getCourtsConfig().getMaxJudges()) {
             return;
         }
         final int requiredVotes = Courts.getCourts().getCourtsConfig().getJudgeRequiredVotes();
-        if (candidate.votes() < requiredVotes) {
+        if(candidate.votes() < requiredVotes) {
             return;
         }
-        if (candidate.electPercentage() >= 100 && candidate.approvalPercentage() > Courts.getCourts().getCourtsConfig().getJudgeApprovalRateRequired()) {
+        if(candidate.electPercentage() >= 100 && candidate.approvalPercentage() > Courts.getCourts().getCourtsConfig().getJudgeApprovalRateRequired()) {
             final Judge judge = Courts.getCourts().getJudgeManager().promoteJudge(candidate);
-            candidate.resetVotes();
-            Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_ELECTED_ALL,new Object[]{judge});
+            //candidate.resetVotes();
+            Courts.getCourts().getNotificationManager().notification(NotificationType.JUDGE_ELECTED_ALL, new Object[] {judge});
         }
         election.removeCandiate(candidate);
     }
-
 }

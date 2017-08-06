@@ -207,7 +207,7 @@ public class ElectionCommand implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.RED + "You don't have the required permissions");
                 return true;
             }
-            if(!electionManager.requirementsToStartElectionMet() && !Arrays.stream(args).anyMatch(m -> m.equalsIgnoreCase("force"))) {
+            if(!electionManager.requirementsToStartElectionMet() && Arrays.stream(args).noneMatch(m -> m.equalsIgnoreCase("force"))) {
                 commandSender.sendMessage("Requirements not met... use force to force start");
             }
             electionManager.startElection();
@@ -272,7 +272,7 @@ public class ElectionCommand implements CommandExecutor {
         } catch(final Exception e) {
             try {
                 VaultUtil.give(p, cost);
-            } catch(NotSetupException e1) {
+            } catch(final NotSetupException e1) {
                 e1.printStackTrace();
             }
             p.sendMessage(ChatColor.RED + "Error adding you to the election, you may already be running.");

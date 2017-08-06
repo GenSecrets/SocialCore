@@ -25,7 +25,7 @@ public class MainPolicyView extends PolicyView {
         return Courts.getCourts().getPolicyManager().allPolicies().stream()
                 .filter(policy -> policy.getState() != State.UNFINISHED
                         && policy.getState() != State.UNCONFIRMED)
-                .filter(e -> failed ? e.getState() == State.FAILED : e.getState() == State.IN_EFFECT)
+                .filter(e -> !failed || e.getState() == State.FAILED)
                 .sorted((policy1, policy2) -> {
                     if(policy1.getState() == State.FAILED) {
                         if(policy2.getState() == State.FAILED) {
