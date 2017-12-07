@@ -22,18 +22,31 @@ public class MainPolicyView extends PolicyView {
     
     @Override
     List<Policy> getPolicies() {
-        return Courts.getCourts().getPolicyManager().allPolicies().stream()
-                .filter(policy -> policy.getState() != State.UNFINISHED
-                        && policy.getState() != State.UNCONFIRMED)
-                .filter(e -> !failed || e.getState() == State.FAILED)
-                .sorted((policy1, policy2) -> {
-                    if(policy1.getState() == State.FAILED) {
-                        if(policy2.getState() == State.FAILED) {
-                            return policy1.getId() - policy2.getId();
+        if(failed) {
+            return Courts.getCourts().getPolicyManager().allPolicies().stream()
+                    .filter(policy -> policy.getState() == State.FAILED)
+                    .sorted((policy1, policy2) -> {
+                        if(policy1.getState() == State.FAILED) {
+                            if(policy2.getState() == State.FAILED) {
+                                return policy1.getId() - policy2.getId();
+                            }
+                            return -1;
                         }
-                        return -1;
-                    }
-                    return policy1.getId() - policy2.getId();
-                }).collect(Collectors.toList());
+                        return policy1.getId() - policy2.getId();
+                    }).collect(Collectors.toList());
+        } else {
+            return Courts.getCourts().getPolicyManager().allPolicies().stream()
+                    .filter(policy -> policy.getState() != State.UNFINISHED
+                            && policy.getState() != State.UNCONFIRMED && policy.getState() != State.FAILED)
+                    .sorted((policy1, policy2) -> {
+                        if(policy1.getState() == State.FAILED) {
+                            if(policy2.getState() == State.FAILED) {
+                                return policy1.getId() - policy2.getId();
+                            }
+                            return -1;
+                        }
+                        return policy1.getId() - policy2.getId();
+                    }).collect(Collectors.toList());
+        }
     }
 }
