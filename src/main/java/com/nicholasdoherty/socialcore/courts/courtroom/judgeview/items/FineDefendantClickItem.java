@@ -25,7 +25,7 @@ public class FineDefendantClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (right)
             return;
         final Player p = judgeBaseView.getInventoryGUI().getPlayer();

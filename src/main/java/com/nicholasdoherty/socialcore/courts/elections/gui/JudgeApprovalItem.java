@@ -19,8 +19,8 @@ public class JudgeApprovalItem extends ApprovalItem {
     }
 
     @Override
-    public void click(boolean right) {
-        super.click(right);
+    public void click(boolean right, final boolean shift) {
+        super.click(right, shift);
         Courts.getCourts().getElectionManager().checkWin(Courts.getCourts().getElectionManager().getCurrentElection(), (Candidate) approvedCitizen);
         //electionJudgeView.update(this);
         electionJudgeView.getInventoryGUI().updateInv();

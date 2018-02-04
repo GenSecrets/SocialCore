@@ -34,7 +34,7 @@ public class ApprovalItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         boolean approve = !right;
         UUID uuid = inventoryView.getInventoryGUI().getPlayer().getUniqueId();
         if (!approvedCitizen.hasVoted(uuid)) {

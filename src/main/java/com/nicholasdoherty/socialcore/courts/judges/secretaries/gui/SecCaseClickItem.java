@@ -19,7 +19,7 @@ public class SecCaseClickItem extends CaseInfoClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (getCaze().isLocked()) {
             secretaryGUI.getPlayer().sendMessage(ChatColor.RED + "That case is currently locked.");
         }else {

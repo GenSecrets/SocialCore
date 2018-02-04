@@ -30,7 +30,7 @@ public class HourClickItem implements ClickItem{
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         try {
             LocalDate date = dayView.getDay();
             DateTime dateTime = date.toDateTime(LocalTime.fromMillisOfDay(1000 * 60 * 60 * hour));

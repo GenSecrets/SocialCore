@@ -17,7 +17,7 @@ public class CallYayNayVoteClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         judgeBaseView.getCourtSession().callYayNay();
     }
 

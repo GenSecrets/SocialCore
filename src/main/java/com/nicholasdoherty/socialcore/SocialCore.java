@@ -73,6 +73,10 @@ public class SocialCore extends JavaPlugin {
         return inputLib;
     }
     
+    public Courts getCourts() {
+        return courts;
+    }
+    
     @Override
     public void onEnable() {
         plugin = this;

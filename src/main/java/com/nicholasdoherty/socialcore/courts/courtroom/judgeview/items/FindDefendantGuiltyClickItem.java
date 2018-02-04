@@ -19,7 +19,7 @@ public class FindDefendantGuiltyClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         judgeBaseView.getCourtSession().addPostCourtAction(new AffirmDefendantGuilty());
         judgeBaseView.reactivate();
     }

@@ -20,7 +20,7 @@ public class GiveItemClickItem implements ClickItem{
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         Player p = inventoryGUI.getPlayer();
         if (p != null) {
             p.getInventory().addItem(itemStack.clone());

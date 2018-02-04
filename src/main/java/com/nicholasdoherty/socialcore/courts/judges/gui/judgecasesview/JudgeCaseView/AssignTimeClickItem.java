@@ -28,7 +28,7 @@ public class AssignTimeClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (right)
             return;
         ////todo remove test

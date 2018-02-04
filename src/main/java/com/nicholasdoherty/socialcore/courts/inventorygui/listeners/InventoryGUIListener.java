@@ -18,54 +18,66 @@ import org.bukkit.event.server.PluginDisableEvent;
 public class InventoryGUIListener implements Listener {
     SocialCore plugin;
     InventoryGUIManager inventoryGUIManager;
-
+    
     public InventoryGUIListener(SocialCore plugin, InventoryGUIManager inventoryGUIManager) {
         this.plugin = plugin;
         this.inventoryGUIManager = inventoryGUIManager;
-        plugin.getServer().getPluginManager().registerEvents(this,plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
+    
     @EventHandler
     public void disable(PluginDisableEvent event) {
-        if (event.getPlugin() == SocialCore.plugin) {
+        if(event.getPlugin() == SocialCore.plugin) {
             inventoryGUIManager.closeAll();
         }
     }
+    
     @EventHandler
     public void logout(PlayerQuitEvent event) {
         inventoryGUIManager.close(event.getPlayer());
     }
+    
     @EventHandler
     public void in(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player))
-            return;
-        Player p = (Player) event.getPlayer();
-        InventoryGUI inventoryGUI = inventoryGUIManager.getGUI(p);
-        if (inventoryGUI == null)
-            return;
-        if (inventoryGUI != null && inventoryGUI.inSpecialInterface()) {
+        if(!(event.getPlayer() instanceof Player)) {
             return;
         }
-        if (inventoryGUIManager.hasOpen(p)) {
+        Player p = (Player) event.getPlayer();
+        InventoryGUI inventoryGUI = inventoryGUIManager.getGUI(p);
+        if(inventoryGUI == null) {
+            return;
+        }
+        if(inventoryGUI != null && inventoryGUI.inSpecialInterface()) {
+            return;
+        }
+        if(inventoryGUIManager.hasOpen(p)) {
             p.updateInventory();
         }
         inventoryGUI.onClose();
         inventoryGUIManager.remove((Player) event.getPlayer());
     }
+    
     @EventHandler
     public void click(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player))
+        if(!(event.getWhoClicked() instanceof Player)) {
             return;
+        }
         Player p = (Player) event.getWhoClicked();
-        if (!inventoryGUIManager.hasOpen(p))
+        if(!inventoryGUIManager.hasOpen(p)) {
             return;
+        }
         event.setCancelled(true);
         boolean right = false;
+        boolean shift = false;
         InventoryAction action = event.getAction();
-        if (action == InventoryAction.PICKUP_HALF) {
+        if(action == InventoryAction.PICKUP_HALF) {
             right = true;
         }
+        if(action == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            shift = true;
+        }
+        
         InventoryGUI inventoryGUI = inventoryGUIManager.getGUI(p);
-        inventoryGUI.onClick(event.getSlot(),right);
+        inventoryGUI.onClick(event.getSlot(), right, shift);
     }
-
 }

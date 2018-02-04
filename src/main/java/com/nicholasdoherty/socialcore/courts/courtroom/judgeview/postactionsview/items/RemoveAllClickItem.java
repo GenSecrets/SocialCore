@@ -21,7 +21,7 @@ public class RemoveAllClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         postCourtActionHolder.getPostCourtActions().clear();
         prevView.reactivate();
     }

@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryView;
@@ -11,8 +12,10 @@ import com.nicholasdoherty.socialcore.courts.policies.PolicyConfig;
 import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
 import com.nicholasdoherty.socialcore.utils.ItemUtil;
 import org.apache.commons.lang.WordUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
@@ -22,9 +25,9 @@ import java.util.Optional;
  */
 public class PolicyIcon implements ClickItem {
     private final InventoryView inventoryView;
+    private final Citizen viewer;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<Policy> policy;
-    private final Citizen viewer;
     
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public PolicyIcon(final InventoryView inventoryView, final Optional<Policy> policy, final Citizen viewer) {
@@ -47,7 +50,7 @@ public class PolicyIcon implements ClickItem {
     }
     
     @Override
-    public void click(final boolean right) {
+    public void click(final boolean right, final boolean shift) {
         policy.ifPresent(policyInstance -> {
             final boolean approve = !right;
             if(canConfirmVote()) {
@@ -65,6 +68,19 @@ public class PolicyIcon implements ClickItem {
                 Courts.getCourts().getSqlSaveManager().setCitizenVote(viewer, policyInstance, approve).ifPresent(
                         policy1 -> Courts.getCourts().getPolicyManager().checkStateChange(policy1)
                 );
+            } else if(shift) {
+                if(Courts.getCourts().getJudgeManager().isJudge(viewer.getUuid())) {
+                    final int id = policyInstance.getId();
+                    Courts.getCourts().getSqlSaveManager().deletePolicy((long) id);
+                    final Player p = viewer.getPlayer();
+                    if(p.isOnline()) {
+                        inventoryView.update();
+                        p.sendMessage(ChatColor.GREEN + "Policy has been deleted!");
+                        Bukkit.getServer().getOnlinePlayers()
+                                .forEach(e -> e.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        String.format("&6[&eCourt&6] Judge %s&a has removed policy %s.", p.getName(), id))));
+                    }
+                }
             }
         });
         inventoryView.update();
@@ -142,6 +158,10 @@ public class PolicyIcon implements ClickItem {
                 itemStackBuilder = itemStackBuilder.addLore(
                         ChatColor.GRAY + "<Left click to approve>",
                         ChatColor.GRAY + "<Right click to disapprove>");
+            } else if(inventoryView instanceof PolicyView) {
+                if(SocialCore.plugin.getCourts().getJudgeManager().isJudge(viewer.getUuid())) {
+                    itemStackBuilder = itemStackBuilder.addLore(ChatColor.RED + "<Shift-click to delete>");
+                }
             }
             return itemStackBuilder.toItemStack();
         }).orElse(new ItemStack(Material.BEDROCK));

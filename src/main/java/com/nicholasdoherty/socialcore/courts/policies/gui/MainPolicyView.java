@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
@@ -22,6 +23,7 @@ public class MainPolicyView extends PolicyView {
     
     @Override
     List<Policy> getPolicies() {
+        boolean isJudge = SocialCore.plugin.getCourts().getJudgeManager().isJudge(getViewer().getUuid());
         if(failed) {
             return Courts.getCourts().getPolicyManager().allPolicies().stream()
                     .filter(policy -> policy.getState() == State.FAILED)

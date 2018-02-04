@@ -26,7 +26,7 @@ public class DayClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         monthView.switchToDayView(localDate,calendarEvents);
     }
 

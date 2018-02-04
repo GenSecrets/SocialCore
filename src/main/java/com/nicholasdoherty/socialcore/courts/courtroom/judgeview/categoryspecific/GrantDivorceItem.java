@@ -19,7 +19,7 @@ public class GrantDivorceItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (right)
             return;
         categorySpecificView.addPostCourtAction(new GrantDivorce(categorySpecificView.getCase()));

@@ -20,7 +20,7 @@ public class BookPageItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
 
     }
 

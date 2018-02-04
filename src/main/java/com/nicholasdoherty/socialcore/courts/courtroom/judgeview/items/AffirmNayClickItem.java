@@ -19,7 +19,7 @@ public class AffirmNayClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         judgeBaseView.getCourtSession().addPostCourtAction(new AffirmNay());
         judgeBaseView.reactivate();
     }

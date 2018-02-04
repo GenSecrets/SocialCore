@@ -17,7 +17,7 @@ public class JudgeCaseClickItem extends CaseInfoClickItem {
         this.judgeProcessedCasesView = judgeProcessedCasesView;
     }
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (getCaze().isLocked()) {
             judgeProcessedCasesView.getInventoryGUI().getPlayer().sendMessage(ChatColor.RED + "That case is currently locked.");
         }else {

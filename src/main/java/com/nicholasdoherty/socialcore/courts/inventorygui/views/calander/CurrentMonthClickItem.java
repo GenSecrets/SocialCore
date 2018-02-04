@@ -21,7 +21,7 @@ public class CurrentMonthClickItem implements ClickItem{
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         monthView.getCalendarGUI().onBack();
     }
 

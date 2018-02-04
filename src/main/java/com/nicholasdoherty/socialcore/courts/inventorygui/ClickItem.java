@@ -5,10 +5,12 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by john on 1/3/15.
  */
-public interface ClickItem{
-    public void click(boolean right);
-    public ItemStack itemstack();
-    public default boolean valid() {
+public interface ClickItem {
+    void click(boolean right, final boolean shift);
+    
+    ItemStack itemstack();
+    
+    default boolean valid() {
         return true;
     }
 }

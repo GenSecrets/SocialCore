@@ -14,7 +14,7 @@ public abstract class ChangeViewClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         inventoryView.getInventoryGUI().setCurrentView(inventoryView);
         inventoryView.activate();
     }

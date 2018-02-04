@@ -18,7 +18,7 @@ public class NextPageClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         paginatedItemView.setPage(paginatedItemView.getPage()+1);
         paginatedItemView.update();
     }

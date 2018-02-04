@@ -20,7 +20,7 @@ public class TallyVotesClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         CourtSession courtSession = judgeBaseView.getCourtSession();
         Vote vote = courtSession.getVote();
         if (vote == null) {

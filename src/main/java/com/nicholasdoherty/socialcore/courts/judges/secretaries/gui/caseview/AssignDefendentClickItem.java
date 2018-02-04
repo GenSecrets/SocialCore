@@ -30,7 +30,7 @@ public class AssignDefendentClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         //todo check if inventory close is called on opening new inventory
         if (right)
             return;

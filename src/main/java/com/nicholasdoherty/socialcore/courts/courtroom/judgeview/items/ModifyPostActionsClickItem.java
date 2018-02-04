@@ -23,7 +23,7 @@ public class ModifyPostActionsClickItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         PostActionsView postActionsView = new PostActionsView(judgeBaseView,postCourtActionHolder);
         judgeBaseView.getInventoryGUI().setCurrentView(postActionsView);
         postActionsView.activate();

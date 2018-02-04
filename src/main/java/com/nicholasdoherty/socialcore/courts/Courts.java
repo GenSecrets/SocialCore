@@ -30,7 +30,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by john on 1/3/15.
@@ -53,11 +52,13 @@ public class Courts {
     private SqlSaveManager sqlSaveManager;
     private CitizenManager citizenManager;
     private PolicyManager policyManager;
+    private boolean forceNotSave = false;
+    
     public Courts(SocialCore plugin) {
         courts = this;
         this.plugin = plugin;
         registerSerializers();
-
+        
         //DO NOT MODIFY
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
@@ -68,12 +69,14 @@ public class Courts {
         sqlSaveManager.clean();
         try {
             sqlSaveManager.purgeVotes();
-        }catch (Exception e) {e.printStackTrace();}
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         long time1 = new Date().getTime();
         citizenManager = new CitizenManager(courts);
         try {
             courtsSaveManager = new CourtsSaveManager(this);
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
         electionManager = new ElectionManager(sqlSaveManager.election());
@@ -87,74 +90,81 @@ public class Courts {
         fineManager.startTimer();
         policyManager = new PolicyManager(this);
         long time2 = new Date().getTime();
-        long diff =time2-time1;
-        plugin.getLogger().info("Took " + diff +"ms to deserialize " + caseManager.amount() + " cases");
+        long diff = time2 - time1;
+        plugin.getLogger().info("Took " + diff + "ms to deserialize " + caseManager.amount() + " cases");
         new CourtCommand(this);
-        new ElectionCommand(this,electionManager);
-        new JudgesCommand(this,judgeManager);
+        new ElectionCommand(this, electionManager);
+        new JudgesCommand(this, judgeManager);
         new TestCommand(this);
-        new JudgeCommand(this,judgeManager);
-        new SecretaryCommand(this,judgeManager);
-        new IfElectionCommand(this,electionManager);
-        for (Player p : Bukkit.getOnlinePlayers()) {
+        new JudgeCommand(this, judgeManager);
+        new SecretaryCommand(this, judgeManager);
+        new IfElectionCommand(this, electionManager);
+        for(Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
             judgeManager.setPrefix(p);
         }
         new PrefixManager(this);
-        divorceManager = new DivorceManager(plugin,this);
-
+        divorceManager = new DivorceManager(plugin, this);
     }
-
+    
+    public static Courts getCourts() {
+        return courts;
+    }
+    
     public DivorceManager getDivorceManager() {
         return divorceManager;
     }
-
+    
     public FineManager getFineManager() {
         return fineManager;
     }
-
+    
     public CourtsLangManager getCourtsLangManager() {
         return courtsLangManager;
     }
-
+    
     public NotificationManager getNotificationManager() {
         return notificationManager;
     }
-
+    
     public void reloadConfig() {
         plugin.reloadConfig();
         CourtsConfig courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
-        if (courtsConfig == null) {
+        if(courtsConfig == null) {
             plugin.getLogger().severe("Could not load config. Error");
             return;
         }
         this.courtsConfig = courtsConfig;
         courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
     }
-    private boolean forceNotSave = false;
-
+    
     public void setForceNotSave(boolean forceNotSave) {
         this.forceNotSave = forceNotSave;
     }
-
+    
     public SqlSaveManager getSqlSaveManager() {
         return sqlSaveManager;
     }
-
+    
     public void onDisable() {
         try {
-            for (Player p : Bukkit.getOnlinePlayers()) {
+            for(Player p : Bukkit.getOnlinePlayers()) {
                 judgeManager.revertPrefix(p);
             }
-        }catch (Exception e) {e.printStackTrace();}
-        if (!forceNotSave) {
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(!forceNotSave) {
             try {
                 courtsSaveManager.saveAll();
                 courtsSaveManager.saveFile();
                 courtSessionManager.addAllBackToGlobal();
-            }catch (Exception e) {e.printStackTrace();}
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+    
     public void registerSerializers() {
         ConfigurationSerialization.registerClass(Case.class);
         ConfigurationSerialization.registerClass(CaseHistory.class);
@@ -169,14 +179,14 @@ public class Courts {
         ConfigurationSerialization.registerClass(SerializableUUID.class);
         ConfigurationSerialization.registerClass(CaseLocation.class);
         ConfigurationSerialization.registerClass(CaseMeta.class);
-
+        
         ConfigurationSerialization.registerClass(RegionRestricted.class);
         ConfigurationSerialization.registerClass(Vote.class);
         ConfigurationSerialization.registerClass(CourtSession.class);
         ConfigurationSerialization.registerClass(CourtSessionManager.class);
         ConfigurationSerialization.registerClass(VotingManager.class);
         ConfigurationSerialization.registerClass(Resolve.class);
-
+        
         ConfigurationSerialization.registerClass(AffirmDefendantGuilty.class);
         ConfigurationSerialization.registerClass(AffirmNay.class);
         ConfigurationSerialization.registerClass(AffirmPlaintiffGuilty.class);
@@ -192,62 +202,58 @@ public class Courts {
         ConfigurationSerialization.registerClass(RescheduleCase.class);
         ConfigurationSerialization.registerClass(ThrowoutCase.class);
         ConfigurationSerialization.registerClass(GrantSameSexMarriage.class);
-
+        
         ConfigurationSerialization.registerClass(YayNayVote.class);
         ConfigurationSerialization.registerClass(GulityInnocentVote.class);
-
+        
         ConfigurationSerialization.registerClass(BasicQueuedNotification.class);
         ConfigurationSerialization.registerClass(VoteSummaryQueued.class);
     }
-
+    
     public PolicyManager getPolicyManager() {
         return policyManager;
     }
-
-    public void setCaseManager(CaseManager caseManager) {
-        this.caseManager = caseManager;
-    }
-
+    
     public CitizenManager getCitizenManager() {
         return citizenManager;
     }
-
+    
     public DefaultDayGetter getDefaultDayGetter() {
         return defaultDayGetter;
     }
-
+    
     public StallManager getStallManager() {
         return stallManager;
     }
-
+    
     public CaseManager getCaseManager() {
         return caseManager;
     }
-
+    
+    public void setCaseManager(CaseManager caseManager) {
+        this.caseManager = caseManager;
+    }
+    
     public SocialCore getPlugin() {
         return plugin;
     }
-
+    
     public CourtsConfig getCourtsConfig() {
         return courtsConfig;
     }
-
-    public static Courts getCourts() {
-        return courts;
-    }
-
+    
     public CourtSessionManager getCourtSessionManager() {
         return courtSessionManager;
     }
-
+    
     public CourtsSaveManager getCourtsSaveManager() {
         return courtsSaveManager;
     }
-
+    
     public ElectionManager getElectionManager() {
         return electionManager;
     }
-
+    
     public JudgeManager getJudgeManager() {
         return judgeManager;
     }

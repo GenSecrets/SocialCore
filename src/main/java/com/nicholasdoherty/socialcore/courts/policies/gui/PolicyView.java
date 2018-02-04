@@ -1,7 +1,5 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
-import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.inventorygui.views.PaginatedItemView;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
@@ -18,26 +16,31 @@ import java.util.stream.Collectors;
  */
 public abstract class PolicyView extends PaginatedItemView {
     private Citizen viewer;
+    
     public PolicyView(InventoryGUI inventoryGUI, Citizen viewer) {
         super(inventoryGUI, 54);
         this.viewer = viewer;
     }
-
+    
     abstract List<Policy> getPolicies();
-
+    
     @Override
     public void update() {
         setPaginatedItems(getPolicies().stream()
-                .map(policy -> new PolicyIcon(this,Optional.of(policy),viewer)).collect(Collectors.toList()));
+                .map(policy -> new PolicyIcon(this, Optional.of(policy), viewer)).collect(Collectors.toList()));
         super.update();
     }
-
+    
     protected String getName() {
         return "Policies";
     }
-
+    
     @Override
     public Inventory getBaseInventory() {
-        return Bukkit.createInventory(null,54,getName());
+        return Bukkit.createInventory(null, 54, getName());
+    }
+    
+    public Citizen getViewer() {
+        return viewer;
     }
 }

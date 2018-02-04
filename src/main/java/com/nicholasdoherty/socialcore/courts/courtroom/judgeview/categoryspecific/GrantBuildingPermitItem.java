@@ -21,7 +21,7 @@ public class GrantBuildingPermitItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (right)
             return;
         if (caze != null && caze.getCaseMeta() != null && caze.getCaseMeta().getCaseLocation() == null) {

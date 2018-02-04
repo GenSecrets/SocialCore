@@ -20,7 +20,7 @@ public class CaseInfoBookClickItem extends CaseInfoClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (caze != null && caze.getCaseBook() != null && caze.getCaseBook().getItemMeta() != null &&
                 caze.getCaseBook().getItemMeta() instanceof BookMeta) {
             BookMeta bookMeta = (BookMeta) caze.getCaseBook().getItemMeta();

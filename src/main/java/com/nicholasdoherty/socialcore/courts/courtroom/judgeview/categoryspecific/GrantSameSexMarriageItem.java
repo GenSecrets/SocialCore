@@ -19,7 +19,7 @@ public class GrantSameSexMarriageItem implements ClickItem {
     }
 
     @Override
-    public void click(boolean right) {
+    public void click(boolean right, final boolean shift) {
         if (right)
             return;
         if (postCourtActionHolder.getCase().getDefendent() == null) {
