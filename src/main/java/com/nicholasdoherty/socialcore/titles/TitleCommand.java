@@ -15,69 +15,69 @@ import java.util.List;
  */
 public class TitleCommand implements CommandExecutor {
     private TitleManager titleManager;
-
+    
     public TitleCommand(TitleManager titleManager) {
         this.titleManager = titleManager;
         titleManager.getPlugin().getCommand("titles").setExecutor(this);
         titleManager.getPlugin().getCommand("title").setExecutor(this);
         titleManager.getPlugin().getCommand("reloadtitles").setExecutor(this);
     }
-
+    
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (command.getName().equalsIgnoreCase("reloadtitles")) {
-            if (args.length == 1 && args[0].equalsIgnoreCase("clearcache")) {
+        if(command.getName().equalsIgnoreCase("reloadtitles")) {
+            if(args.length == 1 && args[0].equalsIgnoreCase("clearcache")) {
                 titleManager.clearCache();
                 commandSender.sendMessage(ChatColor.GREEN + "Cleared cache.");
                 return true;
             }
             titleManager.loadTitles();
-            commandSender.sendMessage(ChatColor.GREEN +"Reloaded. Use \"/reloadtitles clearcache\" to clear the cache.");
+            commandSender.sendMessage(ChatColor.GREEN + "Reloaded. Use \"/reloadtitles clearcache\" to clear the cache.");
             return true;
         }
-        if (!(commandSender instanceof Player)) {
+        if(!(commandSender instanceof Player)) {
             return false;
         }
         Player p = (Player) commandSender;
-        if (command.getName().equalsIgnoreCase("titles")) {
+        if(command.getName().equalsIgnoreCase("titles")) {
             sendAllowableTitles(p);
             return true;
-        }else {
-            if (args.length == 0) {
+        } else {
+            if(args.length == 0) {
                 p.sendMessage(ChatColor.RED + "Usage: /title TITLE-NAME or /title off");
-            }else {
+            } else {
                 String titleName = args[0];
-                if (titleName.equalsIgnoreCase("off")) {
-                    if (!titleManager.hasTitle(p)) {
+                if(titleName.equalsIgnoreCase("off")) {
+                    if(!titleManager.hasTitle(p)) {
                         p.sendMessage(ChatColor.RED + "You don't have a title.");
                         return true;
                     }
                     titleManager.turnOffTitle(p);
-                    p.sendMessage(ChatColor.GREEN +"Title turned off");
-                }else {
-                    if (titleManager.isOncooldown(p.getUniqueId())) {
+                    p.sendMessage(ChatColor.GREEN + "Title turned off");
+                } else {
+                    if(titleManager.isOncooldown(p.getUniqueId())) {
                         p.sendMessage(ChatColor.RED + "Please wait before using /title again...");
                         return true;
                     }
                     titleName = titleName.toLowerCase();
                     Title title = titleManager.getTitles().get(titleName);
-                    if (title == null || !p.hasPermission("sc.title." + title.getName().toLowerCase())) {
+                    if(title == null || !p.hasPermission("sc.title." + title.getName().toLowerCase())) {
                         p.sendMessage(ChatColor.RED + "You can't use a title by that name.");
                         return true;
                     }
-                    titleManager.setTitle(p,title);
-                    p.sendMessage(ChatColor.GREEN +"Set your title to: " + title.getName());
+                    titleManager.setTitle(p, title);
+                    p.sendMessage(ChatColor.GREEN + "Set your title to: " + title.getName());
                 }
             }
             return true;
         }
     }
-
+    
     private void sendAllowableTitles(Player p) {
         StringBuilder stringBuilder = new StringBuilder(ChatColor.GREEN + "You may use the following titles: ");
         List<String> allowedTitleNames = new ArrayList<>();
-        for (Title title : titleManager.getTitles().values()) {
-            if (p.hasPermission("sc.title." + title.getName())) {
+        for(Title title : titleManager.getTitles().values()) {
+            if(p.hasPermission("sc.title." + title.getName())) {
                 allowedTitleNames.add(title.getName());
             }
         }

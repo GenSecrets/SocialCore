@@ -13,16 +13,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class TitleListener implements Listener {
     private TitleManager titleManager;
-
+    
     public TitleListener(TitleManager titleManager) {
         this.titleManager = titleManager;
-        Bukkit.getServer().getPluginManager().registerEvents(this,titleManager.getPlugin());
+        Bukkit.getServer().getPluginManager().registerEvents(this, titleManager.getPlugin());
     }
-
+    
     @EventHandler
     public void logout(PlayerQuitEvent event) {
         ColoredTagsUtil.removeTitle(event.getPlayer());
     }
+    
     @EventHandler(priority = EventPriority.MONITOR)
     public void login(PlayerJoinEvent event) {
         titleManager.addTitle(event.getPlayer());
