@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.elections.gui;
 
 import com.nicholasdoherty.socialcore.courts.elections.Election;
-import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
 import org.bukkit.entity.Player;
 
 /**

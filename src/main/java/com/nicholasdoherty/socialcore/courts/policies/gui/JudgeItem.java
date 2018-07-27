@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
-import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 

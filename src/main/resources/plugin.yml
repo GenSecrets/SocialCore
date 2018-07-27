@@ -4,6 +4,9 @@ version: 1.3-Z139
 authors: [theMightyChain,pascoej@murri.ca]
 loadafter: [Werewolf,Vampires,Essentials]
 softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
+
+api-version: 1.13
+
 commands:
     ifelection:
         usage: /ifelection <command>

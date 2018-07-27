@@ -1,9 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.notifications;
 
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
-import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
-import org.bukkit.ChatColor;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -12,26 +10,30 @@ import java.util.UUID;
 /**
  * Created by john on 2/20/15.
  */
+@SuppressWarnings("unused")
 public class VoteNotification extends Notification {
-    String baseApproval,baseDisapproval;
-    public VoteNotification(ConfigurationSection section) {
+    String baseApproval;
+    String baseDisapproval;
+    
+    public VoteNotification(final ConfigurationSection section) {
         super(section);
-        this.baseApproval = VoxStringUtils.color(section.getString("approval"));
-        this.baseDisapproval = VoxStringUtils.color(section.getString("disapproval"));
+        baseApproval = VoxStringUtils.color(section.getString("approval"));
+        baseDisapproval = VoxStringUtils.color(section.getString("disapproval"));
     }
-    public boolean vote(ApprovedCitizen citizen, UUID uuid, boolean approve) {
-        Player p = citizen.getPlayer();
-        if (p == null || !p.isOnline()) {
+    
+    public boolean vote(final ApprovedCitizen citizen, final UUID uuid, final boolean approve) {
+        final Player p = citizen.getPlayer();
+        if(p == null || !p.isOnline()) {
             return false;
         }
         String message;
-        if (approve) {
+        if(approve) {
             message = baseApproval;
-        }else {
+        } else {
             message = baseDisapproval;
         }
-        message = this.doReplacements(message,new Object[]{citizen,p}, null);
-        sendBasedOnType(citizen,message);
+        message = doReplacements(message, new Object[] {citizen, p}, null);
+        sendBasedOnType(citizen, message);
         return true;
     }
 }

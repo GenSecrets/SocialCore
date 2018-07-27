@@ -11,36 +11,38 @@ import java.util.UUID;
  * Created by john on 1/16/15.
  */
 public abstract class ChatVote extends Vote {
-    public ChatVote(Restricter restricter) {
+    public ChatVote(final Restricter restricter) {
         super(restricter);
     }
-
-    public ChatVote(Map<String, Object> map) {
+    
+    public ChatVote(final Map<String, Object> map) {
         super(map);
     }
-
-    public synchronized void onChat(final Player p, String text) {
-        UUID uuid = p.getUniqueId();
-        if (!canVote(uuid))
+    
+    public synchronized void onChat(final Player p, final String text) {
+        final UUID uuid = p.getUniqueId();
+        if(!canVote(uuid)) {
             return;
+        }
         boolean changing = false;
-        if (hasVoted(uuid)) {
+        if(hasVoted(uuid)) {
             changing = true;
         }
-        VoteValue approves = voteValue(text);
-        if (approves == null)
+        final VoteValue approves = voteValue(text);
+        if(approves == null) {
             return;
-        this.vote(uuid,approves);
-        final String message = message(approves,changing);
-        CourtsTickLater.runTickLater(new Runnable() {
-            @Override
-            public void run() {
-                if (!p.isOnline())
-                    return;
-                p.sendMessage(message);
+        }
+        vote(uuid, approves);
+        final String message = message(approves, changing);
+        CourtsTickLater.runTickLater(() -> {
+            if(!p.isOnline()) {
+                return;
             }
+            p.sendMessage(message);
         });
     }
+    
     public abstract String message(VoteValue voteValue, boolean changing);
+    
     public abstract VoteValue voteValue(String text);
 }

@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.judges.secretaries.gui;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.Secretary;
 import org.bukkit.entity.Player;
 

@@ -11,7 +11,7 @@ import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
-import com.nicholasdoherty.socialcore.utils.UUIDUtil;
+import com.voxmc.voxlib.util.UUIDUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

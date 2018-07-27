@@ -12,38 +12,36 @@ import org.bukkit.plugin.Plugin;
 /**
  * Created by john on 1/21/15.
  */
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class NotificationsListener implements Listener {
-    private Courts courts;
-    private NotificationManager notificationManager;
-
-    public NotificationsListener(Courts courts, NotificationManager notificationManager) {
+    private final Courts courts;
+    private final NotificationManager notificationManager;
+    
+    public NotificationsListener(final Courts courts, final NotificationManager notificationManager) {
         this.courts = courts;
         this.notificationManager = notificationManager;
-        Plugin plugin = courts.getPlugin();
-        plugin.getServer().getPluginManager().registerEvents(this,plugin);
+        final Plugin plugin = courts.getPlugin();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
+    
     @EventHandler(ignoreCancelled = true)
-    public void login(PlayerJoinEvent event) {
+    public void login(final PlayerJoinEvent event) {
         final Player p = event.getPlayer();
-        CourtsTickLater.runTickLater(new Runnable() {
-            @Override
-            public void run() {
-                if (!p.isOnline())
-                    return;
-                if (p == null)
-                    return;
-                notificationManager.onLogin(p);
+        CourtsTickLater.runTickLater(() -> {
+            if(!p.isOnline()) {
+                return;
             }
-        },3);
+            notificationManager.onLogin(p);
+        }, 3);
     }
-
+    
     @EventHandler(ignoreCancelled = true)
-    public void join(PlayerJoinEvent event) {
+    public void join(final PlayerJoinEvent event) {
         notificationManager.login(event.getPlayer().getUniqueId());
     }
+    
     @EventHandler(ignoreCancelled = true)
-    public void leave(PlayerQuitEvent event) {
+    public void leave(final PlayerQuitEvent event) {
         notificationManager.logout(event.getPlayer().getUniqueId());
     }
 }

@@ -2,7 +2,7 @@ package com.nicholasdoherty.socialcore.courts.fines;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import com.voxmc.voxlib.util.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 

@@ -3,10 +3,10 @@ package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCas
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.categoryspecific.*;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
-import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.ChangeViewClickItem;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.PaginatedItemView;
-import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.gui.clickitems.ChangeViewClickItem;
+import com.voxmc.voxlib.gui.inventorygui.views.PaginatedItemView;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

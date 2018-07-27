@@ -16,8 +16,8 @@ import com.nicholasdoherty.socialcore.courts.policies.Policy.State;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.nicholasdoherty.socialcore.utils.SerializationUtil;
-import com.nicholasdoherty.socialcore.utils.VLocation;
+import com.nicholasdoherty.socialcore.utils.SCSerializer;
+import com.voxmc.voxlib.VLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -603,7 +603,7 @@ public class SqlSaveManager {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("REPLACE INTO courts_case_resolves (case_id,resolve) VALUES(?,?)");
             preparedStatement.setInt(1, caze.getId());
             if(caze.getResolve() != null) {
-                preparedStatement.setString(2, SerializationUtil.serialize(caze.getResolve()));
+                preparedStatement.setString(2, SCSerializer.serialize(caze.getResolve()));
             } else {
                 preparedStatement.setNull(2, Types.LONGNVARCHAR);
             }
@@ -625,7 +625,7 @@ public class SqlSaveManager {
             if(resolveString == null) {
                 return null;
             }
-            return (Resolve) SerializationUtil.deserialize(resolveString);
+            return (Resolve) SCSerializer.deserialize(resolveString);
         } catch(final SQLException e) {
             e.printStackTrace();
         }
@@ -656,12 +656,12 @@ public class SqlSaveManager {
                 preparedStatement.setNull(4, Types.VARCHAR);
             }
             if(caze.getCaseBook() != null) {
-                preparedStatement.setString(5, SerializationUtil.serialize(caze.getCaseBook()));
+                preparedStatement.setString(5, SCSerializer.serialize(caze.getCaseBook()));
             } else {
                 preparedStatement.setNull(5, Types.VARCHAR);
             }
             if(caze.getCaseMeta() != null) {
-                preparedStatement.setString(6, SerializationUtil.serialize(caze.getCaseMeta()));
+                preparedStatement.setString(6, SCSerializer.serialize(caze.getCaseMeta()));
             } else {
                 preparedStatement.setNull(6, Types.LONGNVARCHAR);
             }
@@ -876,13 +876,13 @@ public class SqlSaveManager {
             CaseMeta caseMeta = null;
             final String caseMetaString = resultSet.getString("case_meta");
             if(caseMetaString != null) {
-                caseMeta = (CaseMeta) SerializationUtil.deserialize(caseMetaString);
+                caseMeta = (CaseMeta) SCSerializer.deserialize(caseMetaString);
             }
             
-            ItemStack caseBook = new ItemStack(Material.BOOK_AND_QUILL);
+            ItemStack caseBook = new ItemStack(Material.WRITABLE_BOOK);
             final String caseBookString = resultSet.getString("case_book_blob");
             if(caseBookString != null) {
-                caseBook = (ItemStack) SerializationUtil.deserialize(caseBookString);
+                caseBook = (ItemStack) SCSerializer.deserialize(caseBookString);
             }
             final Case caze = new Case(id, caseStatus, plaintiff, defendant, caseBook, false, caseCategory, caseMeta);
             final CourtDate courtDate = getCourtDate(caze);

@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.time;
 
 import com.nicholasdoherty.socialcore.SocialCore;
-import com.nicholasdoherty.socialcore.utils.ConfigAccessor;
+import com.voxmc.voxlib.util.ConfigAccessor;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 

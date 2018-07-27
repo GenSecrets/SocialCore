@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.notifications;
 
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
-import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 

@@ -4,23 +4,27 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Created by john on 1/21/15.
+ * @author amy
+ * @since 7/26/18.
  */
-public class CourtsTickLater extends BukkitRunnable{
-    private Runnable run;
-
-    private CourtsTickLater(Runnable run) {
+@SuppressWarnings("unused")
+public final class CourtsTickLater extends BukkitRunnable {
+    private final Runnable run;
+    
+    private CourtsTickLater(final Runnable run) {
         this.run = run;
     }
-
+    
+    public static void runTickLater(final Runnable run) {
+        runTickLater(run, 1);
+    }
+    
+    public static void runTickLater(final Runnable run, final long ticks) {
+        new CourtsTickLater(run).runTaskLater(Courts.getCourts().getPlugin(), ticks);
+    }
+    
     @Override
     public void run() {
         run.run();
-    }
-    public static void runTickLater(Runnable run) {
-        runTickLater(run,1);
-    }
-    public static void runTickLater(Runnable run, long ticks) {
-        new CourtsTickLater(run).runTaskLater(Courts.getCourts().getPlugin(),ticks);
     }
 }

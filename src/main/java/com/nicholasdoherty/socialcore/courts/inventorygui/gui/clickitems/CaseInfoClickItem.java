@@ -1,11 +1,11 @@
-package com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems;
+package com.voxmc.voxlib.gui.inventorygui.gui.clickitems;
 
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseHistory;
 import com.nicholasdoherty.socialcore.courts.cases.CourtDate;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview.SecCaseView;
-import com.nicholasdoherty.socialcore.utils.TextUtil;
+import com.voxmc.voxlib.util.TextUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

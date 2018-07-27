@@ -5,8 +5,9 @@ import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseManager;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
-import com.nicholasdoherty.socialcore.utils.VLocation;
-import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import com.voxmc.voxlib.VLocation;
+import com.voxmc.voxlib.util.VaultUtil;
+import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,49 +21,48 @@ import java.util.*;
  * Created by john on 1/6/15.
  */
 public class CitizensStall extends Stall {
-
-    public CitizensStall(int id, VLocation vLocation) {
-        super(id, StallType.CITIZEN, vLocation);
-    }
-
+    
     Set<UUID> firstClicks = new HashSet<>();
     Map<UUID, BukkitTask> timeoutRemove = new HashMap<>();
-
     Set<UUID> onCooldown = new HashSet<>();
-
+    
+    public CitizensStall(final int id, final VLocation vLocation) {
+        super(id, StallType.CITIZEN, vLocation);
+    }
+    
     @Override
-    public void onClick(Player p) {
-        CaseManager caseManager = Courts.getCourts().getCaseManager();
+    public void onClick(final Player p) {
+        final CaseManager caseManager = Courts.getCourts().getCaseManager();
         final UUID uuid = p.getUniqueId();
-        ItemStack itemInHand = p.getItemInHand();
-        if (onCooldown.contains(p.getUniqueId())) {
+        final ItemStack itemInHand = p.getInventory().getItemInMainHand();
+        if(onCooldown.contains(p.getUniqueId())) {
             p.sendMessage(Courts.getCourts().getCourtsLangManager().getCitizenCooldown());
             return;
         }
-        if (p.getItemInHand() != null) {
-            ItemStack item = p.getItemInHand();
-            if (Case.isCaseBook(item)) {
-                if (isBookEmpty(itemInHand)) {
+        if(p.getInventory().getItemInMainHand() != null) {
+            final ItemStack item = p.getInventory().getItemInMainHand();
+            if(Case.isCaseBook(item)) {
+                if(isBookEmpty(itemInHand)) {
                     p.sendMessage(getCaseBookEmpty());
                     return;
                 }
-                if (!Case.isEmptyCaseBook(item)) {
+                if(!Case.isEmptyCaseBook(item)) {
                     p.sendMessage(getCaseAlreadyFiled());
                     return;
                 }
-                Case caze = caseManager.newCase(item, p.getName());
+                final Case caze = caseManager.newCase(item, p.getName());
                 caze.setPlantiff(Courts.getCourts().getCitizenManager().toCitizen(p));
                 caze.updateSave();
-                p.setItemInHand(null);
+                p.getInventory().setItemInMainHand(null);
                 p.sendMessage(getCaseSubmitted());
                 return;
             }
         }
-        int cost = Courts.getCourts().getCourtsConfig().getCaseFilingCost();
-        if (!firstClicks.contains(uuid)) {
+        final int cost = Courts.getCourts().getCourtsConfig().getCaseFilingCost();
+        if(!firstClicks.contains(uuid)) {
             p.sendMessage(getConfirmMessage(cost));
             firstClicks.add(uuid);
-            BukkitTask removeTask = new BukkitRunnable() {
+            final BukkitTask removeTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     firstClicks.remove(uuid);
@@ -70,26 +70,26 @@ public class CitizensStall extends Stall {
             }.runTaskLater(Courts.getCourts().getPlugin(), 300);
             timeoutRemove.put(uuid, removeTask);
         } else {
-            if (timeoutRemove.containsKey(uuid)) {
+            if(timeoutRemove.containsKey(uuid)) {
                 timeoutRemove.get(uuid).cancel();
                 timeoutRemove.remove(uuid);
                 firstClicks.remove(uuid);
             }
             try {
-                if (!VaultUtil.charge(p, cost)) {
+                if(!VaultUtil.charge(p, cost)) {
                     p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                     return;
                 }
-            } catch (VaultUtil.NotSetupException e) {
+            } catch(final NotSetupException e) {
                 p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                 e.printStackTrace();
                 return;
             }
-            ItemStack copyOfBook = Case.baseItemStack();
+            final ItemStack copyOfBook = Case.baseItemStack();
             p.getInventory().addItem(copyOfBook);
             p.updateInventory();
             p.sendMessage(getGivedMessage());
-            long cooldown = Courts.getCourts().getCourtsConfig().getCitizenStallDocumentCooldown();
+            final long cooldown = Courts.getCourts().getCourtsConfig().getCitizenStallDocumentCooldown();
             onCooldown.add(uuid);
             new BukkitRunnable() {
                 @Override
@@ -99,33 +99,34 @@ public class CitizensStall extends Stall {
             }.runTaskLater(Courts.getCourts().getPlugin(), cooldown);
         }
     }
-
+    
     private String getGivedMessage() {
         return Courts.getCourts().getCourtsLangManager().getCitizenGaveCourtDocuments();
     }
-
-    private String getConfirmMessage(int cost) {
+    
+    private String getConfirmMessage(final int cost) {
         return Courts.getCourts().getCourtsLangManager().getCitizenConfirm().replace("{cost}", cost + "");
     }
-
+    
     private String getCaseSubmitted() {
         return Courts.getCourts().getCourtsLangManager().getCitizenSubmitted();
     }
-
+    
     private String getCaseAlreadyFiled() {
         return Courts.getCourts().getCourtsLangManager().getCitizenCaseAlreadyFiled();
     }
-
+    
     private String getCaseBookEmpty() {
         return Courts.getCourts().getCourtsLangManager().getCitizenCaseBookEmpty();
     }
-
-    private boolean isBookEmpty(ItemStack book) {
-        BookMeta bookMeta = (BookMeta) book.getItemMeta();
-        if (bookMeta.getPages().size() == 0)
+    
+    private boolean isBookEmpty(final ItemStack book) {
+        final BookMeta bookMeta = (BookMeta) book.getItemMeta();
+        if(bookMeta.getPages().isEmpty()) {
             return true;
-        for (String page : bookMeta.getPages()) {
-            if (page.length() > 3) {
+        }
+        for(final String page : bookMeta.getPages()) {
+            if(page.length() > 3) {
                 return false;
             }
         }

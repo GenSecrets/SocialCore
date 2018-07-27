@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
-import com.nicholasdoherty.socialcore.utils.VLocation;
+import com.voxmc.voxlib.VLocation;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.HashMap;

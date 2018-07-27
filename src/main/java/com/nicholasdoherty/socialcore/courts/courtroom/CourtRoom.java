@@ -1,9 +1,9 @@
 package com.nicholasdoherty.socialcore.courts.courtroom;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.utils.VLocation;
-import com.nicholasdoherty.socialcore.utils.VoxEffects;
-import com.nicholasdoherty.socialcore.utils.title.TitleUtil;
+import com.voxmc.voxlib.VLocation;
+import com.voxmc.voxlib.util.VoxEffects;
+import com.voxmc.voxlib.util.title.TitleUtil;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.ChatColor;

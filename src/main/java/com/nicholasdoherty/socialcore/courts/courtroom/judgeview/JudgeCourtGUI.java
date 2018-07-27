@@ -2,7 +2,7 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview;
 
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
-import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 
 /**

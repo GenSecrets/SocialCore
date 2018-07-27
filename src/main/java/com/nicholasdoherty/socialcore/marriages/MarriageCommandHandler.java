@@ -7,8 +7,8 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.marriages.Marriages.Status;
-import com.nicholasdoherty.socialcore.utils.VaultUtil;
-import com.nicholasdoherty.socialcore.utils.VaultUtil.NotSetupException;
+import com.voxmc.voxlib.util.VaultUtil;
+import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -35,7 +35,7 @@ public class MarriageCommandHandler implements CommandExecutor {
         this.sc = sc;
     }
     
-    private static void removeLineWith(final List<String> l, final CharSequence with) {
+    private static void removeLineWith(final List<String> l, @SuppressWarnings("SameParameterValue") final CharSequence with) {
         new ArrayList<>(l).stream().filter(s -> s.contains(with)).forEach(l::remove);
     }
     
@@ -212,7 +212,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             for(final ItemStack item : p.getInventory().getContents()) {
                                 if(item != null) {
                                     for(final MarriageGem gem : sc.lang.marriageGems) {
-                                        if(gem.getBlockID() == item.getTypeId()) {
+                                        if(gem.getBlockID() == item.getType().getId()) {
                                             if(item.getItemMeta() != null) {
                                                 if(item.getItemMeta().getDisplayName() != null) {
                                                     if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -236,7 +236,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                     }
                                 }
                             }
-    
+                            
                             Bukkit.getServer().getOnlinePlayers().stream().filter(pr -> pr.hasPermission("sc.priest")).forEach(pr -> pr.sendMessage(ChatColor.GREEN + proposeTo.getPlayerName() + " and " + proposeFrom.getPlayerName() + " have become engaged!"));
                         } else {
                             player.sendMessage(ChatColor.RED + "You have not been proposed to!");
@@ -358,7 +358,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : player.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getTypeId()) {
+                                    if(gem.getBlockID() == item.getType().getId()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -459,7 +459,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getTypeId()) {
+                                    if(gem.getBlockID() == item.getType().getId()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -485,7 +485,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p2.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getTypeId()) {
+                                    if(gem.getBlockID() == item.getType().getId()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -520,7 +520,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getTypeId()) {
+                                    if(gem.getBlockID() == item.getType().getId()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -675,7 +675,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             if(pl != null) {
                                 pl.sendMessage(ChatColor.YELLOW + p1.getPlayerName() + " has filed for a divorce :(");
                             }
-    
+                            
                             Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.hasPermission("sc.lawyer")).forEach(p -> p.sendMessage(ChatColor.GREEN + "Lawyer, " + p1.getPlayerName() + " has filed for a divorce against " + p1.getMarriedTo()));
                         } else {
                             for(final String s : sc.save.getAllDivorces()) {

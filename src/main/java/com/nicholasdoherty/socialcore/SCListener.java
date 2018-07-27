@@ -2,9 +2,13 @@ package com.nicholasdoherty.socialcore;
 
 import com.massivecraft.vampire.entity.UPlayer;
 import com.massivecraft.vampire.event.EventVampirePlayerInfectionChange;
-import com.nicholasdoherty.socialcore.utils.VampWWUtil;
+import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
 import com.nicholasdoherty.werewolf.event.WerewolfInfectionEvent;
-import org.bukkit.*;
+import com.voxmc.voxlib.util.VampWWUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -367,8 +371,8 @@ public class SCListener implements Listener {
             final Vector v2 = p2.getEyeLocation().toVector();
             final Vector v3 = v.midpoint(v2);
             final Location loc = v3.toLocation(p.getWorld());
-            //ParticleEffect.HEART.display(loc,1,1,1,5,20);
-            loc.getWorld().playEffect(loc, Effect.HEART, 1);
+            ParticleEffect.HEART.display(loc, 1, 1, 1, 5, 20);
+            //loc.getWorld().playEffect(loc, Effect.HEART, 1);
             p.sendMessage(ChatColor.AQUA + "You have kissed " + p2.getName() + '.');
             p2.sendMessage(ChatColor.AQUA + p.getName() + " kisses you.");
             final int healAmount = sc.lang.kissHealAmount;

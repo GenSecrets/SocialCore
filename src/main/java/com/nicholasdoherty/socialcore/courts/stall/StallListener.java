@@ -28,78 +28,84 @@ import java.util.UUID;
 public class StallListener implements Listener {
     Courts courts;
     StallManager stallManager;
-    public StallListener(Courts courts, StallManager stallManager) {
+    Set<UUID> recentlyClicked = new HashSet<>();
+    
+    public StallListener(final Courts courts, final StallManager stallManager) {
         this.courts = courts;
         this.stallManager = stallManager;
-        SocialCore plugin = courts.getPlugin();
-        plugin.getServer().getPluginManager().registerEvents(this,plugin);
+        final SocialCore plugin = courts.getPlugin();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-    Set<UUID> recentlyClicked = new HashSet<>();
+    
     @EventHandler
-    public void interactStallEvent(PlayerInteractEvent event) {
-        Action a = event.getAction();
-        if (a != Action.LEFT_CLICK_BLOCK && a != Action.RIGHT_CLICK_BLOCK)
+    public void interactStallEvent(final PlayerInteractEvent event) {
+        final Action a = event.getAction();
+        if(a != Action.LEFT_CLICK_BLOCK && a != Action.RIGHT_CLICK_BLOCK) {
             return;
-        Block b = event.getClickedBlock();
-        if (b == null)
+        }
+        final Block b = event.getClickedBlock();
+        if(b == null) {
             return;
-        Location loc = b.getLocation();
-        Stall stall = stallManager.getStall(loc);
-        if (stall == null) {
+        }
+        final Location loc = b.getLocation();
+        final Stall stall = stallManager.getStall(loc);
+        if(stall == null) {
             return;
         }
         final UUID uuid = event.getPlayer().getUniqueId();
-        if (recentlyClicked.contains(uuid))
+        if(recentlyClicked.contains(uuid)) {
             return;
+        }
         event.setCancelled(true);
         stall.onClick(event.getPlayer());
         recentlyClicked.add(uuid);
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 recentlyClicked.remove(uuid);
             }
-        }.runTaskLater(courts.getPlugin(),2);
+        }.runTaskLater(courts.getPlugin(), 2);
     }
+    
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void fix183(PlayerEditBookEvent event) {
+    public void fix183(final PlayerEditBookEvent event) {
         final Player p = event.getPlayer();
         final int slot = event.getSlot();
         final ItemStack orig = event.getPlayer().getInventory().getItem(slot).clone();
         final ItemMeta oldMeta = orig.getItemMeta().clone();
-        if (orig != null && orig.getType() == Material.BOOK_AND_QUILL) {
-            final BookMeta newMeta = event.getNewBookMeta();
-            if (!event.isSigning()) {
+        if(orig.getType() == Material.WRITABLE_BOOK) {
+            if(!event.isSigning()) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if (p.isOnline()) {
-                            ItemStack newItem = p.getInventory().getItem(slot);
-                            if (newItem != null && newItem.getType() == Material.BOOK_AND_QUILL) {
-                                ItemMeta itemMeta = newItem.getItemMeta();
-                                if (oldMeta.getDisplayName() != null) {
+                        if(p.isOnline()) {
+                            final ItemStack newItem = p.getInventory().getItem(slot);
+                            if(newItem != null && newItem.getType() == Material.WRITABLE_BOOK) {
+                                final ItemMeta itemMeta = newItem.getItemMeta();
+                                if(oldMeta.getDisplayName() != null) {
                                     itemMeta.setDisplayName(oldMeta.getDisplayName());
                                 }
-                                if (oldMeta.hasLore()) {
+                                if(oldMeta.hasLore()) {
                                     itemMeta.setLore(oldMeta.getLore());
                                 }
                                 newItem.setItemMeta(itemMeta);
-                                for (Enchantment enchantment : orig.getEnchantments().keySet()) {
-                                    int level = orig.getEnchantments().get(enchantment);
-                                    newItem.addUnsafeEnchantment(enchantment,level);
+                                for(final Enchantment enchantment : orig.getEnchantments().keySet()) {
+                                    final int level = orig.getEnchantments().get(enchantment);
+                                    newItem.addUnsafeEnchantment(enchantment, level);
                                 }
                                 p.updateInventory();
                             }
                         }
                     }
-                }.runTaskLater(courts.getPlugin(),1);
+                }.runTaskLater(courts.getPlugin(), 1);
             }
         }
     }
+    
     @EventHandler(priority = EventPriority.LOWEST)
-    public void preventCaseSigning(PlayerEditBookEvent event) {
-        BookMeta bookMeta = event.getPreviousBookMeta();
-        if (bookMeta != null && bookMeta.hasDisplayName() && bookMeta.getDisplayName().contains("Court Case") &&
+    public void preventCaseSigning(final PlayerEditBookEvent event) {
+        final BookMeta bookMeta = event.getPreviousBookMeta();
+        if(bookMeta != null && bookMeta.hasDisplayName() && bookMeta.getDisplayName().contains("Court Case") &&
                 event.isSigning()) {
             event.setSigning(false);
         }

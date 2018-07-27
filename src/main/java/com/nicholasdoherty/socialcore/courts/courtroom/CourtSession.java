@@ -17,9 +17,9 @@ import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.time.condition.TickCondition;
 import com.nicholasdoherty.socialcore.time.condition.TimeCondition;
-import com.nicholasdoherty.socialcore.utils.SerializableUUID;
-import com.nicholasdoherty.socialcore.utils.VoxEffects;
-import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
+import com.voxmc.voxlib.util.SerializableUUID;
+import com.voxmc.voxlib.util.VoxEffects;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -238,18 +238,18 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
         if(postCourtAction instanceof OnlyAction) {
             clearPostCourtActions();
         }
-        if(postCourtAction != null && postCourtAction instanceof GrantBuildingPermit) {
+        if(postCourtAction instanceof GrantBuildingPermit) {
             for(final PostCourtAction postCourtAction1 : postCourtActions) {
-                if(postCourtAction1 != null && postCourtAction1 instanceof GrantBuildingPermit) {
+                if(postCourtAction1 instanceof GrantBuildingPermit) {
                     if(postCourtAction.prettyDescription() != null && postCourtAction1.prettyDescription() != null && postCourtAction.prettyDescription().equals(postCourtAction1.prettyDescription())) {
                         return;
                     }
                 }
             }
         }
-        if(postCourtAction != null && postCourtAction instanceof GrantChestPermit) {
+        if(postCourtAction instanceof GrantChestPermit) {
             for(final PostCourtAction postCourtAction1 : postCourtActions) {
-                if(postCourtAction1 != null && postCourtAction1 instanceof GrantChestPermit) {
+                if(postCourtAction1 instanceof GrantChestPermit) {
                     if(postCourtAction.prettyDescription() != null && postCourtAction1.prettyDescription() != null && postCourtAction.prettyDescription().equals(postCourtAction1.prettyDescription())) {
                         return;
                     }
@@ -322,10 +322,8 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
         if(!postCourtActions.isEmpty() && judge != null) {
             final Player judgePlayer = judge.getPlayer();
             if(judgePlayer != null && judgePlayer.isOnline()) {
-                final String actionsString = VoxStringUtils.formatToString(VoxStringUtils.toStringList(postCourtActions, o -> {
-                    final PostCourtAction postCourtAction = (PostCourtAction) o;
-                    return postCourtAction.prettyDescription();
-                }));
+                final String actionsString = VoxStringUtils.formatToString(VoxStringUtils.toStringList(
+                        postCourtActions, PostCourtAction::prettyDescription));
                 judgePlayer.sendMessage(ChatColor.GREEN + "The following actions have been performed: ");
                 judgePlayer.sendMessage(ChatColor.GREEN + actionsString);
             }

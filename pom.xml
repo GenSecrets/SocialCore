@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.12-R0.1-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -63,8 +63,8 @@
             <version>6.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
-                  <groupId>org.spigotmc</groupId>
-                  <artifactId>spigot</artifactId>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.bukkit</groupId>
@@ -105,13 +105,6 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>coloredtags</groupId>
-            <artifactId>coloredtags</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/libs/ColoredTags.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>townychat</groupId>
@@ -180,7 +173,7 @@
         <dependency>
             <groupId>com.voxmc</groupId>
             <artifactId>voxlib</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -205,8 +198,8 @@
             <version>1.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
-                  <groupId>org.spigotmc</groupId>
-                  <artifactId>spigot</artifactId>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.bukkit</groupId>

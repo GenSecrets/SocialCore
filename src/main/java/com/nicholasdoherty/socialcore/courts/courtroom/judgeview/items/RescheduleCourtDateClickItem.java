@@ -2,11 +2,8 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.CalendarGUI;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CalanderRunnable;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CancelAction;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.ValidTimeSelector;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,44 +19,30 @@ import java.util.List;
  */
 public class RescheduleCourtDateClickItem implements ClickItem {
     JudgeBaseView judgeBaseView;
-
-    public RescheduleCourtDateClickItem(JudgeBaseView judgeBaseView) {
+    
+    public RescheduleCourtDateClickItem(final JudgeBaseView judgeBaseView) {
         this.judgeBaseView = judgeBaseView;
     }
-
+    
     @Override
-    public void click(boolean right, final boolean shift) {
-        if (right)
+    public void click(final boolean right, final boolean shift) {
+        if(right) {
             return;
-        Player p = judgeBaseView.getInventoryGUI().getPlayer();
-        CalendarGUI.createAndOpen(p, new CalanderRunnable() {
-            @Override
-            public void run(long time) {
-                judgeBaseView.assignDate(time);
-                judgeBaseView.getInventoryGUI().open();
-            }
-        }, new ValidTimeSelector() {
-            @Override
-            public boolean isValid(DateTime dateTime) {
-                if (dateTime.isAfter(DateTime.now().plusMinutes(20))) {
-                    return true;
-                }
-                return false;
-            }
-        }, new CancelAction() {
-            @Override
-            public void onCancel() {
-                judgeBaseView.getInventoryGUI().open();
-            }
-        }, Courts.getCourts().getDefaultDayGetter());
+        }
+        final Player p = judgeBaseView.getInventoryGUI().getPlayer();
+        CalendarGUI.createAndOpen(p, time -> {
+            judgeBaseView.assignDate(time);
+            judgeBaseView.getInventoryGUI().open();
+        }, dateTime -> dateTime.isAfter(DateTime.now().plusMinutes(20)),
+                () -> judgeBaseView.getInventoryGUI().open(), Courts.getCourts().getDefaultDayGetter());
     }
-
+    
     @Override
     public ItemStack itemstack() {
-        ItemStack itemStack = new ItemStack(Material.WATCH);
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        final ItemStack itemStack = new ItemStack(Material.CLOCK);
+        final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Set court date");
-        List<String> lore = new ArrayList<>();
+        final List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "<Left click to set a court date>");
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);

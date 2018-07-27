@@ -8,7 +8,7 @@ import com.nicholasdoherty.socialcore.courts.courtroom.DontChangeStatus;
 import com.nicholasdoherty.socialcore.courts.courtroom.OnlyAction;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.nicholasdoherty.socialcore.utils.VaultUtil;
+import com.voxmc.voxlib.util.VaultUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;

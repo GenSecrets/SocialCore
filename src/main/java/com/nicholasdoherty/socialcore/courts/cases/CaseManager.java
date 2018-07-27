@@ -11,12 +11,13 @@ import java.util.*;
 /**
  * Created by john on 1/6/15.
  */
+@SuppressWarnings({"TypeMayBeWeakened", "unused"})
 public class CaseManager{
-    private Map<Integer,Case> cases;
+    private final Map<Integer,Case> cases;
 
-    public CaseManager(List<Case> cases) {
+    public CaseManager(final List<Case> cases) {
         this.cases = new HashMap<>();
-        for (Case caze : cases) {
+        for (final Case caze : cases) {
             this.cases.put(caze.getId(),caze);
         }
     }
@@ -24,8 +25,8 @@ public class CaseManager{
         return cases.size();
     }
 
-    public Case newCase(ItemStack book, String resp) {
-        Case caze = Courts.getCourts().getSqlSaveManager().createNewCase();
+    public Case newCase(ItemStack book, final String resp) {
+        final Case caze = Courts.getCourts().getSqlSaveManager().createNewCase();
         book = Case.assignCaseNumberToBook(book.clone(),caze.getId());
         caze.setCaseBook(book);
         caze.setCaseStatus(CaseStatus.UNPROCESSED,resp);
@@ -33,22 +34,22 @@ public class CaseManager{
         caze.updateSave();
         return caze;
     }
-    public Case getCase(int id) {
+    public Case getCase(final int id) {
         return cases.get(id);
     }
-    public List<Case> casesByStatus(CaseStatus caseStatus) {
-        List<Case> unprocessed = new ArrayList<>();
-        for (Case caze : cases.values()) {
+    public List<Case> casesByStatus(final CaseStatus caseStatus) {
+        final List<Case> unprocessed = new ArrayList<>();
+        for (final Case caze : cases.values()) {
             if (caze.getCaseStatus() == caseStatus) {
                 unprocessed.add(caze);
             }
         }
         return unprocessed;
     }
-    public List<Case> involvedCases(UUID uuid, boolean includeJudge) {
-        List<Case> cases = new ArrayList<>();
-        for (Case caze : futureScheduledCases()) {
-            CourtDate courtDate = caze.getCourtDate();
+    public List<Case> involvedCases(final UUID uuid, final boolean includeJudge) {
+        final List<Case> cases = new ArrayList<>();
+        for (final Case caze : futureScheduledCases()) {
+            final CourtDate courtDate = caze.getCourtDate();
             if (includeJudge && courtDate.getJudge().isSameUUID(uuid)) {
                 cases.add(caze);
             }else if (caze.getPlantiff() != null && caze.getPlantiff().isSameUUID(uuid)) {
@@ -60,8 +61,8 @@ public class CaseManager{
         return cases;
     }
     public List<Case> futureScheduledCases() {
-        List<Case> futureCases = new ArrayList<>();
-        for (Case caze : cases.values()) {
+        final List<Case> futureCases = new ArrayList<>();
+        for (final Case caze : cases.values()) {
             if (caze.getCourtDate() != null && caze.getCourtDate().getTime() > new Date().getTime()-1000*60*60) {
                 futureCases.add(caze);
             }
@@ -69,21 +70,21 @@ public class CaseManager{
         return futureCases;
     }
     public List<Case> allScheduledCases() {
-        List<Case> scheduledCases = new ArrayList<>();
-        for (Case caze : cases.values()) {
+        final List<Case> scheduledCases = new ArrayList<>();
+        for (final Case caze : cases.values()) {
             if (caze.getCourtDate() != null) {
                 scheduledCases.add(caze);
             }
         }
         return scheduledCases;
     }
-    public Case caseByBook(ItemStack itemInHand) {
-        if (itemInHand != null && itemInHand.getType() == Material.BOOK_AND_QUILL && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
-            String displayName = itemInHand.getItemMeta().getDisplayName();
+    public Case caseByBook(final ItemStack itemInHand) {
+        if (itemInHand != null && itemInHand.getType() == Material.WRITABLE_BOOK && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
+            final String displayName = itemInHand.getItemMeta().getDisplayName();
             if (!displayName.contains(ChatColor.WHITE + "Court Case ")) {
                 return null;
             }
-            int caseNumber = Integer.parseInt(displayName.replace(ChatColor.WHITE + "Court Case ","").trim());
+            final int caseNumber = Integer.parseInt(displayName.replace(ChatColor.WHITE + "Court Case ","").trim());
             if (caseNumber >= nextCaseNumber()) {
                 return null;
             }
@@ -91,8 +92,8 @@ public class CaseManager{
         }
         return null;
     }
-    public void onJudgeDemoted(Judge judge) {
-        for (Case caze : cases.values()) {
+    public void onJudgeDemoted(final Judge judge) {
+        for (final Case caze : cases.values()) {
             if (caze.getCaseStatus() == CaseStatus.COURT_DATE_SET && caze.getCourtDate() != null && caze.getCourtDate().getJudge().equals(judge)) {
                 caze.setCourtDate(null);
                 String responsible = "Server";

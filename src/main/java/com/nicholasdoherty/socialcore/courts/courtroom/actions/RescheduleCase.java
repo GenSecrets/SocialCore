@@ -8,7 +8,7 @@ import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.courts.courtroom.DontChangeStatus;
 import com.nicholasdoherty.socialcore.courts.courtroom.OnlyAction;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
-import com.nicholasdoherty.socialcore.utils.TextUtil;
+import com.voxmc.voxlib.util.TextUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 

@@ -1,11 +1,8 @@
 package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCaseView;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.CalendarGUI;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CalanderRunnable;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CancelAction;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.ValidTimeSelector;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,51 +19,41 @@ import java.util.List;
  */
 public class AssignTimeClickItem implements ClickItem {
     JudgeCaseView judgeCaseView;
-
-    public AssignTimeClickItem(JudgeCaseView judgeCaseView) {
+    
+    public AssignTimeClickItem(final JudgeCaseView judgeCaseView) {
         this.judgeCaseView = judgeCaseView;
     }
-
+    
     @Override
-    public void click(boolean right, final boolean shift) {
-        if (right)
+    public void click(final boolean right, final boolean shift) {
+        if(right) {
             return;
+        }
         ////todo remove test
         //if (!right) {
         //    judgeCaseView.assignDate(new Date().getTime()+10*1000);
         //    judgeCaseView.activate();
         //    return;
         //}
-        Player p = judgeCaseView.getInventoryGUI().getPlayer();
-        CalendarGUI.createAndOpen(p, new CalanderRunnable() {
-            @Override
-            public void run(long time) {
-                if (Courts.getCourts().getDefaultDayGetter().hasCorutDate(new DateTime(time))) {
-                    return;
-                }
-                judgeCaseView.assignDate(time);
-                judgeCaseView.getInventoryGUI().open();
+        final Player p = judgeCaseView.getInventoryGUI().getPlayer();
+        CalendarGUI.createAndOpen(p, time -> {
+            if(Courts.getCourts().getDefaultDayGetter().hasCorutDate(new DateTime(time))) {
+                return;
             }
-        }, new ValidTimeSelector() {
-            @Override
-            public boolean isValid(DateTime dateTime) {
-                if (dateTime.isAfter(DateTime.now().plusMinutes(20))) {
-                    return true;
-                }
-                if (Courts.getCourts().getDefaultDayGetter().calendarEvents(new LocalDate(dateTime)).length > 1) {
-                    return false;
-                }
-                if (Courts.getCourts().getDefaultDayGetter().hasCorutDate(dateTime)) {
-                    return false;
-                }
+            judgeCaseView.assignDate(time);
+            judgeCaseView.getInventoryGUI().open();
+        }, dateTime -> {
+            if(dateTime.isAfter(DateTime.now().plusMinutes(20))) {
+                return true;
+            }
+            if(Courts.getCourts().getDefaultDayGetter().calendarEvents(new LocalDate(dateTime)).length > 1) {
                 return false;
             }
-        }, new CancelAction() {
-            @Override
-            public void onCancel() {
-                judgeCaseView.getInventoryGUI().open();
+            if(Courts.getCourts().getDefaultDayGetter().hasCorutDate(dateTime)) {
+                return false;
             }
-        }, Courts.getCourts().getDefaultDayGetter());
+            return false;
+        }, () -> judgeCaseView.getInventoryGUI().open(), Courts.getCourts().getDefaultDayGetter());
         //judgeCaseView.getInventoryGUI().close();
         //InputLib inputLib = Courts.getCourts().getPlugin().getInputLib();
         //inputLib.add(p.getUniqueId(), new TextInputTimeRunnable());
@@ -75,13 +62,13 @@ public class AssignTimeClickItem implements ClickItem {
         //inputLib.sendMessage(p, ChatColor.GREEN + "Please the desired court date in this format: " + TextUtil.dateFormat());
         //inputLib.sendMessage(p, ChatColor.GREEN + "For example, it is currently " + TextUtil.formatDate(new Date().getTime()));
     }
-
+    
     @Override
     public ItemStack itemstack() {
-        ItemStack itemStack = new ItemStack(Material.WATCH);
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        final ItemStack itemStack = new ItemStack(Material.CLOCK);
+        final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Set court date");
-        List<String> lore = new ArrayList<>();
+        final List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "<Left click to set a court date>");
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);

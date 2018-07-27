@@ -6,7 +6,7 @@ import com.nicholasdoherty.socialcore.courts.policies.Policy;
 import com.nicholasdoherty.socialcore.courts.policies.Policy.State;
 import com.nicholasdoherty.socialcore.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.courts.policies.gui.UnconfirmedPolicyGUI;
-import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -36,7 +36,7 @@ public class PolicyCommand implements CommandExecutor {
         if(itemStack == null) {
             return false;
         }
-        if(itemStack.getType() != Material.BOOK_AND_QUILL) {
+        if(itemStack.getType() != Material.WRITABLE_BOOK) {
             return false;
         }
         final ItemMeta itemMeta = itemStack.getItemMeta();
@@ -79,7 +79,7 @@ public class PolicyCommand implements CommandExecutor {
                     }
                 } else {
                     if(args[0].equalsIgnoreCase("new")) {
-                        final ItemStack give = new ItemStackBuilder(Material.BOOK_AND_QUILL).setName("Policy Draft")
+                        final ItemStack give = new ItemStackBuilder(Material.WRITABLE_BOOK).setName("Policy Draft")
                                 .toItemStack();
                         p.getInventory().addItem(give);
                         p.sendMessage(policyManager.getPolicyConfig().getPolicyNewMessage());

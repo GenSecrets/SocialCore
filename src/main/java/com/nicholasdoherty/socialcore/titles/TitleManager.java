@@ -3,7 +3,7 @@ package com.nicholasdoherty.socialcore.titles;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.libraries.ConfigAccessor;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.nicholasdoherty.socialcore.utils.ColoredTagsUtil;
+import com.voxmc.voxlib.util.ColoredTagsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;

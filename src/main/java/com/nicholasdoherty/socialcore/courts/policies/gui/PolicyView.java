@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
-import com.nicholasdoherty.socialcore.courts.inventorygui.InventoryGUI;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.PaginatedItemView;
+import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.inventorygui.views.PaginatedItemView;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.policies.Policy;
 import org.bukkit.Bukkit;

@@ -8,7 +8,7 @@ import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.nicholasdoherty.socialcore.utils.TextUtil;
+import com.voxmc.voxlib.util.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;

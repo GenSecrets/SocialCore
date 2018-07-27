@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts;
 
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
-import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 

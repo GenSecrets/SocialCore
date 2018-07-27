@@ -7,7 +7,7 @@ import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.courts.cases.CaseStatus;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.marriages.Divorce;
-import com.nicholasdoherty.socialcore.utils.UUIDUtil;
+import com.voxmc.voxlib.util.UUIDUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -18,9 +18,10 @@ import java.util.UUID;
 /**
  * Created by john on 3/2/15.
  */
+@SuppressWarnings("unused")
 public class DivorceManager {
-    private SocialCore socialCore;
-    private Courts courts;
+    private final SocialCore socialCore;
+    private final Courts courts;
     
     public DivorceManager(final SocialCore socialCore, final Courts courts) {
         this.socialCore = socialCore;
@@ -40,7 +41,7 @@ public class DivorceManager {
     }
     
     private ItemStack defaultDivorceBook(final String exHusband, final String exWife, final ItemStack book) {
-        if(book == null || book.getType() != Material.BOOK_AND_QUILL) {
+        if(book == null || book.getType() != Material.WRITABLE_BOOK) {
             return null;
         }
         final BookMeta bookMeta = (BookMeta) book.getItemMeta();

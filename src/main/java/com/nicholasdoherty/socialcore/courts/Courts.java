@@ -2,6 +2,7 @@ package com.nicholasdoherty.socialcore.courts;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.cases.*;
+import com.nicholasdoherty.socialcore.courts.cases.CaseHistory.HistoryEntry;
 import com.nicholasdoherty.socialcore.courts.citizens.CitizenManager;
 import com.nicholasdoherty.socialcore.courts.commands.*;
 import com.nicholasdoherty.socialcore.courts.courtroom.CourtSession;
@@ -23,8 +24,8 @@ import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.courts.prefix.PrefixManager;
 import com.nicholasdoherty.socialcore.courts.stall.StallManager;
-import com.nicholasdoherty.socialcore.utils.SerializableUUID;
-import com.nicholasdoherty.socialcore.utils.VLocation;
+import com.voxmc.voxlib.util.SerializableUUID;
+import com.voxmc.voxlib.VLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -34,27 +35,28 @@ import java.util.Date;
 /**
  * Created by john on 1/3/15.
  */
+@SuppressWarnings("unused")
 public class Courts {
     private static Courts courts;
-    private SocialCore plugin;
+    private final SocialCore plugin;
     private CourtsConfig courtsConfig;
     private CourtsSaveManager courtsSaveManager;
-    private ElectionManager electionManager;
-    private JudgeManager judgeManager;
-    private StallManager stallManager;
+    private final ElectionManager electionManager;
+    private final JudgeManager judgeManager;
+    private final StallManager stallManager;
     private CaseManager caseManager;
-    private CourtSessionManager courtSessionManager;
-    private DefaultDayGetter defaultDayGetter;
-    private NotificationManager notificationManager;
+    private final CourtSessionManager courtSessionManager;
+    private final DefaultDayGetter defaultDayGetter;
+    private final NotificationManager notificationManager;
     private CourtsLangManager courtsLangManager;
-    private FineManager fineManager;
-    private DivorceManager divorceManager;
-    private SqlSaveManager sqlSaveManager;
-    private CitizenManager citizenManager;
-    private PolicyManager policyManager;
-    private boolean forceNotSave = false;
+    private final FineManager fineManager;
+    private final DivorceManager divorceManager;
+    private final SqlSaveManager sqlSaveManager;
+    private final CitizenManager citizenManager;
+    private final PolicyManager policyManager;
+    private boolean forceNotSave;
     
-    public Courts(SocialCore plugin) {
+    public Courts(final SocialCore plugin) {
         courts = this;
         this.plugin = plugin;
         registerSerializers();
@@ -69,14 +71,14 @@ public class Courts {
         sqlSaveManager.clean();
         try {
             sqlSaveManager.purgeVotes();
-        } catch(Exception e) {
+        } catch(final Exception e) {
             e.printStackTrace();
         }
-        long time1 = new Date().getTime();
+        final long time1 = new Date().getTime();
         citizenManager = new CitizenManager(courts);
         try {
             courtsSaveManager = new CourtsSaveManager(this);
-        } catch(Exception e) {
+        } catch(final Exception e) {
             e.printStackTrace();
         }
         electionManager = new ElectionManager(sqlSaveManager.election());
@@ -89,8 +91,8 @@ public class Courts {
         fineManager = new FineManager(sqlSaveManager.getFines());
         fineManager.startTimer();
         policyManager = new PolicyManager(this);
-        long time2 = new Date().getTime();
-        long diff = time2 - time1;
+        final long time2 = new Date().getTime();
+        final long diff = time2 - time1;
         plugin.getLogger().info("Took " + diff + "ms to deserialize " + caseManager.amount() + " cases");
         new CourtCommand(this);
         new ElectionCommand(this, electionManager);
@@ -99,7 +101,7 @@ public class Courts {
         new JudgeCommand(this, judgeManager);
         new SecretaryCommand(this, judgeManager);
         new IfElectionCommand(this, electionManager);
-        for(Player p : Bukkit.getOnlinePlayers()) {
+        for(final Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
             judgeManager.setPrefix(p);
         }
@@ -129,7 +131,8 @@ public class Courts {
     
     public void reloadConfig() {
         plugin.reloadConfig();
-        CourtsConfig courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
+        final CourtsConfig courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
+        //noinspection ConstantConditions
         if(courtsConfig == null) {
             plugin.getLogger().severe("Could not load config. Error");
             return;
@@ -138,7 +141,7 @@ public class Courts {
         courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
     }
     
-    public void setForceNotSave(boolean forceNotSave) {
+    public void setForceNotSave(final boolean forceNotSave) {
         this.forceNotSave = forceNotSave;
     }
     
@@ -148,10 +151,10 @@ public class Courts {
     
     public void onDisable() {
         try {
-            for(Player p : Bukkit.getOnlinePlayers()) {
+            for(final Player p : Bukkit.getOnlinePlayers()) {
                 judgeManager.revertPrefix(p);
             }
-        } catch(Exception e) {
+        } catch(final Exception e) {
             e.printStackTrace();
         }
         if(!forceNotSave) {
@@ -159,7 +162,7 @@ public class Courts {
                 courtsSaveManager.saveAll();
                 courtsSaveManager.saveFile();
                 courtSessionManager.addAllBackToGlobal();
-            } catch(Exception e) {
+            } catch(final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -168,7 +171,7 @@ public class Courts {
     public void registerSerializers() {
         ConfigurationSerialization.registerClass(Case.class);
         ConfigurationSerialization.registerClass(CaseHistory.class);
-        ConfigurationSerialization.registerClass(CaseHistory.HistoryEntry.class);
+        ConfigurationSerialization.registerClass(HistoryEntry.class);
         ConfigurationSerialization.registerClass(Candidate.class);
         ConfigurationSerialization.registerClass(Election.class);
         ConfigurationSerialization.registerClass(Secretary.class);
@@ -230,7 +233,7 @@ public class Courts {
         return caseManager;
     }
     
-    public void setCaseManager(CaseManager caseManager) {
+    public void setCaseManager(final CaseManager caseManager) {
         this.caseManager = caseManager;
     }
     

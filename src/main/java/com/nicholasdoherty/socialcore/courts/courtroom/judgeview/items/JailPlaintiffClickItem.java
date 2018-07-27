@@ -3,12 +3,9 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.courtroom.actions.JailPlantiff;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
-import com.nicholasdoherty.socialcore.courts.inventorygui.ClickItem;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.CalendarGUI;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CalanderRunnable;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.CancelAction;
-import com.nicholasdoherty.socialcore.courts.inventorygui.views.calander.ValidTimeSelector;
-import com.nicholasdoherty.socialcore.utils.ItemStackBuilder;
+import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,43 +15,29 @@ import org.joda.time.DateTime;
 /**
  * Created by john on 1/14/15.
  */
+@SuppressWarnings("unused")
 public class JailPlaintiffClickItem implements ClickItem {
     JudgeBaseView judgeBaseView;
-
-    public JailPlaintiffClickItem(JudgeBaseView judgeBaseView) {
+    
+    public JailPlaintiffClickItem(final JudgeBaseView judgeBaseView) {
         this.judgeBaseView = judgeBaseView;
     }
-
+    
     @Override
-    public void click(boolean right, final boolean shift) {
-        if (right)
+    public void click(final boolean right, final boolean shift) {
+        if(right) {
             return;
-        Player p = judgeBaseView.getInventoryGUI().getPlayer();
-        CalendarGUI.createAndOpen(p, new CalanderRunnable() {
-            @Override
-            public void run(long time) {
-                judgeBaseView.getCourtSession().addPostCourtAction(new JailPlantiff(time));
-                judgeBaseView.getInventoryGUI().open();
-            }
-        }, new ValidTimeSelector() {
-            @Override
-            public boolean isValid(DateTime dateTime) {
-                if (dateTime.isAfter(DateTime.now())) {
-                    return true;
-                }
-                return false;
-            }
-        }, new CancelAction() {
-            @Override
-            public void onCancel() {
-                judgeBaseView.getInventoryGUI().open();
-            }
-        }, Courts.getCourts().getDefaultDayGetter());
+        }
+        final Player p = judgeBaseView.getInventoryGUI().getPlayer();
+        CalendarGUI.createAndOpen(p, time -> {
+            judgeBaseView.getCourtSession().addPostCourtAction(new JailPlantiff(time));
+            judgeBaseView.getInventoryGUI().open();
+        }, dateTime -> dateTime.isAfter(DateTime.now()), () -> judgeBaseView.getInventoryGUI().open(), Courts.getCourts().getDefaultDayGetter());
     }
-
+    
     @Override
     public ItemStack itemstack() {
-        return new ItemStackBuilder(Material.IRON_FENCE)
+        return new ItemStackBuilder(Material.IRON_BARS)
                 .setName(ChatColor.RED + "Jail Plaintiff")
                 .addLore(ChatColor.GRAY + "<Left click to jail",
                         ChatColor.GRAY + "the plaintiff>")

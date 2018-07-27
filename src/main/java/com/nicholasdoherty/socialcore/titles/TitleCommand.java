@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.titles;
 
-import com.nicholasdoherty.socialcore.utils.VoxStringUtils;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
