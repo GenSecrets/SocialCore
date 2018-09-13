@@ -57,19 +57,22 @@ public class PolicyManager {
     public Policy checkStateChange(Policy policy) {
         if (policy.getState() == Policy.State.UNCONFIRMED && policy.getConfirmApprovals().size()
                 >= policyConfig.getJudgesRequiredToConfirm()) {
+        	getServer().dispatchCommand((getServer.getConsoleSender(), "/mail sendall " + policyConfig.getPolicyStartVotingMessage());
             return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.MAIN_VOTING).orElse(policy);
         }else if (policy.getState() == Policy.State.MAIN_VOTING && policy.totalVotes() >= policyConfig.getPolicyRequiredVotes()){
             float percent = (policy.getApprovals().size()*100f) / policy.totalVotes();
             if (percent <= policyConfig.getPolicyApprovalRateRemoved()) {
                 return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.FAILED).orElse(policy);
             }else if (percent >= policyConfig.getPolicyApprovalRateRequired()) {
-                Bukkit.broadcastMessage(policyConfig.getPolicyOfficialApproveVotesMessage().replace("policy-number",policy.getId()+""));
+                Bukkit.broadcastMessage(policyConfig.getPolicyOfficialApproveVotesMessage().replace("policy-number",policy.getId()+""));  
                 return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.IN_EFFECT).orElse(policy);
             }
         }else if (policy.getState() == Policy.State.MAIN_VOTING && new Date().getTime() > policy.getCreationTime().getTime()
                  + VoxTimeUnit.TICK.toMillis(policyConfig.getPolicyAutoPassTicks())) {
+        	//JACEK ADAMS (Quilipayun): we've decided that policies should auto fail instead of pass. The AutoPass message is now an auto-fail one, but I'm too scared of
+        	//other dependencies to change it's variable name.
             Bukkit.broadcastMessage(policyConfig.getPolicyOfficialApproveAutoMessage().replace("policy-number",policy.getId()+""));
-            return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.IN_EFFECT).orElse(policy);
+            return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.FAILED).orElse(policy);
         }else if (policy.getState() == Policy.State.UNCONFIRMED && new Date().getTime() > policy.getCreationTime().getTime()
                 + com.voxmc.voxlib.VoxTimeUnit.TICK.toMillis(policyConfig.getPolicyConfirmTimeoutTicks())) {
             return courts.getSqlSaveManager().updatePolicyState(policy, Policy.State.FAILED).orElse(policy);

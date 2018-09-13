@@ -17,7 +17,7 @@ public class PolicyConfig {
     private String voteStatusUnconfirmed,voteStatusConfirmed;
     private String voteStatusApproved,voteStatusDisapproved,voteStatusAbstained;
     private String policyDraftAlreadyPendingMessage,policyNewMessage,policyFinishMessage,policyFinishCharactersMessage,
-    policyOfficialApproveVotesMessage,policyOfficialApproveAutoMessage;
+    policyOfficialApproveVotesMessage,policyOfficialApproveAutoMessage, policyStartVotingMessage;
     private long policyCheckInterval,policyAutoPassTicks,policyConfirmTimeoutTicks;
     private int policyApprovalRateRemoved,policyApprovalRateRequired,policyRequiredVotes,
     policyMaxCharacters,judgesRequiredToConfirm;
@@ -41,6 +41,7 @@ public class PolicyConfig {
         policyFinishMessage = ConfigUtil.getColorizedString(langSection,"policy-finish");
         policyOfficialApproveVotesMessage = ConfigUtil.getColorizedString(langSection,"policy-official-votes");
         policyOfficialApproveAutoMessage = ConfigUtil.getColorizedString(langSection,"policy-official-auto");
+        policyStartVotingMessage = ConfigUtil.getColorizedSTring(langSection, "policy-start-voting");
         stateDescriptions = new HashMap<>();
         ConfigurationSection voteStatusSection = langSection.getConfigurationSection("vote-status");
         voteStatusUnconfirmed = ConfigUtil.getColorizedString(voteStatusSection,"unconfirmed");
@@ -127,12 +128,16 @@ public class PolicyConfig {
     public String getPolicyOfficialApproveAutoMessage() {
         return policyOfficialApproveAutoMessage;
     }
-
+    
+    public String getPolicyStartVotingMessage()
+    {
+    	return policyStartVotingMessage;
+    }
 
     public int getPolicyApprovalRateRemoved() {
         return policyApprovalRateRemoved;
     }
-
+    
     public int getPolicyApprovalRateRequired() {
         return policyApprovalRateRequired;
     }

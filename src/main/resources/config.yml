@@ -147,8 +147,9 @@ courts:
     policy-new: "&6[&eCourt&6]&c You have received a book for which you should write your intended policy. You have a 300 character limit, and should include wether are not a punishment is applicable to ths policy."
     policy-finish-characters: "&6[&eCourt&6]&c This policy exceeds the max character count. Try simplifying the policy or splitting into into multiple policies."
     policy-finish: "&6[&eCourt&6]&c You have published your policy for review. Three other judges will be required to approve the policy before it is made public."
+    policy-start-voting: "A new policy has been moved to voting. Please cast your votes at /policies"
     policy-official-votes: "&6[&eCourt&6]&c The policy {policy-number} has been approved by the community, and is now official."
-    policy-official-auto: "&6[&eCourt&6]&c The policy {policy-number} has been approved by default."
+    policy-official-auto: "&6[&eCourt&6]&c The policy {policy-number} has been failed by default."
     vote-status:
       unconfirmed: You have not confirmed this policy.
       confirmed: You have confirmed this policy.
