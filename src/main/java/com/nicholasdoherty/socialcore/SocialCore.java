@@ -2,7 +2,6 @@ package com.nicholasdoherty.socialcore;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inputlib.InputLib;
-import com.voxmc.voxlib.gui.inventorygui.InventoryGUIManager;
 import com.nicholasdoherty.socialcore.emotes.EmoteCommand;
 import com.nicholasdoherty.socialcore.emotes.EmoteListener;
 import com.nicholasdoherty.socialcore.emotes.Emotes;
@@ -17,6 +16,7 @@ import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
 import com.nicholasdoherty.socialcore.titles.TitleManager;
+import com.voxmc.voxlib.gui.inventorygui.InventoryGUIManager;
 import com.voxmc.voxlib.util.VaultUtil;
 import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.Bukkit;
@@ -26,6 +26,7 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,7 +223,7 @@ public class SocialCore extends JavaPlugin {
                 final JarEntry entry = jar.getJarEntry(jarPath);
                 if(entry != null && !entry.isDirectory()) {
                     final InputStream in = jar.getInputStream(entry);
-                    final InputStreamReader isr = new InputStreamReader(in, "UTF8");
+                    final InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8);
                     if(writeName.isFile()) {
                         if(backupOld) {
                             if(fileBackup.isFile()) {
@@ -234,7 +235,7 @@ public class SocialCore extends JavaPlugin {
                         }
                     }
                     final FileOutputStream out = new FileOutputStream(writeName);
-                    final OutputStreamWriter osw = new OutputStreamWriter(out, "UTF8");
+                    final OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                     final char[] tempbytes = new char[512];
                     int readbytes = isr.read(tempbytes, 0, 512);
                     while(readbytes > -1) {
