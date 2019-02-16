@@ -80,26 +80,38 @@ public class SocialCore extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        getLogger().info("Starting SocialCore...");
         try {
             VaultUtil.setup(getServer());
         } catch(final NotSetupException e) {
             getLogger().severe("Vault not detected, exceptions ahoy");
         }
         Clock.start(plugin);
+        getLogger().info("SC Clock started!");
         timeConditionManager = new TimeConditionManager();
         inventoryGUIManager = new InventoryGUIManager(this);
         inputLib = new InputLib(this);
         socialPlayersCache = new HashMap<>();
         //helpers
         checkConfig();
+        getLogger().info("Config checked!");
         final String directory = getDataFolder().toString();
+        getLogger().info("Creating handlers...");
         races = new Races(this);
+        getLogger().info("[SC Handler] Created races handler");
         save = new SaveHandler(directory, this);
+        getLogger().info("[SC Handler] Created save handler");
         marriages = new Marriages(this);
+        getLogger().info("[SC Handler] Created marriages handler");
         store = new SQLStore();
+        getLogger().info("[SC Handler] Created MySQL handler");
         courts = new Courts(this);
+        getLogger().info("[SC Handler] Created courts handler");
         globalMute = new GlobalMute(this);
+        getLogger().info("[SC Handler] Created global mute handler");
         whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist"); // Putting this here so I don't have to read from config a lot
+        getLogger().info("[SC Handler] Created piggyback whitelist config");
+        getLogger().info("Finished creating handlers!");
         //commands
         final CommandExecutor scCommandHandler = new SCCommandHandler(this);
         final CommandExecutor marriageCommandHandler = new MarriageCommandHandler(this);
@@ -126,17 +138,21 @@ public class SocialCore extends JavaPlugin {
         //
         //testing
         getCommand("getpermissions").setExecutor(new ViewPermissionsCommand());
+        getLogger().info("Finished setting up commands!");
         //langs
         lang = new SCLang(this);
         lang.loadConfig();
+        getLogger().info("Finished setting up lang!");
         
         //events
         getServer().getPluginManager().registerEvents(new SCListener(this), this);
+        getLogger().info("Registered listeners!");
         
         //players
 //
         //genders
         genders = new Genders();
+        getLogger().info("Finished setting up genders!");
         
         //marriages
 //
@@ -146,7 +162,9 @@ public class SocialCore extends JavaPlugin {
         new EmoteCommand(this);
         new FixerCommand(this);
         new ForceEmoteCommand(this);
+        getLogger().info("Finished setting up emotes!");
         races.reloadRaces();
+        getLogger().info("Reloaded races!");
         for(final Player p : Bukkit.getOnlinePlayers()) {
             final SocialPlayer socialPlayer = save.getSocialPlayer(p.getName());
             if(socialPlayer.getRace() != null) {
@@ -171,7 +189,10 @@ public class SocialCore extends JavaPlugin {
                 race.applyRace(p, permissionAttachment);
             }
         }
+        getLogger().info("Updated online player races!");
         titleManager = new TitleManager(this);
+        getLogger().info("Updated titles!");
+        getLogger().info("SocialCore has finished starting!");
     }
     
     public TimeConditionManager getTimeConditionManager() {

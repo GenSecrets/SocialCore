@@ -57,43 +57,61 @@ public class Courts {
     private boolean forceNotSave;
     
     public Courts(final SocialCore plugin) {
+        plugin.getLogger().info("[COURTS] Starting courts...");
         courts = this;
         this.plugin = plugin;
         registerSerializers();
+        plugin.getLogger().info("[COURTS] Registered serializers!");
         
         //DO NOT MODIFY
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
+        plugin.getLogger().info("[COURTS] Reloaded config!");
         courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
         courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
+        plugin.getLogger().info("[COURTS] Loaded config and lang!");
         sqlSaveManager = new SqlSaveManager();
         sqlSaveManager.upgrade();
+        plugin.getLogger().info("[COURTS] Upgraded DB!");
         sqlSaveManager.clean();
+        plugin.getLogger().info("[COURTS] Cleaned DB!");
         try {
             sqlSaveManager.purgeVotes();
         } catch(final Exception e) {
             e.printStackTrace();
         }
+        plugin.getLogger().info("[COURTS] Purged outdated votes!");
         final long time1 = new Date().getTime();
         citizenManager = new CitizenManager(courts);
+        plugin.getLogger().info("[COURTS] Set up citizens manager!");
         try {
             courtsSaveManager = new CourtsSaveManager(this);
         } catch(final Exception e) {
             e.printStackTrace();
         }
+        plugin.getLogger().info("[COURTS] Set up save manager!");
         electionManager = new ElectionManager(sqlSaveManager.election());
+        plugin.getLogger().info("[COURTS] Set up election manager!");
         judgeManager = new JudgeManager(this);
+        plugin.getLogger().info("[COURTS] Set up judge manager!");
         caseManager = new CaseManager(sqlSaveManager.getCases());
+        plugin.getLogger().info("[COURTS] Set up case manager!");
         stallManager = new StallManager(sqlSaveManager.getStalls());
+        plugin.getLogger().info("[COURTS] Set up stall manager!");
         courtSessionManager = courtsSaveManager.courtRoomManager();
+        plugin.getLogger().info("[COURTS] Set up court session manager!");
         defaultDayGetter = new DefaultDayGetter(caseManager);
+        plugin.getLogger().info("[COURTS] Set up default day getter!");
         notificationManager = new NotificationManager(this);
+        plugin.getLogger().info("[COURTS] Set up notification manager!");
         fineManager = new FineManager(sqlSaveManager.getFines());
         fineManager.startTimer();
+        plugin.getLogger().info("[COURTS] Set up fine manager!");
         policyManager = new PolicyManager(this);
+        plugin.getLogger().info("[COURTS] Set up policy manager!");
         final long time2 = new Date().getTime();
         final long diff = time2 - time1;
-        plugin.getLogger().info("Took " + diff + "ms to deserialize " + caseManager.amount() + " cases");
+        plugin.getLogger().info("[COURTS] Took " + diff + "ms to deserialize " + caseManager.amount() + " cases");
         new CourtCommand(this);
         new ElectionCommand(this, electionManager);
         new JudgesCommand(this, judgeManager);
@@ -101,12 +119,17 @@ public class Courts {
         new JudgeCommand(this, judgeManager);
         new SecretaryCommand(this, judgeManager);
         new IfElectionCommand(this, electionManager);
+        plugin.getLogger().info("[COURTS] Registered commands!");
         for(final Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
             judgeManager.setPrefix(p);
         }
+        plugin.getLogger().info("[COURTS] Updated online judge perms/prefixes!");
         new PrefixManager(this);
+        plugin.getLogger().info("[COURTS] Set up prefix manager!");
         divorceManager = new DivorceManager(plugin, this);
+        plugin.getLogger().info("[COURTS] Set up divorce manager!");
+        plugin.getLogger().info("[COURTS] Finished loading courts!");
     }
     
     public static Courts getCourts() {
