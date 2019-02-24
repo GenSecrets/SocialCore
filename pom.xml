@@ -7,7 +7,8 @@
     <groupId>SocialCore</groupId>
     <artifactId>SocialCore</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <repositories>
+
+    <!-- repositories>
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -24,18 +25,21 @@
             <id>dmulloy2-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
-    </repositories>
+    </repositories -->
+
     <dependencies>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib-API</artifactId>
             <version>4.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-jdbc</artifactId>
             <version>0.7.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -51,12 +55,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
@@ -76,6 +82,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
@@ -91,6 +98,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>com.massivecraft.vampire</groupId>
             <artifactId>Vampire</artifactId>
@@ -106,6 +114,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>townychat</groupId>
             <artifactId>townychat</artifactId>
@@ -113,6 +122,7 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/TownyChat.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>essentials</groupId>
             <artifactId>essentials</artifactId>
@@ -120,11 +130,13 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/EssentialsX-2.0.1.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>com.massivecraft.massivecore</groupId>
             <artifactId>MassiveCore</artifactId>
             <version>2.8.22-SNAPSHOT</version>
         </dependency>
+
         <!-- dependency>
             <groupId>mcore</groupId>
             <artifactId>mcore</artifactId>
@@ -144,6 +156,7 @@
                 </exclusion>
             </exclusions>
         </dependency -->
+
         <dependency>
             <groupId>groupmanager</groupId>
             <artifactId>groupmanager</artifactId>
@@ -151,6 +164,7 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/EssentialsGroupManager.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>org.kitteh</groupId>
             <artifactId>VanishNoPacket</artifactId>
@@ -170,21 +184,25 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>com.voxmc</groupId>
             <artifactId>voxlib</artifactId>
             <version>2.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.5</version>
         </dependency>
+
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+
         <dependency>
             <groupId>wgregionevents</groupId>
             <artifactId>wgregionevents</artifactId>
@@ -192,6 +210,7 @@
             <scope>system</scope>
             <systemPath>${basedir}/libs/WGRegionEvents.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>Werewolves</groupId>
             <artifactId>Werewolves</artifactId>
@@ -215,31 +234,35 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
             <version>1.2.5</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.22</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.22</version>
         </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.github.davidmoten/rxjava-extras -->
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-extras</artifactId>
             <version>0.8.0.6</version>
         </dependency>
-
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -280,6 +303,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -289,6 +313,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
