@@ -3,8 +3,8 @@ package com.nicholasdoherty.socialcore;
 import com.massivecraft.vampire.entity.UPlayer;
 import com.massivecraft.vampire.event.EventVampirePlayerInfectionChange;
 import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
+import com.nicholasdoherty.socialcore.utils.VampWWUtil;
 import com.nicholasdoherty.werewolf.event.WerewolfInfectionEvent;
-import com.voxmc.voxlib.util.VampWWUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,7 +24,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-@SuppressWarnings({"unused", "TypeMayBeWeakened", "deprecation"})
+@SuppressWarnings({"unused", "deprecation"})
 public class SCListener implements Listener {
     public static Map<String, String> riding = new HashMap<>();
     SocialCore sc;
@@ -254,17 +254,13 @@ public class SCListener implements Listener {
         if(riding.containsKey(damaged.getName()) && damaged.isInsideVehicle()) {
             damaged.leaveVehicle();
             riding.remove(damaged.getName());
-            if(riding.containsKey(other.getName())) {
-                riding.remove(other.getName());
-            }
+            riding.remove(other.getName());
             activatePiggyBackCooldown(damaged, other);
         }
         if(riding.containsKey(other.getName()) && other.isInsideVehicle()) {
             other.leaveVehicle();
             riding.remove(other.getName());
-            if(riding.containsKey(damaged.getName())) {
-                riding.remove(damaged.getName());
-            }
+            riding.remove(damaged.getName());
             activatePiggyBackCooldown(damaged, other);
         }
     }
@@ -273,15 +269,11 @@ public class SCListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         if(event.getPlayer().isInsideVehicle()) {
             event.getPlayer().leaveVehicle();
-            if(riding.containsKey(event.getPlayer().getName())) {
-                riding.remove(event.getPlayer().getName());
-            }
+            riding.remove(event.getPlayer().getName());
         }
         if(event.getPlayer().getPassenger() != null) {
             event.getPlayer().getPassenger().leaveVehicle();
-            if(riding.containsKey(event.getPlayer().getName())) {
-                riding.remove(event.getPlayer().getName());
-            }
+            riding.remove(event.getPlayer().getName());
         }
     }
     
