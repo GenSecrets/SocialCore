@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Created by john on 3/4/15.
  */
-@SuppressWarnings({"SqlResolve", "UnusedParameters", "SqlDialectInspection"})
+@SuppressWarnings({"UnusedParameters", "SqlDialectInspection"})
 public class SqlSaveManager {
     private final Courts courts;
     
