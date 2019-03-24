@@ -4,6 +4,7 @@ import com.massivecraft.vampire.entity.UPlayer;
 import com.nicholasdoherty.werewolf.core.WPlayer;
 import com.nicholasdoherty.werewolf.core.storage.WStore;
 import com.nicholasdoherty.werewolf.util.Lang;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,9 +34,9 @@ public final class VampWWUtil {
     
     @SuppressWarnings("deprecation")
     public static boolean isWWDisabledFood(final ItemStack itemStack) {
-        final int item = itemStack.getType().getId();
-        for(int i = 0; i < Lang.disabledFood.length; i++) {
-            if(item == Lang.disabledFood[i]) {
+        final Material item = itemStack.getType();
+        for(int i = 0; i < Lang.getDisabledFood().length; i++) {
+            if(item == Lang.getDisabledFood()[i]) {
                 return true;
             }
         }
