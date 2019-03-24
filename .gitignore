@@ -1,10 +1,7 @@
-*.jar
 .idea
 target/
 *.iml
 .DS_Store
 *.zip
-.idea
-.DS_Store
 dependency-reduced-pom.xml
-*.iml
+/*.jar
