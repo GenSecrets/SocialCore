@@ -69,7 +69,8 @@ public class PolicyIcon implements ClickItem {
                         policy1 -> Courts.getCourts().getPolicyManager().checkStateChange(policy1)
                 );
             } else if(shift) {
-                if(Courts.getCourts().getJudgeManager().isJudge(viewer.getUuid())) {
+                if(Courts.getCourts().getJudgeManager().isJudge(viewer.getUuid())
+                        || viewer.getPlayer().hasPermission("courts.policy.delete")) {
                     final int id = policyInstance.getId();
                     Courts.getCourts().getSqlSaveManager().deletePolicy((long) id);
                     final Player p = viewer.getPlayer();
@@ -159,7 +160,8 @@ public class PolicyIcon implements ClickItem {
                         ChatColor.GRAY + "<Left click to approve>",
                         ChatColor.GRAY + "<Right click to disapprove>");
             } else if(inventoryView instanceof PolicyView) {
-                if(SocialCore.plugin.getCourts().getJudgeManager().isJudge(viewer.getUuid())) {
+                if(SocialCore.plugin.getCourts().getJudgeManager().isJudge(viewer.getUuid())
+                        || viewer.getPlayer().hasPermission("courts.policy.delete")) {
                     itemStackBuilder = itemStackBuilder.addLore(ChatColor.RED + "<Shift-click to delete>");
                 }
             }

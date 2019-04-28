@@ -240,3 +240,6 @@ permissions:
     courts.nopay:
         description: Doesn't require payment for testing
         default: false
+    courts.policy.delete:
+        description: Allow deleting policies without being a judge
+        default: op
