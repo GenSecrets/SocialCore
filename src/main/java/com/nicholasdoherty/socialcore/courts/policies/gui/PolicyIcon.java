@@ -69,7 +69,8 @@ public class PolicyIcon implements ClickItem {
                         policy1 -> Courts.getCourts().getPolicyManager().checkStateChange(policy1)
                 );
             } else if(shift) {
-                if(Courts.getCourts().getJudgeManager().isJudge(viewer.getUuid())) {
+                if(Courts.getCourts().getJudgeManager().isJudge(viewer.getUuid())
+                        || viewer.getPlayer().hasPermission("courts.policy.delete")) {
                     final int id = policyInstance.getId();
                     Courts.getCourts().getSqlSaveManager().deletePolicy((long) id);
                     final Player p = viewer.getPlayer();
