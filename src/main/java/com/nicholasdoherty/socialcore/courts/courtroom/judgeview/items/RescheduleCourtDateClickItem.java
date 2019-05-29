@@ -4,12 +4,12 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
 import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
+import com.voxmc.voxlib.libs.org.joda.time.DateTime;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class RescheduleCourtDateClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStack itemStack = new ItemStack(Material.CLOCK);
+        final ItemStack itemStack = new ItemStack(Material.WATCH);
         final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Set court date");
         final List<String> lore = new ArrayList<>();

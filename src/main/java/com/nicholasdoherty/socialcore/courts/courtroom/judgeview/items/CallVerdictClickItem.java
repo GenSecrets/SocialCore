@@ -28,7 +28,7 @@ public class CallVerdictClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStackBuilder itemStackBuilder = new ItemStackBuilder(Material.GOLDEN_AXE);
+        final ItemStackBuilder itemStackBuilder = new ItemStackBuilder(Material.GOLD_AXE);
         itemStackBuilder.addEnchant(Enchantment.DURABILITY, 1);
         itemStackBuilder.setName(ChatColor.YELLOW + "Call Verdict");
         itemStackBuilder.addLore(ChatColor.GRAY + "<Left click to announce your verdict>",

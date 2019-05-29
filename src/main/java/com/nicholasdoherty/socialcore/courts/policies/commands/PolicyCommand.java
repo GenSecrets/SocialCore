@@ -36,7 +36,7 @@ public class PolicyCommand implements CommandExecutor {
         if(itemStack == null) {
             return false;
         }
-        if(itemStack.getType() != Material.WRITABLE_BOOK) {
+        if(itemStack.getType() != Material.BOOK_AND_QUILL) {
             return false;
         }
         final ItemMeta itemMeta = itemStack.getItemMeta();
@@ -79,7 +79,7 @@ public class PolicyCommand implements CommandExecutor {
                     }
                 } else {
                     if(args[0].equalsIgnoreCase("new")) {
-                        final ItemStack give = new ItemStackBuilder(Material.WRITABLE_BOOK).setName("Policy Draft")
+                        final ItemStack give = new ItemStackBuilder(Material.BOOK_AND_QUILL).setName("Policy Draft")
                                 .toItemStack();
                         p.getInventory().addItem(give);
                         p.sendMessage(policyManager.getPolicyConfig().getPolicyNewMessage());

@@ -73,14 +73,14 @@ public class StallListener implements Listener {
         final int slot = event.getSlot();
         final ItemStack orig = event.getPlayer().getInventory().getItem(slot).clone();
         final ItemMeta oldMeta = orig.getItemMeta().clone();
-        if(orig.getType() == Material.WRITABLE_BOOK) {
+        if(orig.getType() == Material.BOOK_AND_QUILL) {
             if(!event.isSigning()) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         if(p.isOnline()) {
                             final ItemStack newItem = p.getInventory().getItem(slot);
-                            if(newItem != null && newItem.getType() == Material.WRITABLE_BOOK) {
+                            if(newItem != null && newItem.getType() == Material.BOOK_AND_QUILL) {
                                 final ItemMeta itemMeta = newItem.getItemMeta();
                                 if(oldMeta.getDisplayName() != null) {
                                     itemMeta.setDisplayName(oldMeta.getDisplayName());

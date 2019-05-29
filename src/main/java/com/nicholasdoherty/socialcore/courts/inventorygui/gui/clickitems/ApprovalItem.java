@@ -65,7 +65,7 @@ public class ApprovalItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        final ItemStack head = new ItemStack(Material.SKULL_ITEM);
         head.setDurability((short) 3);
         final SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
         skullMeta.setOwner(approvedCitizen.getName());

@@ -879,7 +879,7 @@ public class SqlSaveManager {
                 caseMeta = (CaseMeta) SCSerializer.deserialize(caseMetaString);
             }
             
-            ItemStack caseBook = new ItemStack(Material.WRITABLE_BOOK);
+            ItemStack caseBook = new ItemStack(Material.BOOK_AND_QUILL);
             final String caseBookString = resultSet.getString("case_book_blob");
             if(caseBookString != null) {
                 caseBook = (ItemStack) SCSerializer.deserialize(caseBookString);

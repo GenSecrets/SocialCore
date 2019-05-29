@@ -1,9 +1,9 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
-import com.voxmc.voxlib.gui.inventorygui.views.calendar.CalendarEvent;
-import com.voxmc.voxlib.gui.inventorygui.views.calendar.DayGetter;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import com.voxmc.voxlib.gui.inventorygui.views.calander.CalendarEvent;
+import com.voxmc.voxlib.gui.inventorygui.views.calander.DayGetter;
+import com.voxmc.voxlib.libs.org.joda.time.DateTime;
+import com.voxmc.voxlib.libs.org.joda.time.LocalDate;
 
 import java.util.HashMap;
 import java.util.HashSet;
