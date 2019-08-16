@@ -41,7 +41,7 @@ public class DivorceManager {
     }
     
     private ItemStack defaultDivorceBook(final String exHusband, final String exWife, final ItemStack book) {
-        if(book == null || book.getType() != Material.BOOK_AND_QUILL) {
+        if(book == null || book.getType() != Material.WRITABLE_BOOK) {
             return null;
         }
         final BookMeta bookMeta = (BookMeta) book.getItemMeta();

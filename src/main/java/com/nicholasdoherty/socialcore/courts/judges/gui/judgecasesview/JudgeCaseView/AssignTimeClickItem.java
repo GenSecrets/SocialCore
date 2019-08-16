@@ -3,13 +3,13 @@ package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCas
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
-import com.voxmc.voxlib.libs.org.joda.time.DateTime;
-import com.voxmc.voxlib.libs.org.joda.time.LocalDate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class AssignTimeClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStack itemStack = new ItemStack(Material.WATCH);
+        final ItemStack itemStack = new ItemStack(Material.CLOCK);
         final ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Set court date");
         final List<String> lore = new ArrayList<>();

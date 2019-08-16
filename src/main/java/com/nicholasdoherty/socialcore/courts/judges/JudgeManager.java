@@ -8,7 +8,6 @@ import com.nicholasdoherty.socialcore.courts.notifications.NotificationManager;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.voxmc.voxlib.libs.org.joda.time.Days;
 import com.voxmc.voxlib.util.PlayerUtil;
 import com.voxmc.voxlib.util.VaultUtil;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.joda.time.Days;
 
 import java.util.*;
 import java.util.stream.Collectors;

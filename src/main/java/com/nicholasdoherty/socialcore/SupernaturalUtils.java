@@ -1,10 +1,5 @@
 package com.nicholasdoherty.socialcore;
 
-import com.massivecraft.vampire.entity.UPlayer;
-import com.nicholasdoherty.werewolf.core.storage.WStore;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 /**
  * Created by john on 2/7/14.
  */
@@ -13,11 +8,15 @@ public final class SupernaturalUtils {
     }
     
     public static boolean isVampire(final String name) {
+        /*
         final UPlayer uPlayer = UPlayer.get(name);
         return uPlayer != null && (uPlayer.isInfected() || uPlayer.getInfection() > 0 || uPlayer.isVampire());
+         */
+        return false;
     }
     
     public static boolean isWerewolf(String name) {
+        /*
         if(name == null) {
             return false;
         }
@@ -26,13 +25,18 @@ public final class SupernaturalUtils {
             name = Bukkit.getPlayer(name).getName();
         }
         return WStore.playerIsInfected(name);
+         */
+        return false;
     }
     
     public static boolean isSupernatural(final String name) {
-        return isVampire(name) || isWerewolf(name);
+        return false; // isVampire(name) || isWerewolf(name);
     }
     
     public static boolean isHuman(final String name) {
+        if(true) {
+            return true;
+        }
         if(name == null) {
             return true;
         }

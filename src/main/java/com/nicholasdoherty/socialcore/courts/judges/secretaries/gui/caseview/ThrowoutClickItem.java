@@ -29,7 +29,7 @@ public class ThrowoutClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStack itemStack = new ItemStack(Material.REDSTONE_COMPARATOR);
+        final ItemStack itemStack = new ItemStack(Material.COMPARATOR);
         final List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "<Left click to throw case out>");
         final ItemMeta itemMeta = itemStack.getItemMeta();

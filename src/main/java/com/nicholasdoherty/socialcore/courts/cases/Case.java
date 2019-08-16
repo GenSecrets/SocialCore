@@ -75,7 +75,7 @@ public class Case implements ConfigurationSerializable {
     }
     
     public static boolean isCaseBook(final ItemStack itemStack) {
-        if(itemStack == null || itemStack.getType() != Material.BOOK_AND_QUILL) {
+        if(itemStack == null || itemStack.getType() != Material.WRITABLE_BOOK) {
             return false;
         }
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
@@ -86,7 +86,7 @@ public class Case implements ConfigurationSerializable {
     }
     
     public static boolean isEmptyCaseBook(final ItemStack itemStack) {
-        if(itemStack == null || itemStack.getType() != Material.BOOK_AND_QUILL) {
+        if(itemStack == null || itemStack.getType() != Material.WRITABLE_BOOK) {
             return false;
         }
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
@@ -105,7 +105,7 @@ public class Case implements ConfigurationSerializable {
     }
     
     public static ItemStack baseItemStack() {
-        final ItemStack itemStack = new ItemStack(Material.BOOK_AND_QUILL);
+        final ItemStack itemStack = new ItemStack(Material.WRITABLE_BOOK);
         final BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
         final String bookTitle = ChatColor.WHITE + "Court Case";
         bookMeta.setDisplayName(bookTitle);

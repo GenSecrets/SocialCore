@@ -1,10 +1,7 @@
 package com.nicholasdoherty.socialcore;
 
-import com.massivecraft.vampire.entity.UPlayer;
-import com.massivecraft.vampire.event.EventVampirePlayerInfectionChange;
 import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
 import com.nicholasdoherty.socialcore.utils.VampWWUtil;
-import com.nicholasdoherty.werewolf.event.WerewolfInfectionEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,6 +31,7 @@ public class SCListener implements Listener {
         this.sc = sc;
     }
     
+    /*
     @EventHandler
     public void werewolfChange(final WerewolfInfectionEvent event) {
         final String name = event.getpName();
@@ -49,6 +47,7 @@ public class SCListener implements Listener {
             event.setCancelled(true);
         }
     }
+     */
     
     @EventHandler
     public void onlogoutInventory(final PlayerQuitEvent event) {
@@ -60,6 +59,7 @@ public class SCListener implements Listener {
         }.runTaskLater(sc, 1));
     }
     
+    /*
     @EventHandler
     public void vampireChange(final EventVampirePlayerInfectionChange event) {
         if(event.getInfection() == 0) {
@@ -80,6 +80,7 @@ public class SCListener implements Listener {
             uPlayer.setVampire(false);
         }
     }
+     */
     
     @EventHandler(priority = EventPriority.MONITOR)
     public void playerJoin(final PlayerJoinEvent event) {

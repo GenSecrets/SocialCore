@@ -31,7 +31,7 @@ public class ModifyPostActionsClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        return new ItemStackBuilder(Material.BOOK_AND_QUILL)
+        return new ItemStackBuilder(Material.WRITABLE_BOOK)
                 .addEnchant(Enchantment.DURABILITY, 1)
                 .setName(ChatColor.GOLD + "Modify Verdict Actions")
                 .addLore(ChatColor.GRAY + "<Click to modify verdict actions>")

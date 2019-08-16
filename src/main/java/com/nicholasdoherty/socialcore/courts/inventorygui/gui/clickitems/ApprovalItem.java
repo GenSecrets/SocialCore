@@ -4,11 +4,10 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.Secretary;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
-import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.voxmc.voxlib.util.TextUtil;
-import com.voxmc.voxlib.util.VoxStringUtils;
 import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.voxmc.voxlib.gui.inventorygui.InventoryView;
+import com.voxmc.voxlib.util.TextUtil;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -65,10 +64,10 @@ public class ApprovalItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        final ItemStack head = new ItemStack(Material.SKULL_ITEM);
-        head.setDurability((short) 3);
+        final ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         final SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
-        skullMeta.setOwner(approvedCitizen.getName());
+        //noinspection ConstantConditions
+        skullMeta.setOwningPlayer(approvedCitizen.toOfflinePlayer());
         skullMeta.setDisplayName(ChatColor.GOLD + approvedCitizen.getName());
         skullMeta.setLore(lore());
         head.setItemMeta(skullMeta);
@@ -88,10 +87,7 @@ public class ApprovalItem implements ClickItem {
                     if(o == null) {
                         return "";
                     }
-                    if(o instanceof Citizen) {
-                        return ChatColor.WHITE + ((Citizen) o).getName();
-                    }
-                    return o.toString();
+                    return ChatColor.WHITE + o.getName();
                 }))));
             }
         }

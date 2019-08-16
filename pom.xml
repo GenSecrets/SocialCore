@@ -77,6 +77,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.voxmc</groupId>
+            <artifactId>voxlib</artifactId>
+            <version>2.4.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- dependency>
             <groupId>com.massivecraft.vampire</groupId>
             <artifactId>Vampire</artifactId>
             <version>2.8.22-SNAPSHOT</version>
@@ -90,9 +96,9 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency -->
 
-        <dependency>
+        <!-- dependency>
             <groupId>com.massivecraft.massivecore</groupId>
             <artifactId>MassiveCore</artifactId>
             <version>2.8.22-SNAPSHOT</version>
@@ -106,7 +112,8 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency -->
+
         <dependency>
             <groupId>townychat</groupId>
             <artifactId>townychat</artifactId>
@@ -165,11 +172,11 @@
             <version>2.0.0</version>
         </dependency>
 
-        <dependency>
+        <!-- dependency>
             <groupId>com.voxmc.werewolves</groupId>
             <artifactId>Werewolves</artifactId>
             <version>2.0-SNAPSHOT</version>
-        </dependency>
+        </dependency -->
 
         <dependency>
             <groupId>io.reactivex</groupId>

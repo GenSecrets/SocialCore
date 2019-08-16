@@ -2,9 +2,9 @@ package com.nicholasdoherty.socialcore.courts.cases;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
-import com.voxmc.voxlib.gui.inventorygui.views.calander.CalendarEvent;
-import com.voxmc.voxlib.gui.inventorygui.views.calander.CalendarEventType;
-import com.voxmc.voxlib.libs.org.joda.time.DateTime;
+import com.voxmc.voxlib.gui.inventorygui.views.calendar.CalendarEvent;
+import com.voxmc.voxlib.gui.inventorygui.views.calendar.CalendarEventType;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 

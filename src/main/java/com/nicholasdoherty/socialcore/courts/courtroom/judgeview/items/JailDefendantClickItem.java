@@ -3,10 +3,10 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.courtroom.actions.JailDefendent;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
-import com.voxmc.voxlib.libs.org.joda.time.DateTime;
-import com.voxmc.voxlib.util.ItemStackBuilder;
 import com.voxmc.voxlib.gui.inventorygui.ClickItem;
 import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
+import org.joda.time.DateTime;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class JailDefendantClickItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        return new ItemStackBuilder(Material.IRON_FENCE)
+        return new ItemStackBuilder(Material.IRON_BARS)
                 .setName(ChatColor.RED + "Jail Defendant")
                 .addLore(ChatColor.GRAY + "<Left click to jail",
                         ChatColor.GRAY + "the defendant>")

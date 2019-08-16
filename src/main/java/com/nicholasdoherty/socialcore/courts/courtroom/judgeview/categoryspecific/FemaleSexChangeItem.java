@@ -32,7 +32,7 @@ public class FemaleSexChangeItem implements ClickItem {
     
     @Override
     public ItemStack itemstack() {
-        return new ItemStackBuilder(Material.GOLD_SWORD).setDurability((short) 2)
+        return new ItemStackBuilder(Material.GOLDEN_SWORD).setDurability((short) 2)
                 .setName(ChatColor.GREEN + "Female Sex Change")
                 .addLore(ChatColor.GRAY + "<Left click to change"
                         , ChatColor.GRAY + "the plaintiff's gender"

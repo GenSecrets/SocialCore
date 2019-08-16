@@ -79,7 +79,7 @@ public class CaseManager{
         return scheduledCases;
     }
     public Case caseByBook(final ItemStack itemInHand) {
-        if (itemInHand != null && itemInHand.getType() == Material.BOOK_AND_QUILL && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
+        if (itemInHand != null && itemInHand.getType() == Material.WRITABLE_BOOK && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
             final String displayName = itemInHand.getItemMeta().getDisplayName();
             if (!displayName.contains(ChatColor.WHITE + "Court Case ")) {
                 return null;
