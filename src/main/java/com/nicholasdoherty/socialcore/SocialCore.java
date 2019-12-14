@@ -78,6 +78,7 @@ public class SocialCore extends JavaPlugin {
         return courts;
     }
     
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
         plugin = this;

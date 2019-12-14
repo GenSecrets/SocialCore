@@ -3,6 +3,7 @@ package com.nicholasdoherty.socialcore;
 import com.nicholasdoherty.socialcore.marriages.MarriageGem;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class SCLang {
             final String p = sc.getConfig().getString("marriage-rings." + (i + 1));
             final String[] data = p.split(" ");
             final String[] d2 = data[0].split(":");
-            final int bID = Integer.parseInt(d2[0]);
+            final Material bID = Material.getMaterial(d2[0]);
             final String n = registerColors(data[1]);
             final MarriageGem gem = new MarriageGem(bID, n);
             marriageGems.add(gem);

@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@SuppressWarnings("UseOfObsoleteDateTimeApi")
+@SuppressWarnings({"UseOfObsoleteDateTimeApi", "NullableProblems"})
 public class MarriageCommandHandler implements CommandExecutor {
     
     private final SocialCore sc;
@@ -39,7 +39,7 @@ public class MarriageCommandHandler implements CommandExecutor {
         new ArrayList<>(l).stream().filter(s -> s.contains(with)).forEach(l::remove);
     }
     
-    @SuppressWarnings({"deprecation", "ConstantConditions"})
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if(sender.isOp() && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
@@ -88,7 +88,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                 int page = 0;
                 final List<String> allMarriages = sc.save.getAllMarriageNames();
                 if(args.length == 1) {
-                    page = Integer.valueOf(args[0]) - 1;
+                    page = Integer.parseInt(args[0]) - 1;
                 }
                 if(page < 0) {
                     page = 0;
@@ -130,7 +130,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                 final List<String> allEngagements = sc.save.getAllEngagements();
                 int page = 0;
                 if(args.length == 1) {
-                    page = Integer.valueOf(args[0]) - 1;
+                    page = Integer.parseInt(args[0]) - 1;
                 }
                 if(page < 0) {
                     page = 0;
@@ -212,7 +212,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             for(final ItemStack item : p.getInventory().getContents()) {
                                 if(item != null) {
                                     for(final MarriageGem gem : sc.lang.marriageGems) {
-                                        if(gem.getBlockID() == item.getType().getId()) {
+                                        if(gem.getBlockID() == item.getType()) {
                                             if(item.getItemMeta() != null) {
                                                 if(item.getItemMeta().getDisplayName() != null) {
                                                     if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -358,7 +358,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : player.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getType().getId()) {
+                                    if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -459,7 +459,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getType().getId()) {
+                                    if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -485,7 +485,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p2.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getType().getId()) {
+                                    if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -520,7 +520,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.lang.marriageGems) {
-                                    if(gem.getBlockID() == item.getType().getId()) {
+                                    if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -582,7 +582,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                     final List<String> allDivorces = sc.save.getAllDivorces();
                     int page = 0;
                     if(args.length == 1) {
-                        page = Integer.valueOf(args[0]) - 1;
+                        page = Integer.parseInt(args[0]) - 1;
                     }
                     if(page < 0) {
                         page = 0;
@@ -898,7 +898,6 @@ public class MarriageCommandHandler implements CommandExecutor {
             }
             if(cmd.getName().equalsIgnoreCase("unengage")) {
                 if(sender.hasPermission("sc.unengage")) {
-                    @SuppressWarnings("TypeMayBeWeakened")
                     final Player p1 = (Player) sender;
                     Engagement engagement = null;
                     for(final String eName : sc.save.getAllEngagements()) {
