@@ -3,221 +3,176 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.voxmc.socialcore</groupId>
     <artifactId>SocialCore</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0-001</version>
 
     <repositories>
+        <!-- JitPack = Used for remote repositories.
+            The biggest example is voxlib and WGRE from the voxpopulimc repo -->
         <repository>
-            <id>dmulloy2-repo</id>
-            <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
+            <id>jitpack</id>
+            <url>https://jitpack.io/</url>
         </repository>
 
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-
+        <!-- Vault Plugin (economy)-->
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
 
-        <repository>
-            <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-
+        <!-- World Edit Plugin API -->
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo</url>
         </repository>
 
+        <!-- ProtocolLib API -->
         <repository>
-            <id>Cube-Nation Nexus</id>
-            <url>http://nexus3.cube-nation.de/repository/maven-public/</url>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
 
+        <!-- Essentials Plugin API -->
         <repository>
             <id>essentials-repo</id>
             <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
 
+        <!-- SPIGOT MINECRAFT API -->
         <repository>
-            <id>kit</id>
-            <url>http://repo.kitteh.org/content/repositories/public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!-- PAPER MINECRAFT API -->
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib-API</artifactId>
-            <version>4.4.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.davidmoten</groupId>
-            <artifactId>rxjava-jdbc</artifactId>
-            <version>0.7.3</version>
-        </dependency>
-
+        <!-- Spigot/Bukkit Minecraft -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
+            <artifactId>spigot-api</artifactId>
+            <version>1.16.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
+        <!-- VoxPopuliMC Repo: VoxLib & WGRE -->
         <dependency>
-            <groupId>com.voxmc</groupId>
+            <groupId>org.bitbucket.voxpopulimc</groupId>
+            <artifactId>worldguard-region-events</artifactId>
+            <version>master-be87708839-1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.voxpopulimc</groupId>
             <artifactId>voxlib</artifactId>
-            <version>2.4.1-SNAPSHOT</version>
+            <version>1.16-f2f1cdfc0d-1</version>
         </dependency>
 
-        <!-- dependency>
-            <groupId>com.massivecraft.vampire</groupId>
-            <artifactId>Vampire</artifactId>
-            <version>2.8.22-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency -->
-
-        <!-- dependency>
-            <groupId>com.massivecraft.massivecore</groupId>
-            <artifactId>MassiveCore</artifactId>
-            <version>2.8.22-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency -->
-
+        <!-- TownyChat API (repo: JitPack) -->
         <dependency>
-            <groupId>townychat</groupId>
-            <artifactId>townychat</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/TownyChat.jar</systemPath>
+            <groupId>com.github.TownyAdvanced</groupId>
+            <artifactId>TownyChat</artifactId>
+            <version>0.83</version>
         </dependency>
 
+        <!-- Vault -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <!-- Essentials API (repo: Essentials) -->
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>
             <version>2.16.0</version>
         </dependency>
 
+        <!-- ProtocolLib API -->
         <dependency>
-            <groupId>org.kitteh</groupId>
-            <artifactId>VanishNoPacket</artifactId>
-            <version>3.19.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>craftbukkit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>vault</groupId>
-                    <artifactId>vault</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.5.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.voxmc</groupId>
-            <artifactId>voxlib</artifactId>
-            <version>2.4.1-SNAPSHOT</version>
-        </dependency>
-
+        <!--Joda Time: Replacement for java time -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.5</version>
         </dependency>
 
+        <!-- JSON Formatting/Control -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.voxmc.wgre</groupId>
-            <artifactId>worldguard-region-events</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-
-        <!-- dependency>
-            <groupId>com.voxmc.werewolves</groupId>
-            <artifactId>Werewolves</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency -->
-
+        <!-- ReactiveX Dependencies-->
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
             <version>1.2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.22</version>
         </dependency>
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava-extras</artifactId>
             <version>0.8.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rxjava-jdbc</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+
+        <!-- SLF4J Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.28</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.28</version>
+        </dependency>
+
+        <!-- Maven Dependencies -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.4</version>
+            <type>maven-plugin</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <type>maven-plugin</type>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Maven SHADE plugin: Hides different part of the class structure on build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.2.4</version>
                 <configuration>
                     <artifactSet>
                         <includes>
                             <include>joda-time:joda-time</include>
                             <include>com.googlecode.json-simple:json-simple</include>
-                            <include>com.voxmc:voxlib</include>
                             <include>com.github.davidmoten:rxjava-jdbc</include>
                             <include>com.github.davidmoten:rxjava-extras</include>
-                            <include>io.reactivex:rxjava</include>
-                            <include>org.slf4j:slf4j-api</include>
-                            <include>org.slf4j:slf4j-simple</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -242,6 +197,7 @@
                 </executions>
             </plugin>
 
+            <!-- Maven COMPILER plugin: Used for compiling the project -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -252,6 +208,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Maven SUREFIRE plugin: Used for unit testing -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
