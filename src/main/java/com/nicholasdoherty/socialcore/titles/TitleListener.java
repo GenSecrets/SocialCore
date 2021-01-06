@@ -1,6 +1,5 @@
 package com.nicholasdoherty.socialcore.titles;
 
-import com.voxmc.voxlib.util.ColoredTagsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,7 +20,7 @@ public class TitleListener implements Listener {
     
     @EventHandler
     public void logout(final PlayerQuitEvent event) {
-        ColoredTagsUtil.removeTitle(event.getPlayer());
+        titleManager.removeTitle(event.getPlayer());
     }
     
     @EventHandler(priority = EventPriority.MONITOR)

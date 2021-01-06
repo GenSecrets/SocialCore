@@ -3,7 +3,7 @@ package com.nicholasdoherty.socialcore.titles;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.libraries.ConfigAccessor;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
-import com.voxmc.voxlib.util.ColoredTagsUtil;
+import com.voxmc.voxlib.util.title.TitleUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -62,7 +62,8 @@ public class TitleManager {
     public void turnOffTitle(Player p) {
         playerTitles.remove(p.getUniqueId());
         saveIntoCache(p.getUniqueId(), null);
-        ColoredTagsUtil.removeTitle(p);
+        // TODO: Remove titles with VoxLib via commands
+        //ColoredTagsUtil.removeTitle(p);
     }
     
     private void saveIntoCache(UUID uuid, String title) {
@@ -93,6 +94,11 @@ public class TitleManager {
         saveIntoCache(p.getUniqueId(), title.getName());
         saveCacheFile();
     }
+
+    public void removeTitle(Player p){
+        // TODO: Remove Titles with VoxLib via commands
+        //ColoredTagsUtil.removeTitle(event.getPlayer());
+    }
     
     public void addTitle(Player p) {
         if(!playerTitles.containsKey(p.getUniqueId())) {
@@ -115,7 +121,8 @@ public class TitleManager {
     }
     
     private void applyTitle(Player p, Title title) {
-        ColoredTagsUtil.setTitle(p, title.getPrefix(), title.getSuffix());
+        // TODO: Apply Titles with VoxLib via commands
+        //ColoredTagsUtil.setTitle(p, title.getPrefix(), title.getSuffix());
     }
     
     public void initTitles() {
@@ -126,7 +133,8 @@ public class TitleManager {
     
     public void onDisable() {
         for(Player p : Bukkit.getOnlinePlayers()) {
-            ColoredTagsUtil.removeTitle(p);
+            // TODO: Remove titles safely for online players on plugin disable
+            //ColoredTagsUtil.removeTitle(p);
         }
     }
     
