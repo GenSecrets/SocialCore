@@ -2,10 +2,10 @@ package com.nicholasdoherty.socialcore.courts.mastercases;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
-import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.InventoryGUI;
 import com.voxmc.voxlib.gui.inventorygui.gui.clickitems.CaseInfoClickItem;
-import com.voxmc.voxlib.gui.inventorygui.views.PaginatedItemView;
+import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 

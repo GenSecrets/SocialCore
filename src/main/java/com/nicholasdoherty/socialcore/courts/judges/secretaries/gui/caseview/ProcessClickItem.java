@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.caseview;
 
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.ClickItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

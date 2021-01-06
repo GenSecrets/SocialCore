@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
-import com.voxmc.voxlib.gui.inventorygui.views.calendar.CalendarEvent;
-import com.voxmc.voxlib.gui.inventorygui.views.calendar.DayGetter;
+import com.voxmc.voxlib.gui.views.calendar.CalendarEvent;
+import com.voxmc.voxlib.gui.views.calendar.DayGetter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
