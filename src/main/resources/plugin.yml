@@ -1,11 +1,11 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 1.3-Z139
-authors: [theMightyChain,pascoej@murri.ca]
-loadafter: [Werewolf,Vampires,Essentials]
-softdepend: [ProtocolLib,WorldGuard,TownyChat,ColoredTags]
+version: 2.0-001
+authors: [theMightyChain,pascoej@murri.ca,GenSecrets]
+loadafter: [Vault,TownyChat,Essentials]
+softdepend: [ProtocolLib,WorldGuard,TownyChat]
 
-api-version: 1.13
+api-version: 1.16
 
 commands:
     ifelection:
@@ -212,9 +212,6 @@ permissions:
         default: false
     sc.race:
         description: Required to use races
-        default: true
-    sc.petname:
-        description: Required to use petname
         default: true
     sc.race.issupernatural:
         description: Allows a player to be a different race than default

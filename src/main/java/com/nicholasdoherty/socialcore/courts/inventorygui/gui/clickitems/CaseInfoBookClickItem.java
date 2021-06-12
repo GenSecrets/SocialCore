@@ -1,8 +1,8 @@
-package com.voxmc.voxlib.gui.inventorygui.gui.clickitems;
+package com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems;
 
 import com.nicholasdoherty.socialcore.courts.cases.Case;
-import com.voxmc.voxlib.gui.inventorygui.InventoryView;
-import com.voxmc.voxlib.gui.inventorygui.views.BookView;
+import com.voxmc.voxlib.gui.InventoryView;
+import com.voxmc.voxlib.gui.views.BookView;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.meta.BookMeta;
 

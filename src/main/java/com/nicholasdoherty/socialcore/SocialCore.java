@@ -16,7 +16,7 @@ import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
 import com.nicholasdoherty.socialcore.titles.TitleManager;
-import com.voxmc.voxlib.gui.inventorygui.InventoryGUIManager;
+import com.voxmc.voxlib.gui.InventoryGUIManager;
 import com.voxmc.voxlib.util.VaultUtil;
 import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.Bukkit;

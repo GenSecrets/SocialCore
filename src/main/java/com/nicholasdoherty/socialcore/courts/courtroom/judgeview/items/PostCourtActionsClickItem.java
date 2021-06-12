@@ -2,7 +2,7 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.PostCourtActionHolder;
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
+import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

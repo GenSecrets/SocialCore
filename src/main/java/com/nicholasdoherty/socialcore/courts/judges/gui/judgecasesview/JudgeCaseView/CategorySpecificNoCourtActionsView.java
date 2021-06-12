@@ -3,9 +3,9 @@ package com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeCas
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.categoryspecific.*;
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
-import com.voxmc.voxlib.gui.inventorygui.gui.clickitems.ChangeViewClickItem;
-import com.voxmc.voxlib.gui.inventorygui.views.PaginatedItemView;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.clickitems.ChangeViewClickItem;
+import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

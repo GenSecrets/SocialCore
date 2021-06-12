@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.courts.mastercases;
 
-import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
+import com.voxmc.voxlib.gui.InventoryGUI;
 import org.bukkit.entity.Player;
 
 /**

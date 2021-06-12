@@ -4,8 +4,8 @@ import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.ApprovalItem;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
-import com.voxmc.voxlib.gui.inventorygui.views.PaginatedItemView;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 

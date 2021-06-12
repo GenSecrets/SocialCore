@@ -2,8 +2,8 @@ package com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.JudgeBaseView;
-import com.voxmc.voxlib.gui.inventorygui.ClickItem;
-import com.voxmc.voxlib.gui.inventorygui.views.CalendarGUI;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.views.CalendarGUI;
 import org.joda.time.DateTime;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

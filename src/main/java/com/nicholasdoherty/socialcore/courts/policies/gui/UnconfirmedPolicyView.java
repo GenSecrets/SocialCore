@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore.courts.policies.gui;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
-import com.voxmc.voxlib.gui.inventorygui.InventoryGUI;
-import com.voxmc.voxlib.gui.inventorygui.InventoryView;
+import com.voxmc.voxlib.gui.InventoryGUI;
+import com.voxmc.voxlib.gui.InventoryView;
 import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.policies.Policy;
