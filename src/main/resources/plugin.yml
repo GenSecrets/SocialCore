@@ -12,22 +12,6 @@ commands:
         usage: /ifelection <command>
         description: runs command if election is scheduled
         permission: sc.utility
-    reloadtitles:
-        usage: /reloadtitles
-        description: reloads titles
-        permission: sc.admin
-    title:
-        usage: /title <title> or /title off
-        descripiton: Changes your title
-        permission: sc.titles
-    titles:
-        usage: /titles
-        description: Lists the titles you may use
-        permission: sc.titles
-    forceemote:
-        usage: /forceemote <player> <emote> [target]
-        description: Forces a player to do an emote
-        permission: sc.forceemote
     petname:
         usage: /petname [name]
         description: Give your significant other a pet name
@@ -65,18 +49,6 @@ commands:
         description: Displays the current version of social core
         usage: /<command>.
         permission: sc.basic
-    female:
-        description: Set your gender to female
-        usage: /<command>.
-        permission: sc.gender
-    male:
-        description: Set your gender to male
-        usage: /<command>.
-        permission: sc.gender
-    gender:
-        description: Check your gender.
-        usage: /<command>.
-        permission: sc.gender
     marriage:
         description: View all marriage commands.
         usage: /<command>.
@@ -115,59 +87,25 @@ commands:
     aunengage:
         description: Force unengage
         permission: sc.admin
-    emotes:
-        description: Shows availible emotes
-        permission: sc.emotes
-    race:
-        description: Race related commands
-        permission: sc.race
-    races:
-        description: Race related commands
-        permission: sc.race
     fixmarriages:
         description: fixes a bug
         permission: sc.admin
     getpermissions:
         description: View your permissions
         permission: sc.admin
-    globalmute:
-        description: Toggle a global mute
-        permission: sc.globalmute.use
-        aliases: [muteall,silence,shutuppls]
 permissions:
     sc.utility:
         description: Used for autocommand
         default: op
-    sc.titles:
-        description: Required to use title commands
-        default: true
     sc.defaultperm:
         description: all have
         default: true
-    sc.forceemote:
-        description: allows using forcemmote
-        default: op
     sc.status:
         description: allows use of status command
         default: true
     sc.petname:
         description: allows you to use /petname
         default: true
-    sc.racestatus:
-        description: Lets you use /race status
-        default: op
-    sc.emotes:
-        description: Required to show availible emotes
-        default: true
-    sc.gender:
-        description: Required to check and set gender
-        default: true
-    sc.gender.others:
-        description: Required to check other's gender
-        default: true
-    sc.set.others:
-        description: Required set other's gender
-        default: false
     sc.marriage:
         description: Required to view all marriage commands
         default: true
@@ -207,24 +145,9 @@ permissions:
     sc.admin:
         description: Required to marry a couple
         default: false
-    sc.samesex:
-        description: Required to propose samesex
-        default: false
-    sc.race:
-        description: Required to use races
-        default: true
-    sc.race.issupernatural:
-        description: Allows a player to be a different race than default
-        default: false
     sc.viewspouseinventory:
         description: Allows player to view their spouse's inventory.
         default: true
-    sc.globalmute.use:
-        description: Allows a player to toggle a global mute
-        default: op
-    sc.globalmute.bypass:
-        description: Allows a player to still chat even when a global mute is active
-        default: op
     courts.admin:
         description: Allows use of courts admin commands
         default: op
