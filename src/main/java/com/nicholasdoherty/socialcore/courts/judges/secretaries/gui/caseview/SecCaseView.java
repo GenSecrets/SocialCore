@@ -8,7 +8,7 @@ import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.courts.cases.CaseStatus;
 import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.gui.InventoryGUI;
-import com.voxmc.voxlib.gui.inventorygui.gui.clickitems.CaseInfoBookClickItem;
+import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.CaseInfoBookClickItem;
 import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import com.nicholasdoherty.socialcore.courts.judges.secretaries.gui.SecretaryCasePaginatedView;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;

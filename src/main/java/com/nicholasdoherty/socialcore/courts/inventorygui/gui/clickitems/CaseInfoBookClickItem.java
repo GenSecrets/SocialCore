@@ -1,4 +1,4 @@
-package com.voxmc.voxlib.gui.inventorygui.gui.clickitems;
+package com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems;
 
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.voxmc.voxlib.gui.InventoryView;
