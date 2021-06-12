@@ -18,7 +18,7 @@ marriage-rings:
     16: '388:0 &5Gem of New Life'
     17: '91:0 &5Ghastly Garnet'
     18: '86:0 &5Ghastly Garnet'
-    18: '264:0 &5Morbid Moonstone'
+    19: '264:0 &5Morbid Moonstone'
 #The required distance (in blocks) between the priest and both couples:
 priest-marriage-distance: 10
 #The required distance (in blocks) between each partner:
@@ -121,8 +121,6 @@ courts:
   category-config: 
     abandoned:
       permit-item: "paper 1 Unbreaking:1 name:&9Building_Permit lore:&6Awarded_to:_{citizen_name}|&5by_Judge:_{judge-name}|&2Permission_to_build/destroy|&2at_{location}|&7Permit|&3Bind_On_Pickup"
-    abandoned-chest:
-      permit-item: "paper 1 Unbreaking:1 name:&Chest_Permit lore:&6Awarded_to:_{citzen-name}|&5by_Judge:_{judge-name}|&2Permission_to_loot_chest(s)|&2at_{location}|&7Permit|&3Bind_On_Pickup"
   court-rooms: 
     test-courtroom: 
       effects-location: "new_vb,-1458,103,433"
@@ -140,9 +138,6 @@ courts:
     judge-prefix: "<J>"
     court-session-plaintiff-prefix: "<Plaintiff>"
     court-session-defendant-prefix: "<Defendant>"
-    judge-prefix: "&6<&eJ&6>"
-    court-session-plaintiff-prefix: "&6<Plaintiff>"
-    court-session-defendant-prefix: "&6<Defendant>"
     policy-draft-already-pending: "&6[&eCourt&6]&c There is already a policy awaiting approval."
     policy-new: "&6[&eCourt&6]&c You have received a book for which you should write your intended policy. You have a 300 character limit, and should include wether are not a punishment is applicable to ths policy."
     policy-finish-characters: "&6[&eCourt&6]&c This policy exceeds the max character count. Try simplifying the policy or splitting into into multiple policies."
@@ -162,7 +157,6 @@ courts:
       OTHER: "Cases which do not fit in any other category"
       TRESPASSING: "Trespassing involves a player repeatedly entering a player's property even after being asked to leave."
       CIVIL_MARRIAGE: "When two players wish to be married by a judge, discreetly."
-      SEX_CHANGE: "When a player needs to change their picked sex."
     citizen-stall: 
       case-already-filed: "&6[&eCourt&6]&c Case has already been filed"
       case-book-empty: "&6[&eCourt&6]&c This case book is empty. You need to fill it with the details of your case."
