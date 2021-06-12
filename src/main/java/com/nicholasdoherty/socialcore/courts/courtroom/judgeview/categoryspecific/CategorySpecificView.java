@@ -31,15 +31,9 @@ public class CategorySpecificView extends PaginatedItemView{
         if (caseCategory == CaseCategory.DIVORCE) {
             paginatedItems.add(new GrantDivorceItem(judgeBaseView.getCourtSession()));
         }
-        if (caseCategory == CaseCategory.ABANDONED || caseCategory == CaseCategory.ABANDONED_CHEST
+        if (caseCategory == CaseCategory.ABANDONED
                 || caseCategory == CaseCategory.TRESPASSING || caseCategory == CaseCategory.OTHER ) {
             paginatedItems.add(new GrantBuildingPermitItem(this));
-        }
-        if (caseCategory == CaseCategory.SAMESEX_MARRIAGE) {
-            paginatedItems.add(new GrantSameSexMarriageItem(judgeBaseView.getCourtSession()));
-        }
-        if (caseCategory == CaseCategory.ABANDONED_CHEST) {
-            paginatedItems.add(new GrantChestPermitItem(this));
         }
         this.setPaginatedItems(paginatedItems);
     }
