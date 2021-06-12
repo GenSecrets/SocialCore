@@ -870,7 +870,7 @@ public class SqlSaveManager {
             }
             CaseCategory caseCategory = null;
             final String caseCategoryString = resultSet.getString("case_category");
-            if(caseCategoryString != null) {
+            if(caseCategoryString != null && !caseCategoryString.equals("SAMESEX_MARRIAGE") && !caseCategoryString.equals("SEX_CHANGE") && !caseCategoryString.equals("ABANDONED_CHEST")) {
                 caseCategory = CaseCategory.valueOf(caseCategoryString);
             }
             CaseMeta caseMeta = null;
