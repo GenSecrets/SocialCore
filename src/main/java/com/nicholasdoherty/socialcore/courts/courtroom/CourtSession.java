@@ -247,15 +247,6 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
                 }
             }
         }
-        if(postCourtAction instanceof GrantChestPermit) {
-            for(final PostCourtAction postCourtAction1 : postCourtActions) {
-                if(postCourtAction1 instanceof GrantChestPermit) {
-                    if(postCourtAction.prettyDescription() != null && postCourtAction1.prettyDescription() != null && postCourtAction.prettyDescription().equals(postCourtAction1.prettyDescription())) {
-                        return;
-                    }
-                }
-            }
-        }
         if(postCourtAction instanceof JailDefendent) {
             removeAllPostCourtAction(JailPlantiff.class);
         }

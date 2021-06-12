@@ -220,14 +220,12 @@ public class Courts {
         ConfigurationSerialization.registerClass(FineDefendent.class);
         ConfigurationSerialization.registerClass(FinePlantiff.class);
         ConfigurationSerialization.registerClass(GrantBuildingPermit.class);
-        ConfigurationSerialization.registerClass(GrantChestPermit.class);
         ConfigurationSerialization.registerClass(GrantDivorce.class);
         ConfigurationSerialization.registerClass(JailDefendent.class);
         ConfigurationSerialization.registerClass(JailPlantiff.class);
         ConfigurationSerialization.registerClass(PostponeIndef.class);
         ConfigurationSerialization.registerClass(RescheduleCase.class);
         ConfigurationSerialization.registerClass(ThrowoutCase.class);
-        ConfigurationSerialization.registerClass(GrantSameSexMarriage.class);
         
         ConfigurationSerialization.registerClass(YayNayVote.class);
         ConfigurationSerialization.registerClass(GulityInnocentVote.class);
