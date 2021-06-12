@@ -1,7 +1,6 @@
 package com.nicholasdoherty.socialcore;
 
 import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
-import com.nicholasdoherty.socialcore.utils.VampWWUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,24 +30,6 @@ public class SCListener implements Listener {
         this.sc = sc;
     }
     
-    /*
-    @EventHandler
-    public void werewolfChange(final WerewolfInfectionEvent event) {
-        final String name = event.getpName();
-        if(SupernaturalUtils.isVampire(name)) {
-            event.setCancelled(true);
-            return;
-        }
-        final SocialPlayer socialPlayer = sc.save.getSocialPlayer(name);
-        if(socialPlayer.getRace() == null) {
-            return;
-        }
-        if(!socialPlayer.getRace().getName().equalsIgnoreCase("human")) {
-            event.setCancelled(true);
-        }
-    }
-     */
-    
     @EventHandler
     public void onlogoutInventory(final PlayerQuitEvent event) {
         event.getPlayer().getInventory().getViewers().forEach(v -> new BukkitRunnable() {
@@ -59,29 +40,6 @@ public class SCListener implements Listener {
         }.runTaskLater(sc, 1));
     }
     
-    /*
-    @EventHandler
-    public void vampireChange(final EventVampirePlayerInfectionChange event) {
-        if(event.getInfection() == 0) {
-            return;
-        }
-        final UPlayer uPlayer = event.getUplayer();
-        final String name = uPlayer.getMakerId();
-        if(SupernaturalUtils.isWerewolf(name)) {
-            System.out.println(1);
-            event.setInfection(0);
-            uPlayer.setVampire(false);
-            return;
-        }
-        //uPlayer.sendMessage(socialPlayer.getRace().getLoreName() + " " + sc.races.getDefaultRace().getLoreName());
-        if(!SupernaturalUtils.isHuman(name)) {
-            event.setInfection(0);
-            System.out.println(2);
-            uPlayer.setVampire(false);
-        }
-    }
-     */
-    
     @EventHandler(priority = EventPriority.MONITOR)
     public void playerJoin(final PlayerJoinEvent event) {
         final Player p = event.getPlayer();
@@ -89,31 +47,6 @@ public class SCListener implements Listener {
         final PermissionAttachment permissionAttachment = p.addAttachment(sc);
         p.setMetadata("pa", new FixedMetadataValue(sc, permissionAttachment));
         sc.store.create(p.getName());
-        final SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getName());
-        if(p.hasPermission("sc.race.issupernatural") || SupernaturalUtils.isSupernatural(p.getName())) {
-            socialPlayer.setRace(sc.races.getDefaultRace().getName());
-            sc.races.getDefaultRace().applyRace(p, permissionAttachment);
-            sc.save.saveSocialPlayer(socialPlayer);
-            return;
-        }
-        if(socialPlayer.getRaceString() == null) {
-            socialPlayer.setRace(sc.races.getDefaultRace().getName());
-        }
-        socialPlayer.applyRace(permissionAttachment);
-    }
-    
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void consume(final PlayerItemConsumeEvent event) {
-        final Player p1 = event.getPlayer();
-        final SocialPlayer sp = sc.save.getSocialPlayer(p1.getName());
-        if(!sp.isMarried()) {
-            return;
-        }
-        final Player p2 = Bukkit.getPlayer(sp.getMarriedTo());
-        if(p2 == null) {
-            return;
-        }
-        p1.setMetadata("last-ate", new FixedMetadataValue(SocialCore.plugin, event.getItem()));
     }
     
     @EventHandler
@@ -180,7 +113,7 @@ public class SCListener implements Listener {
             if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName()) && p1.getLocation().distanceSquared(p2.getLocation()) <= distanceSquared) {
                 if(p1.hasMetadata("last-ate")) {
                     final ItemStack lastAte = (ItemStack) p1.getMetadata("last-ate").get(0).value();
-                    if(lastAte != null && !VampWWUtil.canEat(p2, lastAte)) {
+                    if(lastAte != null) {
                         return;
                     }
                 }
@@ -365,7 +298,6 @@ public class SCListener implements Listener {
             final Vector v3 = v.midpoint(v2);
             final Location loc = v3.toLocation(p.getWorld());
             ParticleEffect.HEART.display(loc, 1, 1, 1, 5, 20);
-            //loc.getWorld().playEffect(loc, Effect.HEART, 1);
             p.sendMessage(ChatColor.AQUA + "You have kissed " + p2.getName() + '.');
             p2.sendMessage(ChatColor.AQUA + p.getName() + " kisses you.");
             final int healAmount = sc.lang.kissHealAmount;
@@ -384,7 +316,6 @@ public class SCListener implements Listener {
                 } catch(final Exception ignore) {
                 }
             }
-            
             sc.marriages.kissPlayer(p.getName());
         }
     }
