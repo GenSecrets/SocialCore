@@ -5,3 +5,4 @@ target/
 *.zip
 dependency-reduced-pom.xml
 /*.jar
+out/
