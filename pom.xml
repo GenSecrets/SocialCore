@@ -68,9 +68,11 @@
             <version>master-be87708839-1</version>
         </dependency>
         <dependency>
-            <groupId>org.bitbucket.voxpopulimc</groupId>
+            <groupId>com.voxmc</groupId>
             <artifactId>voxlib</artifactId>
-            <version>1.16-f2f1cdfc0d-1</version>
+            <version>2.5.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/voxlib-2.5.3.jar</systemPath>
         </dependency>
 
         <!-- TownyChat API (repo: JitPack) -->
