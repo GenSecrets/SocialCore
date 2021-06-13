@@ -136,6 +136,10 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
             backToPageView();
             return;
         }
+        if (caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE && caze.getDefendent() == null){
+            getInventoryGUI().sendViewersMessage(ChatColor.RED + "You must select a spouse to process this case.");
+            return;
+        }
         if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE && caze.getDefendent() == null){
             getInventoryGUI().sendViewersMessage(ChatColor.RED + "You must select a significant other to process this case.");
             return;
@@ -172,6 +176,8 @@ public class SecCaseView extends PaginatedItemView implements AssignCategoryClic
         if (caseCategory == CaseCategory.CIVIL_MARRIAGE) {
             return message.replace("defendant","significant other").replace("Defendant","Significant Other").replace("plaintiff","petitioner").replace("Plaintiff", "Petitioner");
         }
+        if (caseCategory != CaseCategory.SAMESEX_MARRIAGE)
+            return message;
         return message.replace("defendant","spouse").replace("Defendant","Spouse").replace("plaintiff","petitioner").replace("Plaintiff","Petitioner");
     }
 }

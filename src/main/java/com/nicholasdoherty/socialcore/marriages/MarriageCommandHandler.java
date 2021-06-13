@@ -1,6 +1,7 @@
 package com.nicholasdoherty.socialcore.marriages;
 
 import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
@@ -327,6 +328,21 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 break;
                         }
                         
+                        if(proposeTo.getGender() == Gender.UNSPECIFIED) {
+                            player.sendMessage(ChatColor.RED + "You must specify your gender before you can propose! Type /male or /female");
+                            return true;
+                        }
+                        if(proposeFrom.getGender() == Gender.UNSPECIFIED) {
+                            p.sendMessage(ChatColor.RED + "Someone has tried to propose to you, but you havn't specified your gender! Type /male or /female");
+                            player.sendMessage(ChatColor.RED + proposeFrom.getPlayerName() + " hasn't specified their gender yet!");
+                            return true;
+                        }
+                        
+                        if(proposeTo.getGender() == proposeFrom.getGender() && !player.hasPermission("sc.samesex")) {
+                            player.sendMessage(ChatColor.RED + "Sorry, you need permission to have a samesex marriage.");
+                            return true;
+                        }
+                        
                         if(!player.hasPermission("sc.propose")) {
                             player.sendMessage(ChatColor.RED + "You do not have permision to marry another player!");
                             return true;
@@ -542,8 +558,14 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sc.save.saveMarriage(m);
                         
                         player.sendMessage(ChatColor.GREEN + "You have married " + player1.getPlayerName() + " and " + player2.getPlayerName() + '!');
-                        String toSendPlayer1 = "You have taken " + player2.getPlayerName() + " to be your loftily wedded spouse. Happy ever after!";
-                        String toSendPlayer2 = "You have taken " + player1.getPlayerName() + " to be your loftily wedded spouse. Happy ever after!";
+                        String toSendPlayer1 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded wife. Happy ever after!";
+                        if(player2.getGender() == Gender.MALE) {
+                            toSendPlayer1 = toSendPlayer1.replace("wife", "husband.");
+                        }
+                        String toSendPlayer2 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded wife. Happy ever after!";
+                        if(player1.getGender() == Gender.MALE) {
+                            toSendPlayer2 = toSendPlayer2.replace("wife", "husband");
+                        }
                         p1.sendMessage(toSendPlayer1);
                         p2.sendMessage(toSendPlayer2);
                         for(final Player p : Bukkit.getServer().getOnlinePlayers()) {

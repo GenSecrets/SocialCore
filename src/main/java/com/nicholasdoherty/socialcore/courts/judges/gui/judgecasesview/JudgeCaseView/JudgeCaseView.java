@@ -5,6 +5,7 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.*;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
+import com.nicholasdoherty.socialcore.courts.courtroom.actions.SexChange;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.PostCourtActionHolder;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items.ModifyPostActionsClickItem;
 import com.nicholasdoherty.socialcore.courts.courtroom.judgeview.items.PostCourtActionsClickItem;
@@ -61,6 +62,13 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         update();
     }
     public void addPostCourtAction(PostCourtAction postCourtAction) {
+        if (postCourtAction instanceof SexChange) {
+            for (PostCourtAction postCourtAction1 : new HashSet<>(postCourtActions)) {
+                if (postCourtAction1 instanceof SexChange) {
+                    postCourtActions.remove(postCourtAction1);
+                }
+            }
+        }
         postCourtActions.add(postCourtAction);
     }
 
@@ -79,7 +87,7 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         caseInfoClickItem = new CaseInfoBookClickItem(caze,this);
         addActiveItem(0, caseInfoClickItem);
         addActiveItem(7, new AssignDefendentClickItem(this,this,caze));
-        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
+        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE || caze.getCaseCategory() == CaseCategory.SEX_CHANGE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             addActiveItem(9, new ChangeViewClickItem(new CategorySpecificNoCourtActionsView(this,caze)) {
                 @Override
                 public ItemStack itemstack() {

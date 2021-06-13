@@ -37,6 +37,14 @@ public class CategorySpecificNoCourtActionsView extends PaginatedItemView{
         if (caze.getCaseCategory() == CaseCategory.DIVORCE) {
             clickItemList.add(new GrantDivorceItem(processedCasesView));
         }
+        if (caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE) {
+            clickItemList.add(new GrantSameSexMarriageItem(processedCasesView));
+        }
+        if (caze.getCaseCategory() == CaseCategory.SEX_CHANGE) {
+            clickItemList.add(new UngenderedSexChangeItem(processedCasesView));
+            clickItemList.add(new FemaleSexChangeItem(processedCasesView));
+            clickItemList.add(new MaleSexChangeItem(processedCasesView));
+        }
         if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             clickItemList.add(new GrantCivilMarriageItem(processedCasesView));
         }
