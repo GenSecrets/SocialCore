@@ -24,19 +24,19 @@ public class JudgeListener implements Listener {
     @EventHandler
     public void login(PlayerJoinEvent event) {
         final Player p = event.getPlayer();
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                if (p != null && p.isOnline()) {
-                    judgeManager.setPrefix(p);
-                }
-            }
-        }.runTaskLater(courts.getPlugin(),2);
+        //new BukkitRunnable(){
+        //    @Override
+        //    public void run() {
+        //        if (p != null && p.isOnline()) {
+        //            judgeManager.setPrefix(p);
+        //        }
+        //    }
+        //}.runTaskLater(courts.getPlugin(),2);
         judgeManager.setPerms(p);
     }
 
-    @EventHandler
-    public void logout(PlayerQuitEvent event) {
-        judgeManager.revertPrefix(event.getPlayer());
-    }
+    //@EventHandler
+    //public void logout(PlayerQuitEvent event) {
+    //    judgeManager.revertPrefix(event.getPlayer());
+    //}
 }

@@ -90,7 +90,7 @@ public class JudgeManager {
         judges.add(judge);
         judgesByUUID.put(judge.getUuid(), judge);
         setPerms(judge.getUuid());
-        setPrefix(judge.getUuid());
+        //setPrefix(judge.getUuid());
         return judge;
     }
     
@@ -100,7 +100,7 @@ public class JudgeManager {
         judgesByUUID.remove(judge.getUuid());
         Courts.getCourts().getCaseManager().onJudgeDemoted(judge);
         setPerms(judge.getUuid());
-        setPrefix(judge.getUuid());
+        //setPrefix(judge.getUuid());
         Courts.getCourts().getElectionManager().checkShouldScheduleFile();
     }
     

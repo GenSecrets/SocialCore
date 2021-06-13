@@ -63,16 +63,16 @@
 
         <!-- VoxPopuliMC Repo: VoxLib & WGRE -->
         <dependency>
-            <groupId>org.bitbucket.voxpopulimc</groupId>
-            <artifactId>worldguard-region-events</artifactId>
-            <version>master-be87708839-1</version>
-        </dependency>
-        <dependency>
             <groupId>com.voxmc</groupId>
             <artifactId>voxlib</artifactId>
             <version>2.5.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/voxlib-2.5.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.voxpopulimc</groupId>
+            <artifactId>worldguard-region-events</artifactId>
+            <version>master-be87708839-1</version>
         </dependency>
 
         <!-- TownyChat API (repo: JitPack) -->
