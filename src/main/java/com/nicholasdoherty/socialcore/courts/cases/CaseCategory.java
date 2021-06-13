@@ -1,7 +1,9 @@
 package com.nicholasdoherty.socialcore.courts.cases;
 
 import com.nicholasdoherty.socialcore.courts.cases.category.AbandonedCategoryConfig;
+import com.nicholasdoherty.socialcore.courts.cases.category.AbandonedChestCategoryConfig;
 import com.nicholasdoherty.socialcore.courts.cases.category.CategoryConfig;
+import com.nicholasdoherty.socialcore.courts.cases.category.SameSexCategoryConfig;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -10,7 +12,8 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public enum CaseCategory {
     DIVORCE(Material.REDSTONE, "Divorce"), TRESPASSING(Material.DIRT, "Trespassing"), ABANDONED(Material.STONE, "Abandoned House/Town"), OTHER(Material.BOOK, "Lawsuit"),
-     CIVIL_MARRIAGE(Material.GOLD_BLOCK, "Civil Marriage");
+    SAMESEX_MARRIAGE(Material.EMERALD, "SameSex Marriage"), SEX_CHANGE(Material.APPLE, "Sex Change"), CIVIL_MARRIAGE(Material.GOLD_BLOCK, "Civil Marriage"),
+    ABANDONED_CHEST(Material.ENDER_CHEST, "Abandoned Chest");
     private Material mat;
     private String name;
     
@@ -47,6 +50,10 @@ public enum CaseCategory {
                 break;
             case ABANDONED:
                 return new AbandonedCategoryConfig(section);
+            case SAMESEX_MARRIAGE:
+                return new SameSexCategoryConfig(section);
+            case ABANDONED_CHEST:
+                return new AbandonedChestCategoryConfig(section);
         }
         return new CategoryConfig(section, this);
     }
