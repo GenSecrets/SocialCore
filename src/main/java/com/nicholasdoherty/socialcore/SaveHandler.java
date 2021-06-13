@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore;
 
+import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.marriages.Divorce;
 import com.nicholasdoherty.socialcore.marriages.Engagement;
 import com.nicholasdoherty.socialcore.marriages.Marriage;
@@ -25,6 +26,10 @@ public class SaveHandler {
     public SaveHandler(final String directory, final SocialCore sc) {
         this.directory = directory;
         this.sc = sc;
+    }
+    
+    public Gender getGenderForPlayer(final String playerName) {
+        return Gender.UNSPECIFIED;
     }
     
     public List<SocialPlayer> allSocialPlayers() {

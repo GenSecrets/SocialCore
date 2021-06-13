@@ -1,6 +1,7 @@
 package com.nicholasdoherty.socialcore.store;
 
 import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.marriages.Divorce;
 import com.nicholasdoherty.socialcore.marriages.Engagement;
@@ -249,6 +250,21 @@ public class SQLStore extends Store {
         }
     }
     
+    public long getLastRaceChange(final String name) {
+        final Connection conn = getConnection();
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT lastChange FROM SocialCore WHERE name = ?");
+            preparedStatement.setString(1, name);
+            final ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) {
+                return rs.getLong("lastChange");
+            }
+        } catch(final SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return 0;
+    }
+    
     public SocialPlayer getSocialPlayer(final String name) {
         final Connection conn = getConnection();
         try {
@@ -256,6 +272,17 @@ public class SQLStore extends Store {
             preparedStatement.setString(1, name);
             final ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
+                String race = rs.getString("race");
+                if(Objects.equals(race, "")) {
+                    race = null;
+                }
+                final long lastChange = rs.getLong("lastChange");
+                String gender = rs.getString("gender");
+                if(gender == null) {
+                    gender = "UNSPECIFIED";
+                } else {
+                    gender = gender.toUpperCase();
+                }
                 String marriedTo = rs.getString("marriedTo");
                 if(marriedTo == null) {
                     marriedTo = "";
@@ -271,6 +298,9 @@ public class SQLStore extends Store {
                 socialPlayer.setEngagedTo(engagedTo);
                 socialPlayer.setMarried(isMarried);
                 socialPlayer.setMarriedTo(marriedTo);
+                socialPlayer.setGender(Gender.valueOf(gender));
+                socialPlayer.setRace(race);
+                socialPlayer.setLastRaceChange(lastChange);
                 socialPlayer.setPetName(rs.getString("pet_name"));
                 return socialPlayer;
             }
@@ -295,7 +325,24 @@ public class SQLStore extends Store {
         }
         return socialPlayers;
     }
-
+    
+    /*public String getRace(String name) {
+        Connection conn = getConnection();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT race FROM SocialCore WHERE name = ?");
+            preparedStatement.setString(1,name);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                String race = rs.getString("race");
+                if (race == null || race.equals(""))
+                    return null;
+                return rs.getString("race");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }*/
     public void create(final String name) {
         final Connection conn = getConnection();
         try {
@@ -306,12 +353,40 @@ public class SQLStore extends Store {
         } catch(final SQLException ignored) {
         }
     }
-
+    
+    /*public void setRace(String name, String race) {
+        Connection conn = getConnection();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET race = ? WHERE name = ?");
+            preparedStatement.setString(1, race);
+            preparedStatement.setString(2, name);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }*/
+    /*public void setLastRaceChange(String name, long time) {
+		Connection conn = getConnection();
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET lastChange = ? WHERE name = ?");
+			preparedStatement.setLong(1, time);
+			preparedStatement.setString(2, name);
+			preparedStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+	} */
     public void syncSocialPlayer(final SocialPlayer socialPlayer) {
         final Connection conn = getConnection();
         try {
             final PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET race = ?, lastChange = ?, gender = ?, marriedTo = ?, engagedTo = ?, isMarried = ?, isEngaged = ?,pet_name = ? WHERE name = ?");
-
+            String race = null;
+            if(socialPlayer.getRace() != null) {
+                race = socialPlayer.getRace().getName().toLowerCase();
+            }
+            preparedStatement.setString(1, race);
+            preparedStatement.setLong(2, socialPlayer.getLastRaceChange());
+            preparedStatement.setString(3, socialPlayer.getGender().toString());
             preparedStatement.setString(4, socialPlayer.getMarriedTo());
             preparedStatement.setString(5, socialPlayer.getEngagedTo());
             preparedStatement.setBoolean(6, socialPlayer.isMarried());
@@ -523,14 +598,26 @@ public class SQLStore extends Store {
             while(rs.next()) {
                 final String name = rs.getString("name");
                 final String engagedTo = rs.getString("engagedTo");
+                final String genderString = rs.getString("gender");
+                final Gender gender = Gender.valueOf(genderString);
                 Engagement engagement = null;
-                    final SocialPlayer spouse1 = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer spouse2 = plugin.save.getSocialPlayer(engagedTo);
-                    if(spouse1 != null && spouse2 != null) {
-                        engagement = new Engagement(spouse1, spouse2);
+                if(gender == Gender.MALE) {
+                    final SocialPlayer husband = plugin.save.getSocialPlayer(name);
+                    final SocialPlayer wife = plugin.save.getSocialPlayer(engagedTo);
+                    if(husband != null && wife != null) {
+                        engagement = new Engagement(husband, wife);
                         final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
                         engagement.setDate(dateBuilder);
                     }
+                } else {
+                    final SocialPlayer wife = plugin.save.getSocialPlayer(name);
+                    final SocialPlayer husband = plugin.save.getSocialPlayer(engagedTo);
+                    if(husband != null && wife != null) {
+                        engagement = new Engagement(husband, wife);
+                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
+                        engagement.setDate(dateBuilder);
+                    }
+                }
                 if(engagement != null) {
                     saveEngagement(engagement);
                 }
@@ -580,15 +667,28 @@ public class SQLStore extends Store {
             while(rs.next()) {
                 final String name = rs.getString("name");
                 final String marriedTo = rs.getString("marriedTo");
+                final String genderString = rs.getString("gender");
+                final Gender gender = Gender.valueOf(genderString);
                 Marriage marriage = null;
-                    final SocialPlayer spouse1 = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer spouse2 = plugin.save.getSocialPlayer(marriedTo);
-                    if(spouse1 != null && spouse2 != null) {
-                        marriage = new Marriage(spouse1, spouse2);
+                if(gender == Gender.MALE) {
+                    final SocialPlayer husband = plugin.save.getSocialPlayer(name);
+                    final SocialPlayer wife = plugin.save.getSocialPlayer(marriedTo);
+                    if(husband != null && wife != null) {
+                        marriage = new Marriage(husband, wife);
                         final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
                         marriage.setDate(dateBuilder);
                         marriage.setPriest("Unknown");
                     }
+                } else {
+                    final SocialPlayer wife = plugin.save.getSocialPlayer(name);
+                    final SocialPlayer husband = plugin.save.getSocialPlayer(marriedTo);
+                    if(husband != null && wife != null) {
+                        marriage = new Marriage(husband, wife);
+                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
+                        marriage.setDate(dateBuilder);
+                        marriage.setPriest("Unknown");
+                    }
+                }
                 if(marriage != null) {
                     if(!peopleCovered.contains(marriage.getWife()) && !peopleCovered.contains(marriage.getHusband())) {
                         saveMarriage(marriage, true);

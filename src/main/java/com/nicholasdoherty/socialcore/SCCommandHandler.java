@@ -21,6 +21,7 @@ public class SCCommandHandler implements CommandExecutor{
 			if (args[0].equalsIgnoreCase("me")) {
 				SocialPlayer sp = sc.save.getSocialPlayer(sender.getName());
 				sender.sendMessage(ChatColor.GOLD+"----------=SocialCore - "+sp.getPlayerName()+"=----------");
+				sender.sendMessage(ChatColor.AQUA+"Gender: "+sp.getGender().toString().toLowerCase());
 				sender.sendMessage(ChatColor.AQUA+"Engaged: "+sp.isEngaged());
 				sender.sendMessage(ChatColor.AQUA+"Engaged to: "+sp.getEngagedTo());
 				sender.sendMessage(ChatColor.AQUA+"Married: "+sp.isMarried());
