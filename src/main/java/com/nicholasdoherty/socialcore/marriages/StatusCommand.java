@@ -14,7 +14,8 @@ public class StatusCommand implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length != 1) {
-            return false;
+            commandSender.sendMessage(ChatColor.YELLOW + "In order to check someone's marriage status, use /status <name>");
+            return true;
         }
         String name = strings[0];
         SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(name);
