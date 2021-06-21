@@ -1,7 +1,10 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 2.0-001
-authors: [theMightyChain,pascoej@murri.ca,GenSecrets]
+version: 2.0-0012
+authors: [theMightyChain,pascoej,GenSecrets]
+depend:
+    - Vault
+    - Essentials
 loadafter: [Vault,TownyChat,Essentials]
 softdepend: [ProtocolLib,WorldGuard,TownyChat]
 
@@ -93,12 +96,36 @@ commands:
     getpermissions:
         description: View your permissions
         permission: sc.admin
+    gender:
+        description: Get someone's gender
+        permission: sc.gender.others
+    male:
+        description: Assign yourself to male gender
+        permission: sc.gender.male
+    female:
+        description: Assign yourself to female gender
+        permission: sc.gender.female
+    nonbinary:
+        description: Assign yourself to nonbinary gender
+        permission: sc.gender.nonbinary
 permissions:
     sc.utility:
         description: Used for autocommand
         default: op
     sc.defaultperm:
         description: all have
+        default: true
+    sc.gender.others:
+        description: Check someone else's gender
+        default: true
+    sc.gender.male:
+        description: Assign yourself to male gender
+        default: true
+    sc.gender.female:
+        description: Assign yourself to female gender
+        default: true
+    sc.gender.nonbinary:
+        description: Assign yourself to nonbinary gender
         default: true
     sc.status:
         description: allows use of status command
