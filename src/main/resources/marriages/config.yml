@@ -1,0 +1,69 @@
+#
+# Generic Marriage settings
+#
+marriage:
+  #Rings/Gems to marry people
+  #Format: '<ITEM_TYPE> <colored item display name>'
+  #  item type must be a spigot minecraft MATERIAL
+  marriage-rings:
+    1: 'REDSTONE &9Ruby Marriage Gem'
+    2: 'EMERALD &9Emerald Marriage Gem'
+    3: 'DIAMOND &5Diamond Marriage Gem'
+    4: 'FIRE_CHARGE &5Heart of Summer'
+    5: 'NETHER_STAR &6Star Marriage Gem'
+    6: 'NETHER_STAR &5Star Marriage Gem'
+    7: 'NETHER_STAR:1 &5Star Marriage Gem'
+    8: 'NETHER_STAR &6Heirloom Marriage Gem'
+    9: 'GOLDEN_APPLE &6Crystaline Fall Marriage Apple'
+    10: 'GOLDEN_APPLE &5Crystaline Fall Marriage Apple'
+    11: 'GOLDEN_APPLE:1 &6Crystaline Fall Marriage Apple'
+    12: 'DIAMOND &5Ten Carat Diamond Ring'
+    13: 'GHAST_TEAR:1 &5Tear of Nerfs'
+    14: 'GHAST_TEAR &5Tear of Nerfs'
+    15: 'CHARCOAL &5The Frigid Heart'
+    16: 'EMERALD &5Gem of New Life'
+    17: 'LIT_PUMPKIN &5Ghastly Garnet'
+    18: 'PUMPKIN &5Ghastly Garnet'
+    19: 'DIAMOND &5Morbid Moonstone'
+    20: 'REDSTONE &5Guardian Ruby'
+    21: 'DIAMOND &5The Dazzler'
+    22: 'DIAMOND &5The Unitato'
+    23: 'DIAMOND &5Eye of Valeria'
+    24: 'DIAMOND &6Knight Marriage Gem'
+    25: 'DIAMOND &6Snowflake Sparkle Marriage Gem'
+    26: 'IRON_NUGGET &5Sleigh Bell Marriage Gem'
+  #The required distance (in blocks) between the priest and both couples:
+  priest-marriage-distance: 10
+  #The required distance (in blocks) between each partner:
+  marriage-couple-distance: 5
+  #how many days it takes to re-marry a player.
+  divorce-remarry-cooldown: 5d
+#
+# Marriage Perks
+#
+perks:
+  petname:
+    login-message: "&d**Your {pet-name}&d has signed in**"
+    logout-message: "&d**Your {pet-name}&d has signed out**"
+    change-name-message: "&dYour {spouse-petname}&d has given you the name pet name: {new-petname}"
+  #Settings to control shift-clicking to kiss your partner
+  kissing:
+    #The amount of healing a single kiss does
+    kiss-heal-amount: 0
+    #Should the kissing effect be played
+    kissing-heart-effect: true
+  #Settings to control sharing of items/inventory/food
+  sharing:
+    #The required distance (in blocks) between partners when sharing eaten food
+    food-share-distance: 50
+    #The required distance (in blocks) between partners when using the share inventory command
+    inventory-share-distance: 0
+      #Settings to control sharable exp
+    xp:
+      #The required distance for married couples to get bonus xp from each other
+      xp-bonus-distance: 5
+      #The percent of the killer's xp to give to their significant other (0.0 - 1.0)
+      xp-bonus-percent: 0.5
+  piggyback:
+    #The cooldown between piggybacking your partner
+    piggyback-cooldown: 90s

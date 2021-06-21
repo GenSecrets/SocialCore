@@ -13,6 +13,9 @@ import com.voxmc.voxlib.util.VaultUtil;
 import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,7 +66,14 @@ public class SocialCore extends JavaPlugin {
         return courts;
     }
     public String prefix;
-    
+    public boolean isCourtsEnabled;
+    public boolean isGendersEnabled;
+    public boolean isMarriagesEnabled;
+    private FileConfiguration courtsConfig;
+    private FileConfiguration courtsLangConfig;
+    private FileConfiguration marriagesConfig;
+    private FileConfiguration gendersConfig;
+
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
@@ -88,38 +98,66 @@ public class SocialCore extends JavaPlugin {
         getLogger().info("Creating handlers...");
         save = new SaveHandler(directory, this);
         getLogger().info("[SC Handler] Created save handler");
-        marriages = new Marriages(this);
-        getLogger().info("[SC Handler] Created marriages handler");
         store = new SQLStore();
         getLogger().info("[SC Handler] Created MySQL handler");
-        courts = new Courts(this);
-        getLogger().info("[SC Handler] Created courts handler");
-        whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist"); // Putting this here so I don't have to read from config a lot
-        getLogger().info("[SC Handler] Created piggyback whitelist config");
+        //
+        // COURTS SETUP
+        //
+        if(getConfig().getBoolean("enable-courts")){
+            setupCourtsConfig();
+            courts = new Courts(this);
+            getLogger().info("[SC Handler] Created courts handler");
+            isCourtsEnabled = true;
+        } else {
+            isCourtsEnabled = false;
+        }
+        //
+        // MARRIAGES SETUP
+        //
+        if(getConfig().getBoolean("enable-marriages")){
+            setupMarriagesConfig();
+            marriages = new Marriages(this);
+            whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist");
+            getLogger().info("[SC Handler] Created piggyback whitelist config");
+            final CommandExecutor marriageCommandHandler = new MarriageCommandHandler(this);
+            getCommand("marriage").setExecutor(marriageCommandHandler);
+            getCommand("marriages").setExecutor(marriageCommandHandler);
+            getCommand("engagements").setExecutor(marriageCommandHandler);
+            getCommand("propose").setExecutor(marriageCommandHandler);
+            getCommand("marry").setExecutor(marriageCommandHandler);
+            getCommand("unengage").setExecutor(marriageCommandHandler);
+            getCommand("divorce").setExecutor(marriageCommandHandler);
+            getCommand("divorces").setExecutor(marriageCommandHandler);
+            getCommand("adivorce").setExecutor(marriageCommandHandler);
+            getCommand("amarry").setExecutor(marriageCommandHandler);
+            getCommand("aunengage").setExecutor(marriageCommandHandler);
+            getCommand("status").setExecutor(new StatusCommand());
+            getCommand("share").setExecutor(marriageCommandHandler);
+            getCommand("petname").setExecutor(new PetnameCommand());
+            getCommand("purgeinvalids").setExecutor(new PurgeInvalidCommand());
+            getLogger().info("[SC Handler] Created marriages handler");
+            isMarriagesEnabled = true;
+        } else {
+            isMarriagesEnabled = false;
+        }
+        //
+        // GENDERS SETUP
+        //
+        if(getConfig().getBoolean("enable-genders")){
+            setupGendersConfig();
+            final CommandExecutor genderCommandHandler = new GenderCommandHandler(this);
+            getCommand("male").setExecutor(genderCommandHandler);
+            getCommand("female").setExecutor(genderCommandHandler);
+            getCommand("genders").setExecutor(genderCommandHandler);
+            getLogger().info("[SC Handler] Created genders handler");
+            isGendersEnabled = true;
+        } else {
+            isGendersEnabled = false;
+        }
         getLogger().info("Finished creating handlers!");
         //commands
         final CommandExecutor scCommandHandler = new SCCommandHandler(this);
-        final CommandExecutor marriageCommandHandler = new MarriageCommandHandler(this);
-        final CommandExecutor genderCommandHandler = new GenderCommandHandler(this);
         getCommand("socialcore").setExecutor(scCommandHandler);
-        getCommand("male").setExecutor(genderCommandHandler);
-        getCommand("female").setExecutor(genderCommandHandler);
-        getCommand("gender").setExecutor(genderCommandHandler);
-        getCommand("marriage").setExecutor(marriageCommandHandler);
-        getCommand("marriages").setExecutor(marriageCommandHandler);
-        getCommand("engagements").setExecutor(marriageCommandHandler);
-        getCommand("propose").setExecutor(marriageCommandHandler);
-        getCommand("marry").setExecutor(marriageCommandHandler);
-        getCommand("divorce").setExecutor(marriageCommandHandler);
-        getCommand("divorces").setExecutor(marriageCommandHandler);
-        getCommand("adivorce").setExecutor(marriageCommandHandler);
-        getCommand("amarry").setExecutor(marriageCommandHandler);
-        getCommand("share").setExecutor(marriageCommandHandler);
-        getCommand("unengage").setExecutor(marriageCommandHandler);
-        getCommand("aunengage").setExecutor(marriageCommandHandler);
-        getCommand("status").setExecutor(new StatusCommand());
-        getCommand("purgeinvalids").setExecutor(new PurgeInvalidCommand());
-        getCommand("petname").setExecutor(new PetnameCommand());
         getLogger().info("Finished setting up commands!");
         //langs
         lang = new SCLang(this);
@@ -161,7 +199,73 @@ public class SocialCore extends JavaPlugin {
     public void onReload() {
         
     }
-    
+
+    public FileConfiguration getCourtsConfig() { return this.courtsConfig; }
+    public FileConfiguration getCourtsLangConfig() { return this.courtsLangConfig; }
+    public FileConfiguration getMarriagesConfig() { return this.marriagesConfig; }
+    public FileConfiguration getGendersConfig() { return this.gendersConfig; }
+
+    private void setupCourtsConfig(){
+        String path = getDataFolder()+"/courts";
+        File courtsConfigFile = new File(path, "config.yml");
+        if (!courtsConfigFile.exists()) {
+            courtsConfigFile.getParentFile().mkdirs();
+            saveResource("config.yml", false);
+        }
+
+        courtsConfig= new YamlConfiguration();
+        try {
+            courtsConfig.load(courtsConfigFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        File courtsLangConfigFile = new File(path, "lang.yml");
+        if (!courtsLangConfigFile.exists()) {
+            courtsLangConfigFile.getParentFile().mkdirs();
+            saveResource("lang.yml", false);
+        }
+
+        courtsLangConfig= new YamlConfiguration();
+        try {
+            courtsLangConfig.load(courtsLangConfigFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupMarriagesConfig(){
+        String path = getDataFolder()+"/marriages";
+        File marriagesConfigFile = new File(path, "config.yml");
+        if (!marriagesConfigFile.exists()) {
+            marriagesConfigFile.getParentFile().mkdirs();
+            saveResource("config.yml", false);
+        }
+
+        marriagesConfig= new YamlConfiguration();
+        try {
+            marriagesConfig.load(marriagesConfigFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupGendersConfig(){
+        String path = getDataFolder()+"/genders";
+        File gendersConfigFile = new File(path, "config.yml");
+        if (!gendersConfigFile.exists()) {
+            gendersConfigFile.getParentFile().mkdirs();
+            saveResource("config.yml", false);
+        }
+
+        gendersConfig= new YamlConfiguration();
+        try {
+            gendersConfig.load(gendersConfigFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void checkConfig() {
         if(!getDataFolder().isDirectory()) {
             getDataFolder().mkdirs();

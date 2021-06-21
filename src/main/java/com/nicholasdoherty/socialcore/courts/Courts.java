@@ -67,8 +67,8 @@ public class Courts {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
         plugin.getLogger().info("[COURTS] Reloaded config!");
-        courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
-        courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
+        courtsConfig = CourtsConfig.fromConfig(plugin.getCourtsConfig());
+        courtsLangManager = new CourtsLangManager(plugin.getCourtsLangConfig());
         plugin.getLogger().info("[COURTS] Loaded config and lang!");
         sqlSaveManager = new SqlSaveManager();
         sqlSaveManager.upgrade();
@@ -154,14 +154,14 @@ public class Courts {
     
     public void reloadConfig() {
         plugin.reloadConfig();
-        final CourtsConfig courtsConfig = CourtsConfig.fromConfig(plugin.getConfig().getConfigurationSection("courts"));
+        final CourtsConfig courtsConfig = CourtsConfig.fromConfig(plugin.getCourtsConfig());
         //noinspection ConstantConditions
         if(courtsConfig == null) {
             plugin.getLogger().severe("Could not load config. Error");
             return;
         }
         this.courtsConfig = courtsConfig;
-        courtsLangManager = new CourtsLangManager(plugin.getConfig().getConfigurationSection("courts.lang"));
+        courtsLangManager = new CourtsLangManager(plugin.getCourtsLangConfig());
     }
     
     public void setForceNotSave(final boolean forceNotSave) {

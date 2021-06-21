@@ -1,0 +1,151 @@
+default-world: "world"
+policy:
+  lang:
+    state-descriptions:
+      UNCONFIRMED: "This has not yet been confirmed by all the judges"
+      MAIN_VOTING: "This policy is currently under vote by all players."
+      IN_EFFECT: "This policy is in effect"
+      FAILED: "This policy failed to become in effect"
+    policy-draft-already-pending: "&6[&eCourt&6]&c There is already a policy awaiting approval."
+    policy-new: "&6[&eCourt&6]&c You have received a book for which you should write your intended policy. You have a 300 character limit, and should include wether are not a punishment is applicable to ths policy."
+    policy-finish-characters: "&6[&eCourt&6]&c This policy exceeds the max character count. Try simplifying the policy or splitting into into multiple policies."
+    policy-finish: "&6[&eCourt&6]&c You have published your policy for review. Three other judges will be required to approve the policy before it is made public."
+    policy-official-votes: "&6[&eCourt&6]&c The policy {policy-number} has been approved by the community, and is now official."
+    policy-official-auto: "&6[&eCourt&6]&c The policy {policy-number} has been approved by default."
+  judges-required-to-confirm: 3
+  policy-approval-rate-removed: 40
+  policy-approval-rate-required: 60
+  character-max: 300
+  policy-required-votes: 100
+  #Instructions are added to end automatically.
+  unpassed-policy-icon-base-item: "book 1 name:&aPolicy_{policy-number} lore:&3{policy-text}|{vote-status}|&aApproval_Rating:_{approval-rating}|&eVote_Progress:_{vote-progress}|{policy-status-description}"
+  passed-policy-icon-base-item: "book 1 name:&aPolicy_{policy-number} lore:&3{policy-text}|{vote-status}|{policy-status-description}"
+  policy-check-interval: 4m # How often to force check of  if should autopass, etc.
+  policy-autopass-time: 3d # How long to wait before auto approving in main voting.
+  policy-confirm-timeout: 1d # How long before failing if didn't get the confirmations.
+silence-mute-length: 10s
+silence-court-effects:
+  title:
+    title: "&cOrder!"
+    subtitle: "&7Quiet in the court"
+    fade-in: 1s
+    stay: 10s
+    fade-out: 5s
+  sounds:
+    BLOCK_ANVIL_USE:
+      volume: 3
+      pitch: 0.4
+court-session-teleport-effects:
+  title:
+    title: "&aJudge {judge-name} teleported to {location}"
+    subtitle: "~~"
+    fade-in: 1s
+    stay: 40t
+    fade-out: 10t
+elections:
+  wait-time: 7d
+court-session-start-effects:
+  title:
+    title: "&eSilence in the courtroom"
+    subtitle: "&7Honerable Judge &e{judge-name}&7 presiding"
+    fade-in: 1s
+    stay: 10s
+    fade-out: 5s
+  sounds:
+    BLOCK_ANVIL_USE:
+      volume: 3
+      pitch: 0.4
+court-session-end-effects:
+  title:
+    title: "&eCourt is adjourned"
+    subtitle: "&7Thank you for your participation"
+    fade-in: 1s
+    stay: 10s
+    fade-out: 5s
+  sounds:
+    BLOCK_ANVIL_USE:
+      volume: 3
+      pitch: 0.4
+judge-permissions:
+  - "towny.chat.justice"
+  - "sc.title.judge"
+  - "magicspells.cast.judgeinspect"
+  - "magicspells.cast.royal-gavel"
+  - "lwc.shownotices"
+secretary-permissions:
+  - "towny.chat.justice"
+case-filing-cost: 100
+category-config:
+  abandoned:
+    permit-item: "paper 1 Unbreaking:1 name:&9Building_Permit lore:&6Awarded_to:_{citizen_name}|&5by_Judge:_{judge-name}|&2Permission_to_build/destroy|&2at_{location}|&7Permit|&3Bind_On_Pickup"
+court-rooms:
+  test-courtroom:
+    effects-location: "new_vb,-1458,103,433"
+    judge-chair-location: "new_vb,-1460,103,433"
+    region: court
+    tp-location: "new_vb,-1394,105,433"
+fine-payment-interval: 5m
+fine-payment-percentage: 15
+judge-approval-rate-demoted: 40
+judge-approval-rate-required: 60
+judge-inactive-days-allowed: 15
+judge-required-votes: 300
+max-judges: 4
+nominate-cost: 10000
+notifier:
+  messages:
+    judge-elected-all:
+      base-message: "&6[&eCourt&6]&e {judge-name}&a has been successfully elected as a judge. Congratulations!"
+    case-assigned-time:
+      base-message: "&6[&eCourt&6]&e {judge-name}&a has scheduled &6{case-name}&a to &6{case-datetime}&a."
+    judge-inactive-all:
+      base-message: "&6[&eCourt&6]&e Judge {judge-name}&c was inactive for too many days and was removed from office."
+    judge-inactive-judge:
+      base-message: "&6[&eCourt&6]&c You were inactive for too many days and have been removed from office"
+      timeout: 3d
+    judge-nominated-all:
+      base-message: "&6[&eCourt&6]&e {player-name}&a has been nominated to become a judge. Type &6/election&a to review the candidates."
+    judge-nominated-self:
+      base-message: "&6[&eCourt&6]&e {player-name}&a, you have been nominated to become a judge. Please review &6/help election&a and &6/help judge&a."
+      timeout: 14d
+    judge-removed-rating-all:
+      base-message: "&6[&eCourt&6]&c Judge &a{judge-name}&c has been removed from office with an approval rating of &c{approval-rating}."
+    judge-removed-rating-judge:
+      base-message: "&6[&eCourt&6]&c You have been removed from office with an approval rating of {approval-rating}."
+      timeout: 7d
+    judge-upcoming-case:
+      base-message: "&6[&eCourt&6]&e Judge {name}, you have {case-name} at {case-datetime}"
+      upcoming-time: 7d
+    ongoing-case-all:
+      base-message: "&6[&eCourt&6]&e Judge {judge-name} is presiding over case: &6{case-number} {case-name} &e(&6{case-category}&e)&e, with plaintiff: &a{case-plaintiff}&e. Type &6/warp court&e to participate and receive rewards."
+      enabled: true
+    ongoing-case-participant:
+      base-message: "&6[&eCourt&6]&e You are involved in an ongoing court session, please teleport with &6/court tp"
+    court-session-end:
+      base-message: "&6[&eCourt&6]&e {case-name} is now adjourned by {judge-name}"
+    participant-upcoming-case:
+      base-message: "&6[&eCourt&6]&e You are involved in {case-name} at {case-datetime}"
+      upcoming-time: 7d
+    secretary-removed:
+      base-message: "&6[&eCourt&6]&a {judge-name}&c has removed you as one of their secretaries."
+      timeout: 7d
+    vote-notification:
+      approval: "&6[&eCourt&6]&a Somebody approved of you, your approval rate is now {approval-rating} with {approvals} approvals and {disapprovals} disapprovals."
+      disapproval: "&6[&eCourt&6]&a Somebody disapproved of you, your approval rate is now {approval-rating} with {approvals} approvals and {disapprovals} disapprovals."
+    vote-summary:
+      approval: "&6[&eCourt&6]&a {new-approvals} citizens have recently approved of you. Approval rating: {approval-rating}"
+      both: "&6[&eCourt&6]&a {new-approvals} citizens have recently approved of you and {new-disapprovals} citizens have disapproved of you "
+      disapproval: "&6[&eCourt&6]&a {new-disapprovals} citizens have recently disapproved of you. Approval rating: {approval-rating}"
+      timeout: 1d
+rewards:
+  session:
+    - 'gold_nugget 1 Unbreaking:1 name:&9Justice_Token lore:&9&o"Fiat_justitia,|&9&oet_pereat_mundus."|&6Royal_currency_used|&6in_the_municipal_system.'
+  court-vote:
+    - 'gold_ingot 1'
+    - 'diamond 1'
+  judgement:
+    - 'gold_nugget 1 Unbreaking:1 name:&5Arbiter_Token lore:&9&o"Fiat_justitia,|&9&oet_pereat_mundus."|&6Royal_currency_used|&6in_the_municipal_system.'
+  process:
+    - 'gold_nugget 1 Unbreaking:1 name:&9Justice_Token lore:&9&o"Fiat_justitia,|&9&oet_pereat_mundus."|&6Royal_currency_used|&6in_the_municipal_system.'
+secretaries-per-judge: 2
+time-between-vote-messages: 10m

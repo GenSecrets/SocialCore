@@ -9,6 +9,7 @@ import com.voxmc.voxlib.VLocation;
 import com.voxmc.voxlib.util.VoxEffects;
 import com.voxmc.voxlib.EssentialsItem;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -207,7 +208,7 @@ public class CourtsConfig {
         return silenceMuteLength;
     }
 
-    public static CourtsConfig fromConfig(ConfigurationSection section) {
+    public static CourtsConfig fromConfig(FileConfiguration section) {
         int maxJudges = section.getInt("max-judges");
         int secretariesPerJudge = section.getInt("secretaries-per-judge");
         int judgeInactiveDaysAllowed = section.getInt("judge-inactive-days-allowed");

@@ -4,7 +4,9 @@ import com.nicholasdoherty.socialcore.marriages.MarriageGem;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +34,11 @@ public class SCLang {
     }
     
     public void loadConfig() {
+        //MARRIAGE SETTINGS
         marriageGems = new ArrayList<>();
-        final int s = sc.getConfig().getConfigurationSection("marriage-rings").getKeys(false).size();
+        final int s = sc.getMarriagesConfig().getConfigurationSection("marriage.marriage-rings").getKeys(false).size();
         for(int i = 0; i < s; i++) {
-            final String p = sc.getConfig().getString("marriage-rings." + (i + 1));
+            final String p = sc.getMarriagesConfig().getString("marriage.marriage-rings." + (i + 1));
             final String[] data = p.split(" ");
             final String[] d2 = data[0].split(":");
             final Material bID = Material.getMaterial(d2[0]);
@@ -43,23 +46,27 @@ public class SCLang {
             final MarriageGem gem = new MarriageGem(bID, n);
             marriageGems.add(gem);
         }
-        if(sc.getConfig().contains("divorce-propose-cooldown")) {
-            divorceProposeCooldownMillis = 50 * VoxTimeUnit.getTicks(sc.getConfig().getString("divorce-propose-cooldown"));
+        priestDistance = sc.getMarriagesConfig().getInt("marriage.priest-marriage-distance");
+        coupleDistance = sc.getMarriagesConfig().getInt("marriage.marriage-couple-distance");
+        if(sc.getMarriagesConfig().contains("marriage.divorce-remarry-cooldown")) {
+            divorceProposeCooldownMillis = 50 * VoxTimeUnit.getTicks(sc.getMarriagesConfig().getString("marriage.divorce-remarry-cooldown"));
         }
-        priestDistance = sc.getConfig().getInt("priest-marriage-distance");
-        coupleDistance = sc.getConfig().getInt("marriage-couple-distance");
-        
-        coupleXPDistance = sc.getConfig().getInt("marriage-xp-bonus-distance");
-        coupleXPPercent = sc.getConfig().getDouble("marriage-xp-bonus-percent");
-        kissingCooldown = sc.getConfig().getInt("kiss-cooldown");
-        piggybackCooldown = VoxTimeUnit.getTicks(sc.getConfig().getString("piggyback-cooldown"));
-        maxConsumeDistanceSquared = Math.pow(sc.getConfig().getDouble("marriage-food-share-distance", 5), 2);
-        maxShareInventDistanceSquared = Math.pow(sc.getConfig().getDouble("marriage-inventory-share-distance", 5), 2);
-        kissHealAmount = sc.getConfig().getInt("kiss-heal-amount");
-        petNameLoginMessage = ChatColor.translateAlternateColorCodes('&', sc.getConfig().getString("login-petname-message"));
-        petNameLogoutMessage = ChatColor.translateAlternateColorCodes('&', sc.getConfig().getString("logout-petname-message"));
-        petNameChangeSpouseMessage = ChatColor.translateAlternateColorCodes('&', sc.getConfig().getString("petname-change-spouse-message"));
-        defaultWorld = sc.getConfig().getString("default-world", "world");
+
+        // PERKS SETTINGS
+        // KISSING
+        kissingCooldown = sc.getMarriagesConfig().getInt("perks.kissing.kiss-cooldown");
+        kissHealAmount = sc.getMarriagesConfig().getInt("perks.kissing.kiss-heal-amount");
+        // SHARING
+        piggybackCooldown = VoxTimeUnit.getTicks(sc.getMarriagesConfig().getString("perks.piggyback.piggyback-cooldown"));
+        maxConsumeDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.food-share-distance", 5), 2);
+        maxShareInventDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.inventory-share-distance", 5), 2);
+        coupleXPDistance = sc.getMarriagesConfig().getInt("perks.sharing.xp.xp-bonus-distance");
+        coupleXPPercent = sc.getMarriagesConfig().getDouble("perks.sharing.xp.xp-bonus-percent");
+        // PETNAMES
+        petNameLoginMessage = ChatColor.translateAlternateColorCodes('&', sc.getMarriagesConfig().getString("perks.petname.login-message"));
+        petNameLogoutMessage = ChatColor.translateAlternateColorCodes('&', sc.getMarriagesConfig().getString("perks.petname.logout-message"));
+        petNameChangeSpouseMessage = ChatColor.translateAlternateColorCodes('&', sc.getMarriagesConfig().getString("perks.petname.change-name-message"));
+        defaultWorld = sc.getMarriagesConfig().getString("default-world", "world");
     }
     
     public String registerColors(final String msg) {

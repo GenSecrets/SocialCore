@@ -1,0 +1,12 @@
+genders:
+  - 'MALE'
+  - 'FEMALE'
+  - 'NONBINARY'
+  - 'OTHER'
+pronouns:
+  - 'HE/HIM'
+  - 'HE/HIM THEY/THEM'
+  - 'SHE/HER'
+  - 'SHE/HER THEY/THEM'
+  - 'THEY/THEM'
+  - 'OTHER'
