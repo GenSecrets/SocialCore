@@ -272,10 +272,6 @@ public class SQLStore extends Store {
             preparedStatement.setString(1, name);
             final ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
-                String race = rs.getString("race");
-                if(Objects.equals(race, "")) {
-                    race = null;
-                }
                 final long lastChange = rs.getLong("lastChange");
                 String gender = rs.getString("gender");
                 if(gender == null) {
@@ -299,8 +295,6 @@ public class SQLStore extends Store {
                 socialPlayer.setMarried(isMarried);
                 socialPlayer.setMarriedTo(marriedTo);
                 socialPlayer.setGender(Gender.valueOf(gender));
-                socialPlayer.setRace(race);
-                socialPlayer.setLastRaceChange(lastChange);
                 socialPlayer.setPetName(rs.getString("pet_name"));
                 return socialPlayer;
             }
@@ -380,12 +374,10 @@ public class SQLStore extends Store {
         final Connection conn = getConnection();
         try {
             final PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET race = ?, lastChange = ?, gender = ?, marriedTo = ?, engagedTo = ?, isMarried = ?, isEngaged = ?,pet_name = ? WHERE name = ?");
-            String race = null;
-            if(socialPlayer.getRace() != null) {
-                race = socialPlayer.getRace().getName().toLowerCase();
-            }
+            String race = "";
+            long lastRace = 5L;
             preparedStatement.setString(1, race);
-            preparedStatement.setLong(2, socialPlayer.getLastRaceChange());
+            preparedStatement.setLong(2, lastRace);
             preparedStatement.setString(3, socialPlayer.getGender().toString());
             preparedStatement.setString(4, socialPlayer.getMarriedTo());
             preparedStatement.setString(5, socialPlayer.getEngagedTo());

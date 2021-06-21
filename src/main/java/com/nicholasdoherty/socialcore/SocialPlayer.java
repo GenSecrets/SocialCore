@@ -1,35 +1,10 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.races.Race;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.PermissionAttachment;
-
 public class SocialPlayer {
 
 	private String playerName;
 	private SocialCore.Gender gender;
-	private String race;
-	private long lastRaceChange = 0;
 	private String petName;
-
-	public Race getRace() {
-		return SocialCore.plugin.races.getRace(race);
-	}
-	public String getRaceString() {
-		return race;
-	}
-
-	public void setRace(String race) {
-		this.race = race;
-	}
-
-	public long getLastRaceChange() {
-		return lastRaceChange;
-	}
-
-	public void setLastRaceChange(long lastRaceChange) {
-		this.lastRaceChange = lastRaceChange;
-	}
 
 	//engagement
 	private boolean isEngaged;
@@ -92,22 +67,5 @@ public class SocialPlayer {
 
 	public void setPetName(String petName) {
 		this.petName = petName;
-	}
-
-	public void applyRace() {
-		if (race != null && !race.equals("")) {
-			Race race1 = SocialCore.plugin.races.getRace(race);
-			if (race1 != null) {
-				race1.applyRace(Bukkit.getPlayer(playerName));
-			}
-		}
-	}
-	public void applyRace(PermissionAttachment pa) {
-		if (race != null && !race.equals("")) {
-			Race race1 = SocialCore.plugin.races.getRace(race);
-			if (race1 != null) {
-				race1.applyRace(Bukkit.getPlayer(playerName),pa);
-			}
-		}
 	}
 }
