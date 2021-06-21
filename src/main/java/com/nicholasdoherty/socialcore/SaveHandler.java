@@ -5,6 +5,7 @@ import com.nicholasdoherty.socialcore.marriages.Divorce;
 import com.nicholasdoherty.socialcore.marriages.Engagement;
 import com.nicholasdoherty.socialcore.marriages.Marriage;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
@@ -149,10 +150,12 @@ public class SaveHandler {
         if(playerName == null) {
             return null;
         }
-        final Player p = Bukkit.getPlayer(playerName);
-        if(p != null) {
-            playerName = p.getName();
+        final OfflinePlayer p = sc.getServer().getOfflinePlayer(playerName);
+        if(!p.hasPlayedBefore()) {
+            return null;
         }
+
+        playerName = p.getName();
         if(sc.socialPlayersCache.containsKey(playerName)) {
             return sc.socialPlayersCache.get(playerName);
         }
