@@ -148,7 +148,7 @@ public class SocialCore extends JavaPlugin {
             final CommandExecutor genderCommandHandler = new GenderCommandHandler(this);
             getCommand("male").setExecutor(genderCommandHandler);
             getCommand("female").setExecutor(genderCommandHandler);
-            getCommand("genders").setExecutor(genderCommandHandler);
+            getCommand("gender").setExecutor(genderCommandHandler);
             getLogger().info("[SC Handler] Created genders handler");
             isGendersEnabled = true;
         } else {
@@ -206,28 +206,28 @@ public class SocialCore extends JavaPlugin {
     public FileConfiguration getGendersConfig() { return this.gendersConfig; }
 
     private void setupCourtsConfig(){
-        String path = getDataFolder()+"/courts";
-        File courtsConfigFile = new File(path, "config.yml");
+        File courtsFolder = new File(getDataFolder().getPath() + File.separator + "courts");
+        if (!courtsFolder.exists()){
+            courtsFolder.mkdir();
+        }
+
+        File courtsConfigFile = new File(courtsFolder.getPath(), "config.yml");
+        File courtsLangConfigFile = new File(courtsFolder.getPath(), "lang.yml");
+
         if (!courtsConfigFile.exists()) {
             courtsConfigFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
+            saveResource(courtsFolder.getName()+File.separator+"config.yml", false);
+        }
+        if (!courtsLangConfigFile.exists()) {
+            courtsLangConfigFile.getParentFile().mkdirs();
+            saveResource(courtsFolder.getName()+File.separator+"lang.yml", false);
         }
 
         courtsConfig= new YamlConfiguration();
+        courtsLangConfig= new YamlConfiguration();
+
         try {
             courtsConfig.load(courtsConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        File courtsLangConfigFile = new File(path, "lang.yml");
-        if (!courtsLangConfigFile.exists()) {
-            courtsLangConfigFile.getParentFile().mkdirs();
-            saveResource("lang.yml", false);
-        }
-
-        courtsLangConfig= new YamlConfiguration();
-        try {
             courtsLangConfig.load(courtsLangConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
@@ -235,14 +235,19 @@ public class SocialCore extends JavaPlugin {
     }
 
     private void setupMarriagesConfig(){
-        String path = getDataFolder()+"/marriages";
-        File marriagesConfigFile = new File(path, "config.yml");
+        File marriagesFolder = new File(getDataFolder().getPath() + File.separator + "marriages");
+        if (!marriagesFolder.exists()){
+            marriagesFolder.mkdir();
+        }
+
+        File marriagesConfigFile = new File(marriagesFolder.getPath(), "config.yml");
         if (!marriagesConfigFile.exists()) {
             marriagesConfigFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
+            saveResource(marriagesFolder.getName()+File.separator+"config.yml", false);
         }
 
         marriagesConfig= new YamlConfiguration();
+
         try {
             marriagesConfig.load(marriagesConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
@@ -251,14 +256,19 @@ public class SocialCore extends JavaPlugin {
     }
 
     private void setupGendersConfig(){
-        String path = getDataFolder()+"/genders";
-        File gendersConfigFile = new File(path, "config.yml");
+        File gendersFolder = new File(getDataFolder().getPath() + File.separator + "genders");
+        if (!gendersFolder.exists()){
+            gendersFolder.mkdir();
+        }
+
+        File gendersConfigFile = new File(gendersFolder.getPath(), "config.yml");
         if (!gendersConfigFile.exists()) {
             gendersConfigFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
+            saveResource(gendersFolder.getName()+File.separator+"config.yml", false);
         }
 
         gendersConfig= new YamlConfiguration();
+
         try {
             gendersConfig.load(gendersConfigFile);
         } catch (IOException | InvalidConfigurationException e) {

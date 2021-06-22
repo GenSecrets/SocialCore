@@ -1,6 +1,12 @@
 default-world: "world"
 policy:
   lang:
+    vote-status:
+      unconfirmed: "You have not confirmed this policy."
+      confirmed: "You have confirmed this policy."
+      approved: "You have approved of this policy."
+      disapproved: "You have disapproved of this policy."
+      abstained: "You have not yet voted on this policy."
     state-descriptions:
       UNCONFIRMED: "This has not yet been confirmed by all the judges"
       MAIN_VOTING: "This policy is currently under vote by all players."
@@ -91,6 +97,8 @@ judge-approval-rate-required: 60
 judge-inactive-days-allowed: 15
 judge-required-votes: 300
 max-judges: 4
+max-judge-offline-time: 14d
+citizen-stall-document-cooldown: 5m
 nominate-cost: 10000
 notifier:
   messages:
@@ -149,3 +157,4 @@ rewards:
     - 'gold_nugget 1 Unbreaking:1 name:&9Justice_Token lore:&9&o"Fiat_justitia,|&9&oet_pereat_mundus."|&6Royal_currency_used|&6in_the_municipal_system.'
 secretaries-per-judge: 2
 time-between-vote-messages: 10m
+max-fine: 2500

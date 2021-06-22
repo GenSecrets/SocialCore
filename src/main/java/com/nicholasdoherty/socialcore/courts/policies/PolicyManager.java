@@ -22,7 +22,7 @@ public class PolicyManager {
     
     public PolicyManager(final Courts courts) {
         this.courts = courts;
-        policyConfig = new PolicyConfig(courts.getPlugin().getConfig().getConfigurationSection("courts.policy"));
+        policyConfig = new PolicyConfig(courts.getPlugin().getCourtsConfig().getConfigurationSection("policy"));
         cache = Collections.synchronizedMap(new HashMap<>());
         new PolicyCommand(courts, this);
         new PoliciesCommand(courts, this);

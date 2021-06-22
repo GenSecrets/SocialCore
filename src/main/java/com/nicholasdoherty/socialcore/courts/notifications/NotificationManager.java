@@ -158,8 +158,8 @@ public class NotificationManager {
     private void initNotifs() {
         notificationTypeNotificationMap = new HashMap<>();
         eventNotifs = new HashMap<>();
-        ConfigurationSection configurationSection = courts.getPlugin().getConfig();
-        configurationSection = configurationSection.getConfigurationSection("courts.notifier");
+        ConfigurationSection configurationSection = courts.getPlugin().getCourtsConfig();
+        configurationSection = configurationSection.getConfigurationSection("notifier");
         ConfigurationSection messagesSection = configurationSection.getConfigurationSection("messages");
 
         for (QueuedNotification queuedNotification : Courts.getCourts().getCourtsSaveManager().queuedNotificationList()) {
