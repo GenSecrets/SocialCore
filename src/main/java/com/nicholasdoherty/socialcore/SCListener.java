@@ -64,7 +64,7 @@ public class SCListener implements Listener {
         }
         final Player marriedToP = Bukkit.getPlayer(socialPlayer.getMarriedTo());
         if(marriedToP != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
-            marriedToP.sendMessage(SocialCore.plugin.lang.petNameLoginMessage.replace("{pet-name}", socialPlayer.getPetName()));
+            marriedToP.sendMessage(SocialCore.plugin.marriageConfig.petNameLoginMessage.replace("{pet-name}", socialPlayer.getPetName()));
         }
     }
     
@@ -83,7 +83,7 @@ public class SCListener implements Listener {
         }
         final Player marriedToP = Bukkit.getPlayer(socialPlayer.getMarriedTo());
         if(marriedToP != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
-            marriedToP.sendMessage(SocialCore.plugin.lang.petNameLogoutMessage.replace("{pet-name}", socialPlayer.getPetName()));
+            marriedToP.sendMessage(SocialCore.plugin.marriageConfig.petNameLogoutMessage.replace("{pet-name}", socialPlayer.getPetName()));
         }
     }
     
@@ -109,7 +109,7 @@ public class SCListener implements Listener {
         
         // If either partner in the marriage has the permission node, let it happen.
         if(p1.hasPermission("sc.marriage.sharefood") || p2.hasPermission("sc.marriage.sharefood")) {
-            final double distanceSquared = sc.lang.maxConsumeDistanceSquared;
+            final double distanceSquared = sc.marriageConfig.maxConsumeDistanceSquared;
             if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName()) && p1.getLocation().distanceSquared(p2.getLocation()) <= distanceSquared) {
                 if(p1.hasMetadata("last-ate")) {
                     final ItemStack lastAte = (ItemStack) p1.getMetadata("last-ate").get(0).value();
@@ -131,7 +131,7 @@ public class SCListener implements Listener {
     public void onExpChange(final PlayerExpChangeEvent e) {
         
         final double ran = Math.random();
-        if(ran <= sc.lang.coupleXPPercent) {
+        if(ran <= sc.marriageConfig.coupleXPPercent) {
             final Player p = e.getPlayer();
             if(p == null) {
                 return;
@@ -146,7 +146,7 @@ public class SCListener implements Listener {
                 if(!p.getWorld().equals(p2.getWorld())) {
                     return;
                 }
-                if(p.getLocation().distanceSquared(p2.getLocation()) > Math.pow(sc.lang.coupleXPDistance, 2)) {
+                if(p.getLocation().distanceSquared(p2.getLocation()) > Math.pow(sc.marriageConfig.coupleXPDistance, 2)) {
                     return;
                 }
                 
@@ -226,7 +226,7 @@ public class SCListener implements Listener {
                 onPiggyBackCooldown.remove(uuid1);
                 onPiggyBackCooldown.remove(uuid2);
             }
-        }.runTaskLater(SocialCore.plugin, SocialCore.plugin.lang.piggybackCooldown);
+        }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.piggybackCooldown);
     }
     
     @EventHandler
@@ -300,7 +300,7 @@ public class SCListener implements Listener {
             ParticleEffect.HEART.display(loc, 1, 1, 1, 5, 20);
             p.sendMessage(ChatColor.AQUA + "You have kissed " + p2.getName() + '.');
             p2.sendMessage(ChatColor.AQUA + p.getName() + " kisses you.");
-            final int healAmount = sc.lang.kissHealAmount;
+            final int healAmount = sc.marriageConfig.kissHealAmount;
             if(healAmount > 0) {
                 try {
                     if(p.getHealth() + healAmount <= p.getMaxHealth()) {
@@ -318,5 +318,16 @@ public class SCListener implements Listener {
             }
             sc.marriages.kissPlayer(p.getName());
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (!event.getPlayer().hasPlayedBefore()) {
+            sc.welcomerLastJoined = event.getPlayer().getName();
+            String welcomeMessage = ChatColor.translateAlternateColorCodes('&', sc.getWelcomerConfig().getString("broadcast-message"));
+            sc.getServer().broadcastMessage(sc.prefix + ChatColor.RESET + welcomeMessage.replace("%player%", event.getPlayer().getName()));
+
+        }
+
     }
 }
