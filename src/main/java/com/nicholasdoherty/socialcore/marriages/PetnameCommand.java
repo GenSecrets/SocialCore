@@ -45,7 +45,7 @@ public class PetnameCommand implements CommandExecutor {
             String spousePetname = socialPlayer.getPetName();
             if (spousePetname == null)
                 spousePetname = socialPlayer.getPlayerName();
-            marrietToP.sendMessage(SocialCore.plugin.lang.petNameChangeSpouseMessage.replace("{spouse-petname}",spousePetname).replace("{new-petname}",petName));
+            marrietToP.sendMessage(SocialCore.plugin.marriageConfig.petNameChangeSpouseMessage.replace("{spouse-petname}",spousePetname).replace("{new-petname}",petName));
         }
         return true;
     }

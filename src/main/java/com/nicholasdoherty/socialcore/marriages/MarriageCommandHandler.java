@@ -1,11 +1,11 @@
 package com.nicholasdoherty.socialcore.marriages;
 
 import com.nicholasdoherty.socialcore.SocialCore;
-import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
+import com.nicholasdoherty.socialcore.genders.Gender;
 import com.nicholasdoherty.socialcore.marriages.Marriages.Status;
 import com.voxmc.voxlib.util.VaultUtil;
 import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
@@ -43,7 +43,7 @@ public class MarriageCommandHandler implements CommandExecutor {
     @Override
     public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
         if(sender.isOp() && args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            sc.lang.loadConfig();
+            sc.marriageConfig.loadConfig();
             sender.sendMessage(ChatColor.GREEN + "Reloaded marriages.");
         }
         if(sender instanceof Player) {
@@ -211,7 +211,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             out:
                             for(final ItemStack item : p.getInventory().getContents()) {
                                 if(item != null) {
-                                    for(final MarriageGem gem : sc.lang.marriageGems) {
+                                    for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
                                         if(gem.getBlockID() == item.getType()) {
                                             if(item.getItemMeta() != null) {
                                                 if(item.getItemMeta().getDisplayName() != null) {
@@ -276,7 +276,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                         final long divorceTime = date.getTime();
                                         final long currentTime = new Date().getTime();
                                         final long elapsedMillis = currentTime - divorceTime;
-                                        if(elapsedMillis < sc.lang.divorceProposeCooldownMillis) {
+                                        if(elapsedMillis < sc.marriageConfig.divorceProposeCooldownMillis) {
                                             if(divorceName.contains(proposeFrom.getPlayerName())) {
                                                 player.sendMessage(ChatColor.RED + "You have divorced too recently to propose!");
                                             } else {
@@ -328,17 +328,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 break;
                         }
                         
-                        if(proposeTo.getGender() == Gender.UNSPECIFIED) {
-                            player.sendMessage(ChatColor.RED + "You must specify your gender before you can propose! Type /male or /female");
-                            return true;
-                        }
-                        if(proposeFrom.getGender() == Gender.UNSPECIFIED) {
-                            p.sendMessage(ChatColor.RED + "Someone has tried to propose to you, but you havn't specified your gender! Type /male or /female");
-                            player.sendMessage(ChatColor.RED + proposeFrom.getPlayerName() + " hasn't specified their gender yet!");
-                            return true;
-                        }
-                        
-                        if(proposeTo.getGender() == proposeFrom.getGender() && !player.hasPermission("sc.samesex")) {
+                        if(proposeTo.getGender().getName() == proposeFrom.getGender().getName() && !player.hasPermission("sc.samesex")) {
                             player.sendMessage(ChatColor.RED + "Sorry, you need permission to have a samesex marriage.");
                             return true;
                         }
@@ -357,7 +347,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         out:
                         for(final ItemStack item : player.getInventory().getContents()) {
                             if(item != null) {
-                                for(final MarriageGem gem : sc.lang.marriageGems) {
+                                for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
                                     if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
@@ -429,19 +419,19 @@ public class MarriageCommandHandler implements CommandExecutor {
                         }
                         
                         p1.sendMessage(ChatColor.GREEN + "Father " + player.getName() + " is beginning the ceremony...");
-                        if(player.getLocation().distance(p1.getLocation()) > sc.lang.priestDistance) {
+                        if(player.getLocation().distance(p1.getLocation()) > sc.marriageConfig.priestDistance) {
                             player.sendMessage(ChatColor.RED + "The priest is too far away from " + player1.getPlayerName() + '!');
                             p1.sendMessage(ChatColor.RED + "The priest is too far away from " + player1.getPlayerName() + '!');
                             p2.sendMessage(ChatColor.RED + "The priest is too far away from " + player1.getPlayerName() + '!');
                             return true;
                         }
-                        if(player.getLocation().distance(p2.getLocation()) > sc.lang.priestDistance) {
+                        if(player.getLocation().distance(p2.getLocation()) > sc.marriageConfig.priestDistance) {
                             player.sendMessage(ChatColor.RED + "The priest is too far away from " + player2.getPlayerName() + '!');
                             p1.sendMessage(ChatColor.RED + "The priest is too far away from " + player2.getPlayerName() + '!');
                             p2.sendMessage(ChatColor.RED + "The priest is too far away from " + player2.getPlayerName() + '!');
                             return true;
                         }
-                        if(p1.getLocation().distance(p2.getLocation()) > sc.lang.coupleDistance) {
+                        if(p1.getLocation().distance(p2.getLocation()) > sc.marriageConfig.coupleDistance) {
                             player.sendMessage(ChatColor.RED + player1.getPlayerName() + " is too far away from " + player2.getPlayerName() + '!');
                             p1.sendMessage(ChatColor.RED + player1.getPlayerName() + " is too far away from " + player2.getPlayerName() + '!');
                             p2.sendMessage(ChatColor.RED + player1.getPlayerName() + " is too far away from " + player2.getPlayerName() + '!');
@@ -458,7 +448,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         out:
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
-                                for(final MarriageGem gem : sc.lang.marriageGems) {
+                                for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
                                     if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
@@ -484,7 +474,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         out:
                         for(final ItemStack item : p2.getInventory().getContents()) {
                             if(item != null) {
-                                for(final MarriageGem gem : sc.lang.marriageGems) {
+                                for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
                                     if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
@@ -519,7 +509,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         out:
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
-                                for(final MarriageGem gem : sc.lang.marriageGems) {
+                                for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
                                     if(gem.getBlockID() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
@@ -558,14 +548,8 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sc.save.saveMarriage(m);
                         
                         player.sendMessage(ChatColor.GREEN + "You have married " + player1.getPlayerName() + " and " + player2.getPlayerName() + '!');
-                        String toSendPlayer1 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded wife. Happy ever after!";
-                        if(player2.getGender() == Gender.MALE) {
-                            toSendPlayer1 = toSendPlayer1.replace("wife", "husband.");
-                        }
-                        String toSendPlayer2 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded wife. Happy ever after!";
-                        if(player1.getGender() == Gender.MALE) {
-                            toSendPlayer2 = toSendPlayer2.replace("wife", "husband");
-                        }
+                        String toSendPlayer1 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded spouse. Happy ever after!";
+                        String toSendPlayer2 = "You have taken " + player1.getPlayerName() + " to be your loftly wedded spouse. Happy ever after!";
                         p1.sendMessage(toSendPlayer1);
                         p2.sendMessage(toSendPlayer2);
                         for(final Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -884,7 +868,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                     p1.sendMessage(ChatColor.RED + "You do not have permission to view your spouse's inventory.");
                     return true;
                 }
-                final double maxDistaceSquared = sc.lang.maxShareInventDistanceSquared;
+                final double maxDistaceSquared = sc.marriageConfig.maxShareInventDistanceSquared;
                 if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName()) && p2.getLocation().distanceSquared(p1.getLocation()) <= maxDistaceSquared) {
                     p1.openInventory(p2.getInventory());
                     p2.sendMessage(ChatColor.AQUA + p1.getName() + " is viewing your inventory!");

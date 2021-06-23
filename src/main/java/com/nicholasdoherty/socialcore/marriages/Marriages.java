@@ -58,7 +58,7 @@ public class Marriages {
 		long saveTime = kissings.get(playerName);
 		
 
-		if (saveTime+(sc.lang.kissingCooldown*1000) < currentTime) {	
+		if (saveTime+(sc.marriageConfig.kissingCooldown*1000) < currentTime) {
 			kissings.remove(playerName);
 			return true;
 		}

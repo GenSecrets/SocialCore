@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore;
 
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -21,12 +22,44 @@ public class SCCommandHandler implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if(!(sender instanceof Player)){
+			sender.sendMessage("You can only use this command in game!");
+			return true;
+		}
+		Player player = (Player)sender;
 		StringBuilder authors = new StringBuilder();
 		for (String author: sc.getDescription().getAuthors()) {
 			authors.append(author).append(", ");
 		}
-		if (args.length > 0) {
-			String name = args[0];
+		StringBuilder depends = new StringBuilder();
+		for (String depend: sc.getDescription().getDepend()) {
+			depends.append(depend).append(", ");
+		}
+
+		if(args.length > 0 && (args[0].equalsIgnoreCase("version") || args[0].equalsIgnoreCase("help"))) {
+			sender.sendMessage(ChatColor.GOLD+"----------=Social - "+sender.getName()+"=----------");
+			sender.sendMessage(ChatColor.YELLOW+"Plugin Info");
+			sender.sendMessage(ChatColor.AQUA+"-Name: "+ChatColor.GRAY+sc.getDescription().getName());
+			sender.sendMessage(ChatColor.AQUA+"-Authors: "+ChatColor.GRAY+authors.substring(0, authors.length()-2));
+			sender.sendMessage(ChatColor.AQUA+"-Version: "+ChatColor.GRAY+sc.getDescription().getVersion());
+			sender.sendMessage(ChatColor.AQUA+"-Depends: "+ChatColor.GRAY+depends.substring(0, depends.length()-2));
+			sender.sendMessage(ChatColor.AQUA+"-Components ("+ChatColor.GREEN+"Enabled "+ChatColor.RED+"Disabled"+ChatColor.AQUA+")");
+			sender.sendMessage((isEnabled(sc.isCourtsEnabled))+"<Courts> " + (isEnabled(sc.isMarriagesEnabled))+"<Marriages> " + (isEnabled(sc.isGendersEnabled))+"<Genders> " + (isEnabled(sc.isWelcomerEnabled))+"<Welcomer>");
+			sender.sendMessage("");
+			sender.sendMessage(ChatColor.YELLOW+"Commands");
+			sender.sendMessage(ChatColor.AQUA+"-View your profile: "+ChatColor.GREEN+"/"+sc.defaultAlias+" <name>");
+			sender.sendMessage(ChatColor.AQUA+"-View court commands: "+ChatColor.GREEN+"/court");
+			sender.sendMessage(ChatColor.AQUA+"-View marriage commands: "+ChatColor.GREEN+"/marriage");
+			sender.sendMessage(ChatColor.AQUA+"-View gender commands: "+ChatColor.GREEN+"/gender");
+			sender.sendMessage(ChatColor.AQUA+"-Welcoming commands: "+ChatColor.GREEN+"/wel"
+					+ChatColor.AQUA+" or "+ChatColor.GREEN+"/welcome");
+		} else {
+			String name;
+			if(args.length > 0){
+				name = args[0];
+			} else {
+				name = sender.getName();
+			}
 			SocialPlayer sp = SocialCore.plugin.save.getSocialPlayer(name);
 			if (sp == null) {
 				sender.sendMessage(ChatColor.RED + "Could not find player: " + name);
@@ -37,46 +70,46 @@ public class SCCommandHandler implements CommandExecutor{
 				sender.sendMessage(ChatColor.GOLD+"----------=Social - "+sp.getPlayerName()+"=----------");
 
 				// PERSONAL PLAYER INFO
-				sender.sendMessage(ChatColor.YELLOW +"Player info");
+				sender.sendMessage(sc.commandColor +"Player info");
 				if(op.isOnline() && ((Player)sender).canSee(op.getPlayer())){
-					sender.sendMessage(ChatColor.AQUA+"Online: "+ChatColor.GREEN+"true");
+					sender.sendMessage(sc.messageColor+"Online: "+sc.successColor+"true");
 				} else {
-					sender.sendMessage(ChatColor.AQUA+"Online: "+ChatColor.RED+"false");
+					sender.sendMessage(sc.messageColor+"Online: "+sc.errorColor+"false");
 				}
-				sender.sendMessage(ChatColor.AQUA+"Gender: "+sp.getGender().toString().toLowerCase());
-				sender.sendMessage(ChatColor.AQUA+"Join Date: "+join);
+				sender.sendMessage(sc.messageColor+"Gender: "+sp.getGender().getName().toLowerCase());
+				sender.sendMessage(sc.messageColor+"Join Date: "+join);
 
 
 				sender.sendMessage("");
 
 				// MARITAL STATUS
-				sender.sendMessage(ChatColor.YELLOW +"Marital status");
+				sender.sendMessage(sc.commandColor +"Marital status");
 				if(sp.isEngaged()){
-					sender.sendMessage(ChatColor.AQUA+"This player is currently engaged!");
-					sender.sendMessage(ChatColor.AQUA+"Fiance: "+sp.getEngagedTo());
+					sender.sendMessage(sc.messageColor+"This player is currently engaged!");
+					sender.sendMessage(sc.messageColor+"Fiance: "+sp.getEngagedTo());
 				} else if(sp.isMarried()){
-					sender.sendMessage(ChatColor.AQUA+"This player is currently married!");
-					sender.sendMessage(ChatColor.AQUA+"Spouse: "+sp.getMarriedTo());
+					sender.sendMessage(sc.messageColor+"This player is currently married!");
+					sender.sendMessage(sc.messageColor+"Spouse: "+sp.getMarriedTo());
 				} else {
-					sender.sendMessage(ChatColor.AQUA+"This player is neither engaged nor married!");
+					sender.sendMessage(sc.messageColor+"This player is neither engaged nor married!");
 				}
-			}
-			return true;
-		}
 
-		sender.sendMessage(ChatColor.GOLD+"----------=Social - "+sender.getName()+"=----------");
-		sender.sendMessage(ChatColor.YELLOW+"Plugin Info");
-		sender.sendMessage(ChatColor.AQUA+"-Name: "+sc.getDescription().getName());
-		sender.sendMessage(ChatColor.AQUA+"-Authors: "+authors.substring(0, authors.length()-2));
-		sender.sendMessage(ChatColor.AQUA+"-Version: "+sc.getDescription().getVersion());
-		sender.sendMessage(ChatColor.AQUA+"-Depends: "+sc.getDescription().getDepend());
-		sender.sendMessage("");
-		sender.sendMessage(ChatColor.YELLOW+"Commands");
-		sender.sendMessage(ChatColor.AQUA+"-View your profile: "+ChatColor.GREEN+"/socialcore <name>");
-		sender.sendMessage(ChatColor.AQUA+"-View marriage commands: "+ChatColor.GREEN+"/marriage");
-		sender.sendMessage(ChatColor.AQUA+"-View gender commands: "+ChatColor.GREEN+"/gender");
+				sender.sendMessage("");
+
+				// HELP
+				sender.sendMessage(sc.commandColor + "Additional info");
+				sender.sendMessage(sc.messageColor + "-Discover more commands via: " + sc.commandColor + "/"+sc.defaultAlias+" help");
+			}
+		}
 		return true;
 		
 	}
 
+	public ChatColor isEnabled(boolean enabled){
+		if(enabled) {
+			return ChatColor.GREEN;
+		} else {
+			return ChatColor.RED;
+		}
+	}
 }
