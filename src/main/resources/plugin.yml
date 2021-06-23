@@ -1,7 +1,7 @@
 name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
-version: 2.0-0012
-authors: [theMightyChain,pascoej,GenSecrets]
+version: 2.0
+authors: [theMightyChain,pascoej,Gummybearking,GenSecrets]
 depend:
     - Vault
     - Essentials
@@ -11,6 +11,10 @@ softdepend: [ProtocolLib,WorldGuard,TownyChat]
 api-version: 1.16
 
 commands:
+    wel:
+        description: Welcome a player!
+    welcome:
+        description: Welcome a player!
     ifelection:
         usage: /ifelection <command>
         description: runs command if election is scheduled
@@ -49,6 +53,10 @@ commands:
         usage: /secretary
         permission: sc.defaultperm
     socialcore:
+        description: Displays the current version of social core
+        usage: /<command>.
+        permission: sc.basic
+    profile:
         description: Displays the current version of social core
         usage: /<command>.
         permission: sc.basic
@@ -93,21 +101,9 @@ commands:
     fixmarriages:
         description: fixes a bug
         permission: sc.admin
-    getpermissions:
-        description: View your permissions
-        permission: sc.admin
     gender:
-        description: Get someone's gender
-        permission: sc.gender.others
-    male:
-        description: Assign yourself to male gender
-        permission: sc.gender.male
-    female:
-        description: Assign yourself to female gender
-        permission: sc.gender.female
-    nonbinary:
-        description: Assign yourself to nonbinary gender
-        permission: sc.gender.nonbinary
+        description: Manage gender commands
+        permission: sc.gender.default
 permissions:
     sc.utility:
         description: Used for autocommand
@@ -115,18 +111,15 @@ permissions:
     sc.defaultperm:
         description: all have
         default: true
+    sc.gender.default:
+        description: Basic gender command
+        default: true
     sc.gender.others:
         description: Check someone else's gender
         default: true
-    sc.gender.male:
-        description: Assign yourself to male gender
-        default: true
-    sc.gender.female:
-        description: Assign yourself to female gender
-        default: true
-    sc.gender.nonbinary:
-        description: Assign yourself to nonbinary gender
-        default: true
+    sc.gender.admin:
+        description: Manage other players genders
+        default: op
     sc.status:
         description: allows use of status command
         default: true
@@ -172,6 +165,9 @@ permissions:
     sc.admin:
         description: Required to marry a couple
         default: false
+    sc.op:
+        description: for the OP of admins bois
+        default: op
     sc.viewspouseinventory:
         description: Allows player to view their spouse's inventory.
         default: true
