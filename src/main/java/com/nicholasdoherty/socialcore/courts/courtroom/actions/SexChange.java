@@ -5,6 +5,7 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
+import com.nicholasdoherty.socialcore.genders.Gender;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -16,15 +17,15 @@ import java.util.Map;
  */
 public class SexChange implements PostCourtAction, ConfigurationSerializable {
     private int cazeId;
-    private SocialCore.Gender gender;
+    private Gender gender;
 
-    public SexChange(Case caze, SocialCore.Gender gender) {
+    public SexChange(Case caze, Gender gender) {
         this.cazeId = caze.getId();
         this.gender = gender;
     }
     public SexChange(Map<String, Object> map) {
         cazeId = (int) map.get("case-id");
-        gender = SocialCore.Gender.valueOf((String) map.get("gender"));
+        gender = new Gender((String) map.get("gender"));
     }
 
     @Override

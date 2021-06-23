@@ -1,9 +1,11 @@
 package com.nicholasdoherty.socialcore;
 
+import com.nicholasdoherty.socialcore.genders.Gender;
+
 public class SocialPlayer {
 
 	private String playerName;
-	private SocialCore.Gender gender;
+	private Gender gender;
 	private String petName;
 
 	//engagement
@@ -15,16 +17,16 @@ public class SocialPlayer {
 	
 	public SocialPlayer(String playerName) {
 		this.playerName = playerName;
-		gender = SocialCore.Gender.UNSPECIFIED;
+		this.gender = new Gender("UNSPECIFIED");
 		isMarried = false;
 
 	}
 	
 	//setters and getters
-	public SocialCore.Gender getGender() {
+	public Gender getGender() {
 		return gender;
 	}
-	public void setGender(SocialCore.Gender gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 	public String getPlayerName() {

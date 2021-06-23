@@ -1,12 +1,9 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.marriages.Divorce;
 import com.nicholasdoherty.socialcore.marriages.Engagement;
 import com.nicholasdoherty.socialcore.marriages.Marriage;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,10 +24,6 @@ public class SaveHandler {
     public SaveHandler(final String directory, final SocialCore sc) {
         this.directory = directory;
         this.sc = sc;
-    }
-    
-    public Gender getGenderForPlayer(final String playerName) {
-        return Gender.UNSPECIFIED;
     }
     
     public List<SocialPlayer> allSocialPlayers() {
@@ -203,6 +196,10 @@ public class SaveHandler {
         } else {
             sc.log.severe("Cannot save a null player!");
         }
+    }
+
+    public int getCountGender(String genderName){
+        return sc.store.getGenderStats(genderName);
     }
     
     public List<String> getAllMarriageNames() {
