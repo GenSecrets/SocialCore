@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore.store;
 
 import com.nicholasdoherty.socialcore.SocialCore;
-import com.nicholasdoherty.socialcore.SocialCore.Gender;
 import com.nicholasdoherty.socialcore.SocialPlayer;
+import com.nicholasdoherty.socialcore.genders.Gender;
 import com.nicholasdoherty.socialcore.marriages.Divorce;
 import com.nicholasdoherty.socialcore.marriages.Engagement;
 import com.nicholasdoherty.socialcore.marriages.Marriage;
@@ -294,7 +294,7 @@ public class SQLStore extends Store {
                 socialPlayer.setEngagedTo(engagedTo);
                 socialPlayer.setMarried(isMarried);
                 socialPlayer.setMarriedTo(marriedTo);
-                socialPlayer.setGender(Gender.valueOf(gender));
+                socialPlayer.setGender(new Gender(gender));
                 socialPlayer.setPetName(rs.getString("pet_name"));
                 return socialPlayer;
             }
@@ -378,7 +378,7 @@ public class SQLStore extends Store {
             long lastRace = 5L;
             preparedStatement.setString(1, race);
             preparedStatement.setLong(2, lastRace);
-            preparedStatement.setString(3, socialPlayer.getGender().toString());
+            preparedStatement.setString(3, socialPlayer.getGender().getName());
             preparedStatement.setString(4, socialPlayer.getMarriedTo());
             preparedStatement.setString(5, socialPlayer.getEngagedTo());
             preparedStatement.setBoolean(6, socialPlayer.isMarried());
@@ -440,6 +440,22 @@ public class SQLStore extends Store {
         }
     }
     
+    public int getGenderStats(String genderName) {
+        int genderCount = 14;
+        final Connection conn = getConnection();
+        try {
+            final String sql = "SELECT COUNT(gender) AS 'rows' FROM SocialCore WHERE gender LIKE '"+genderName+"'";
+            final PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            final ResultSet rs = preparedStatement.executeQuery();
+            rs.next();
+            genderCount = rs.getInt("rows");
+            rs.close();
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return genderCount;
+    }
+
     public List<String> getAllMarriageNames() {
         final List<String> marriageNames = new ArrayList<>();
         final Connection conn = getConnection();
@@ -591,9 +607,9 @@ public class SQLStore extends Store {
                 final String name = rs.getString("name");
                 final String engagedTo = rs.getString("engagedTo");
                 final String genderString = rs.getString("gender");
-                final Gender gender = Gender.valueOf(genderString);
+                final Gender gender = new Gender(genderString);
                 Engagement engagement = null;
-                if(gender == Gender.MALE) {
+                if(gender.getName().equalsIgnoreCase("MALE")) {
                     final SocialPlayer husband = plugin.save.getSocialPlayer(name);
                     final SocialPlayer wife = plugin.save.getSocialPlayer(engagedTo);
                     if(husband != null && wife != null) {
@@ -660,9 +676,9 @@ public class SQLStore extends Store {
                 final String name = rs.getString("name");
                 final String marriedTo = rs.getString("marriedTo");
                 final String genderString = rs.getString("gender");
-                final Gender gender = Gender.valueOf(genderString);
+                final Gender gender = new Gender(genderString);
                 Marriage marriage = null;
-                if(gender == Gender.MALE) {
+                if(gender.getName().equalsIgnoreCase("MALE")) {
                     final SocialPlayer husband = plugin.save.getSocialPlayer(name);
                     final SocialPlayer wife = plugin.save.getSocialPlayer(marriedTo);
                     if(husband != null && wife != null) {
