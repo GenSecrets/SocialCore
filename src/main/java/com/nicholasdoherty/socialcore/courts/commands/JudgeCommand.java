@@ -97,7 +97,7 @@ public class JudgeCommand implements CommandExecutor {
                 return true;
             }
             if(args.length == 2) {
-                final Location loc = locFromString(args[1], Bukkit.getWorld(SocialCore.plugin.lang.defaultWorld));
+                final Location loc = locFromString(args[1], Bukkit.getWorld(SocialCore.plugin.getCourts().getCourtsConfig().getDefaultWorld()));
                 if(loc == null) {
                     p.sendMessage(ChatColor.RED + "Invalid location");
                     return true;

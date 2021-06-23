@@ -34,6 +34,7 @@ public class CourtsConfig {
     private double maxFine;
     private long supportVoteDecayTick;
     private long minElectionWaitMillis;
+    private String defaultWorld;
 
 
 
@@ -45,7 +46,7 @@ public class CourtsConfig {
                         double finePaymentPercentage, long citizenStallDocumentCooldown, long timeBetweenVoteMessages,
                         Set<String> judgePermissions, Set<String> secretaryPermissions, VoxEffects startSessionEffects,
                         VoxEffects endSessionEffects, List<EssentialsItem> sessionReward, long silenceMuteLength,
-                        double maxFine, long supportVoteDecayTick, VoxEffects judgeTeleportEffects, long minElectionWaitMillis) {
+                        double maxFine, long supportVoteDecayTick, VoxEffects judgeTeleportEffects, long minElectionWaitMillis, String defaultWorld) {
         this.maxJudges = maxJudges;
         this.secretariesPerJudge = secretariesPerJudge;
         this.judgeInactiveDaysAllowed = judgeInactiveDaysAllowed;
@@ -77,6 +78,7 @@ public class CourtsConfig {
         this.supportVoteDecayTick = supportVoteDecayTick;
         this.judgeTeleportEffects = judgeTeleportEffects;
         this.minElectionWaitMillis = minElectionWaitMillis;
+        this.defaultWorld = defaultWorld;
     }
 
 
@@ -207,6 +209,7 @@ public class CourtsConfig {
     public long getSilenceMuteLength() {
         return silenceMuteLength;
     }
+    public String getDefaultWorld() { return defaultWorld; }
 
     public static CourtsConfig fromConfig(FileConfiguration section) {
         int maxJudges = section.getInt("max-judges");
@@ -300,12 +303,12 @@ public class CourtsConfig {
         if (section.contains("elections")) {
             minElectionWaitMillis = VoxTimeUnit.TICK.toMillis(VoxTimeUnit.getTicks(section.getString("elections.wait-time")));
         }
-        String defaultJudgeTpWorld = "world";
+        String defaultWorld = "world";
         if (section.contains("judge-default-tp-world")) {
-            defaultJudgeTpWorld = section.getString("judge-default-tp-world");
+            defaultWorld = section.getString("judge-default-tp-world");
         }
         return new CourtsConfig(maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeApprovalRateRequired,judgeApprovalRateDemoted,judgeRequiredVotes,caseFilingCost,processReward,courtVoteReward,
                 judgementReward,voxEffects,silenceLength, courtRoomMap,maxJudgeOfflineTicks,autoSaveInterval,nominateSelfCost,categoryConfigMap,finePaymentInterval,finePaymentPercentage,citizenStallDocumentCooldown,
-                timeBetweenVoteMessages,judgePermissions,secretaryPermissions,startSessionEffects,endSessionEffects,sessionReward,silenceMuteLength,maxFine,supportVoteDecayTicks,judgeTeleportEffects,minElectionWaitMillis);
+                timeBetweenVoteMessages,judgePermissions,secretaryPermissions,startSessionEffects,endSessionEffects,sessionReward,silenceMuteLength,maxFine,supportVoteDecayTicks,judgeTeleportEffects,minElectionWaitMillis,defaultWorld);
     }
 }
