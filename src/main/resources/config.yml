@@ -1,13 +1,22 @@
 #
 # Generic settings for SocialCore
 #
-plugin-prefix: '&8[&bSocial&8]'
-enable-courts: true
-enable-marriages: true
-enable-genders: true
-#
+plugin-prefix: '&8[&bSocial&8] '
+# Alias that can be used in place of "/socialcore"
+default-alias: "profile"
+# Different components of Social Core, enable them or not
+components:
+  enable-courts: true
+  enable-marriages: true
+  enable-genders: true
+  enable-welcomer: true
+# Message colors!
+colors:
+ error: '&c'
+ success: '&a'
+ messages: '&b'
+ commands: '&e'
 # SQL settings for database storage
-#
 sql:
  host: localhost
  dbname: minecraft

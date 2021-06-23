@@ -34,9 +34,9 @@ public class CourtsSaveManager {
         this.courts = courts;
         final SocialCore plugin = courts.getPlugin();
         
-        casesConfigAccessor = new CompressedConfigAccessor(plugin, "courts-data.zip", "cases");
+        casesConfigAccessor = new CompressedConfigAccessor(plugin, "courts"+File.separator+"courts-data.zip", "cases");
         casesConfigAccessor.saveDefaultConfig();
-        configAccessor = new CompressedConfigAccessor(plugin, "courts-data.zip", "base");
+        configAccessor = new CompressedConfigAccessor(plugin, "courts"+File.separator+"courts-data.zip", "base");
         configAccessor.saveDefaultConfig();
         reloadConfigs();
         try {
@@ -55,9 +55,9 @@ public class CourtsSaveManager {
     }
     
     private static synchronized void saveCorrupted() {
-        final File from = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-data.zip");
+        final File from = new File(Courts.getCourts().getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip");
         final Random ran = new Random();
-        final File to = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-data.zip.bad" + ran.nextInt(100000));
+        final File to = new File(Courts.getCourts().getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip.bad" + ran.nextInt(100000));
         System.out.println("Saved bad file to " + to.getName());
         try {
             Files.copy(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -69,8 +69,8 @@ public class CourtsSaveManager {
     public static synchronized void revertFile() {
         System.out.println("[Courts] Error parsing saved data, reverting to backup....");
         saveCorrupted();
-        final File from = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-data.zip.bak");
-        final File to = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-data.zip");
+        final File from = new File(Courts.getCourts().getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip.bak");
+        final File to = new File(Courts.getCourts().getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip");
         try {
             Files.copy(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch(final IOException e1) {
@@ -146,9 +146,9 @@ public class CourtsSaveManager {
         }
         final long time2 = new Date().getTime();
         final long diff = time2 - time;
-        final File old = new File(courts.getPlugin().getDataFolder(), "courts-data.zip");
+        final File old = new File(courts.getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip");
         if(old.exists()) {
-            final File newFile = new File(courts.getPlugin().getDataFolder(), "courts-data.zip.bak");
+            final File newFile = new File(courts.getPlugin().getDataFolder()+File.separator+"courts", "courts-data.zip.bak");
             try {
                 Files.copy(old.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch(final IOException e) {

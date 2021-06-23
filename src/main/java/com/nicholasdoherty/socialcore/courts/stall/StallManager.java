@@ -6,6 +6,7 @@ import com.voxmc.voxlib.VLocation;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class StallManager {
         courts = Courts.getCourts();
         this.stalls = stalls;
         
-        stallStore = new ConfigAccessor(Courts.getCourts().getPlugin(), "stalls.yml");
+        stallStore = new ConfigAccessor(Courts.getCourts().getPlugin(), "courts"+ File.separator+"stalls.yml");
         stallStore.saveDefaultConfig();
         loadMoreStalls();
         new StallListener(courts, this);
