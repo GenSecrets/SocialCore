@@ -8,8 +8,8 @@ import com.nicholasdoherty.socialcore.courts.notifications.NotificationManager;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.voxmc.voxlib.util.PlayerUtil;
-import com.voxmc.voxlib.util.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -103,53 +103,7 @@ public class JudgeManager {
         //setPrefix(judge.getUuid());
         Courts.getCourts().getElectionManager().checkShouldScheduleFile();
     }
-    
-    public void removeSetPrefix(final UUID uuid) {
-        setPrefixes.remove(uuid);
-    }
-    
-    public void setPrefix(final UUID uuid) {
-        final Player p = Bukkit.getPlayer(uuid);
-        if(p != null && p.isOnline()) {
-            setPrefix(p);
-        }
-    }
-    
-    public void revertPrefix(final Player p) {
-        if(setPrefixes.containsKey(p.getUniqueId())) {
-            VaultUtil.setPrefix(p, setPrefixes.get(p.getUniqueId()));
-            setPrefixes.remove(p.getUniqueId());
-        }
-    }
-    
-    public void setPrefix(final Player p) {
-        final UUID uuid = p.getUniqueId();
-        final boolean isJudge = isJudge(uuid);
-        final String judgePrefix = Courts.getCourts().getCourtsLangManager().getJudgePrefix();
-        if(!isJudge && !setPrefixes.containsKey(uuid)) {
-            final String oldPrefix = VaultUtil.getPrefix(p);
-            if(oldPrefix != null && oldPrefix.equals(judgePrefix)) {
-                VaultUtil.setPrefix(p, "");
-            }
-            return;
-        }
-        if(!isJudge && setPrefixes.containsKey(uuid)) {
-            VaultUtil.setPrefix(p, setPrefixes.get(uuid));
-            removeSetPrefix(uuid);
-            return;
-        }
-        if(isJudge) {
-            String oldPrefix = VaultUtil.getPrefix(p);
-            if(oldPrefix == null) {
-                oldPrefix = "";
-            }
-            if(judgePrefix.equals(oldPrefix)) {
-                return;
-            }
-            VaultUtil.setPrefix(p, judgePrefix);
-            setPrefixes.put(uuid, oldPrefix);
-        }
-    }
+
     
     public Judge getJudge(final UUID uuid) {
         //Player player = Bukkit.getPlayer(uuid);
@@ -198,15 +152,6 @@ public class JudgeManager {
         return null;
     }
     
-    private void addPermission(final PermissionAttachment permissionAttachment, String perm) {
-        boolean value = true;
-        if(perm.contains("-")) {
-            value = false;
-            perm = perm.replace("-", "");
-        }
-        permissionAttachment.setPermission(perm, value);
-    }
-    
     public void setPerms(final UUID uuid) {
         final Player p = Bukkit.getPlayer(uuid);
         if(p != null && p.isOnline()) {
@@ -247,7 +192,7 @@ public class JudgeManager {
             permissionAttachment = p.addAttachment(Courts.getCourts().getPlugin());
             p.setMetadata("cpa", new FixedMetadataValue(Courts.getCourts().getPlugin(), permissionAttachment));
             for(final String perm : newPerms) {
-                addPermission(permissionAttachment, perm);
+                VaultUtil.addPermission(permissionAttachment, perm);
             }
             return;
         }
@@ -262,7 +207,7 @@ public class JudgeManager {
             p.setMetadata("cpa", new FixedMetadataValue(Courts.getCourts().getPlugin(), permissionAttachment));
             
             for(final String perm : newPerms) {
-                addPermission(permissionAttachment, perm);
+                VaultUtil.addPermission(permissionAttachment, perm);
             }
         }
     }

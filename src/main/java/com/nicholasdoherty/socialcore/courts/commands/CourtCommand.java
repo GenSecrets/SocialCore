@@ -12,6 +12,7 @@ import com.nicholasdoherty.socialcore.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
 import com.voxmc.voxlib.util.UUIDUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -168,11 +169,12 @@ public class CourtCommand implements CommandExecutor{
             }
             if (args.length > 1 && args[0].equalsIgnoreCase("promote")) {
                 String name = args[1];
-                UUID uuid = UUIDUtil.getUUID(name);
-                if (uuid == null) {
+                Player p = Bukkit.getPlayer(name);
+                if (p == null) {
                     commandSender.sendMessage(ChatColor.RED +"Invalid name");
                     return true;
                 }
+                UUID uuid = p.getUniqueId();
                 name = UUIDUtil.prettyName(name,uuid);
                 if (args.length == 3 && args[2].equalsIgnoreCase("judge")) {
                     Citizen citizen = Courts.getCourts().getCitizenManager().toCitizen(name,uuid);

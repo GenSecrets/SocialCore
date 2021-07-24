@@ -5,9 +5,8 @@ import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseManager;
 import com.nicholasdoherty.socialcore.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.courts.stall.StallType;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.voxmc.voxlib.VLocation;
-import com.voxmc.voxlib.util.VaultUtil;
-import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -67,7 +66,7 @@ public class CitizensStall extends Stall {
                 public void run() {
                     firstClicks.remove(uuid);
                 }
-            }.runTaskLater(Courts.getCourts().getPlugin(), 300);
+            }.runTaskLater(Courts.getCourts().getPlugin(), 100);
             timeoutRemove.put(uuid, removeTask);
         } else {
             if(timeoutRemove.containsKey(uuid)) {
@@ -80,7 +79,7 @@ public class CitizensStall extends Stall {
                     p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                     return;
                 }
-            } catch(final NotSetupException e) {
+            } catch(final Exception e) {
                 p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                 e.printStackTrace();
                 return;

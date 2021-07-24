@@ -2,6 +2,7 @@ package com.nicholasdoherty.socialcore.courts.mastercases;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
+import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.CaseInfoBookClickItem;
 import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.gui.InventoryGUI;
 import com.nicholasdoherty.socialcore.courts.inventorygui.gui.clickitems.CaseInfoClickItem;
@@ -20,7 +21,7 @@ public class MasterCaseView extends PaginatedItemView {
         super(inventoryGUI, 54);
         List<ClickItem> items = new ArrayList<>();
         for (Case caze : Courts.getCourts().getCaseManager().getCases()) {
-            items.add(0,new CaseInfoClickItem(caze));
+            items.add(0,new CaseInfoBookClickItem(caze, this));
         }
         this.setPaginatedItems(items);
     }

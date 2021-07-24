@@ -37,19 +37,19 @@ public class AssignTimeClickItem implements ClickItem {
         //}
         final Player p = judgeCaseView.getInventoryGUI().getPlayer();
         CalendarGUI.createAndOpen(p, time -> {
-            if(Courts.getCourts().getDefaultDayGetter().hasCorutDate(new DateTime(time))) {
+            if(Courts.getCourts().getDefaultDayGetter().hasCourtDate(new DateTime(time))) {
                 return;
             }
             judgeCaseView.assignDate(time);
             judgeCaseView.getInventoryGUI().open();
         }, dateTime -> {
-            if(dateTime.isAfter(DateTime.now().plusMinutes(20))) {
+            if(dateTime.isAfter(DateTime.now().plusMinutes(3))) {
                 return true;
             }
             if(Courts.getCourts().getDefaultDayGetter().calendarEvents(new LocalDate(dateTime)).length > 1) {
                 return false;
             }
-            if(Courts.getCourts().getDefaultDayGetter().hasCorutDate(dateTime)) {
+            if(Courts.getCourts().getDefaultDayGetter().hasCourtDate(dateTime)) {
                 return false;
             }
             return false;

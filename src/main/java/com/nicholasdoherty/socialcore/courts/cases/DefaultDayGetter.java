@@ -65,7 +65,7 @@ public class DefaultDayGetter implements DayGetter {
         }
     }
     
-    public boolean hasCorutDate(final DateTime dateTime) {
+    public boolean hasCourtDate(final DateTime dateTime) {
         if(dateTime == null) {
             return false;
         }

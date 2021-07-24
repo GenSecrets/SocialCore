@@ -15,7 +15,7 @@
             <url>https://jitpack.io/</url>
         </repository>
 
-        <!-- Vault Plugin (economy)-->
+        <!-- Vault Plugin (economy & chat)-->
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -80,6 +80,21 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/voxlib-2.5.3.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>org.gestern</groupId>
+            <artifactId>Gringotts</artifactId>
+            <version>2.11.1-SNAPSHOT-VoxFork-1.0.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}\libs\Gringotts.jar</systemPath>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.voxmc</groupId>
+                    <artifactId>voxlib</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.bitbucket.voxpopulimc</groupId>
             <artifactId>worldguard-region-events</artifactId>

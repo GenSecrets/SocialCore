@@ -72,27 +72,27 @@ public class SaveHandler {
         }
         final Collection<Marriage> invalidMarriages = new ArrayList<>();
         for(final Marriage marriage : marriages) {
-            if(marriage.getHusband() == null || marriage.getWife() == null) {
+            if(marriage.getSpouse1() == null || marriage.getSpouse2() == null) {
                 invalidMarriages.add(marriage);
                 continue;
             }
-            final SocialPlayer husband = socialPlayerMap.get(marriage.getHusband().getPlayerName());
-            final SocialPlayer wife = socialPlayerMap.get(marriage.getWife().getPlayerName());
-            if(husband == null || wife == null) {
+            final SocialPlayer spouse1 = socialPlayerMap.get(marriage.getSpouse1().getPlayerName());
+            final SocialPlayer spouse2 = socialPlayerMap.get(marriage.getSpouse2().getPlayerName());
+            if(spouse1 == null || spouse2 == null) {
                 invalidMarriages.add(marriage);
                 continue;
             }
-            if(!husband.isMarried()) {
-                husband.setMarried(true);
+            if(!spouse1.isMarried()) {
+                spouse1.setMarried(true);
             }
-            if(!wife.isMarried()) {
-                wife.setMarried(true);
+            if(!spouse2.isMarried()) {
+                spouse2.setMarried(true);
             }
-            if(husband.getMarriedTo() == null || !husband.getMarriedTo().equals(wife.getPlayerName())) {
-                husband.setMarriedTo(wife.getPlayerName());
+            if(spouse1.getMarriedTo() == null || !spouse1.getMarriedTo().equals(spouse2.getPlayerName())) {
+                spouse1.setMarriedTo(spouse2.getPlayerName());
             }
-            if(wife.getMarriedTo() == null || !wife.getMarriedTo().equals(husband.getPlayerName())) {
-                wife.setMarriedTo(husband.getPlayerName());
+            if(spouse2.getMarriedTo() == null || !spouse2.getMarriedTo().equals(spouse1.getPlayerName())) {
+                spouse2.setMarriedTo(spouse1.getPlayerName());
             }
             saveMarriage(marriage);
         }
@@ -110,27 +110,27 @@ public class SaveHandler {
         }
         final Collection<Engagement> invalidEngagements = new ArrayList<>();
         for(final Engagement engagement : engagements) {
-            if(engagement.getFHusband() == null || engagement.getFWife() == null) {
+            if(engagement.getFutureSpouse1() == null || engagement.getFutureSpouse2() == null) {
                 invalidEngagements.add(engagement);
                 continue;
             }
-            final SocialPlayer husband = socialPlayerMap.get(engagement.getFHusband().getPlayerName());
-            final SocialPlayer wife = socialPlayerMap.get(engagement.getFWife().getPlayerName());
-            if(husband == null || wife == null) {
+            final SocialPlayer futureSpouse1 = socialPlayerMap.get(engagement.getFutureSpouse1().getPlayerName());
+            final SocialPlayer futureSpouse2 = socialPlayerMap.get(engagement.getFutureSpouse2().getPlayerName());
+            if(futureSpouse1 == null || futureSpouse2 == null) {
                 invalidEngagements.add(engagement);
                 continue;
             }
-            if(!husband.isEngaged()) {
-                husband.setEngaged(true);
+            if(!futureSpouse1.isEngaged()) {
+                futureSpouse1.setEngaged(true);
             }
-            if(!wife.isEngaged()) {
-                wife.setEngaged(true);
+            if(!futureSpouse2.isEngaged()) {
+                futureSpouse2.setEngaged(true);
             }
-            if(husband.getEngagedTo() == null || !husband.getEngagedTo().equals(wife.getPlayerName())) {
-                husband.setEngagedTo(wife.getPlayerName());
+            if(futureSpouse1.getEngagedTo() == null || !futureSpouse1.getEngagedTo().equals(futureSpouse2.getPlayerName())) {
+                futureSpouse1.setEngagedTo(futureSpouse2.getPlayerName());
             }
-            if(wife.getEngagedTo() == null || !wife.getEngagedTo().equals(husband.getPlayerName())) {
-                wife.setEngagedTo(husband.getPlayerName());
+            if(futureSpouse2.getEngagedTo() == null || !futureSpouse2.getEngagedTo().equals(futureSpouse1.getPlayerName())) {
+                futureSpouse2.setEngagedTo(futureSpouse1.getPlayerName());
             }
             saveEngagement(engagement);
         }
@@ -152,7 +152,7 @@ public class SaveHandler {
         if(sc.socialPlayersCache.containsKey(playerName)) {
             return sc.socialPlayersCache.get(playerName);
         }
-        
+
         final SocialPlayer sp = sc.store.getSocialPlayer(playerName);
         sc.socialPlayersCache.put(playerName, sp);
         return sp;
@@ -170,19 +170,21 @@ public class SaveHandler {
     public Marriage getMarriage(final String marriageName) {
         
         final Marriage marriage = new Marriage(marriageName, sc);
-        return getMarriage(marriage.getHusband(), marriage.getWife());
+        return getMarriage(marriage.getSpouse1(), marriage.getSpouse2());
     }
     
     public Marriage getMarriage(final SocialPlayer husband, final SocialPlayer wife) {
-        
+        Marriage marriage;
+        if(husband == null || wife == null){
+            return null;
+        }
         final String marriageName = husband.getPlayerName() + Marriage.NAME_DELIMITER + wife.getPlayerName();
         if(sc.marriages.marriagesCache.containsKey(marriageName)) {
             return sc.marriages.marriagesCache.get(marriageName);
         }
-        
-        final Marriage marriage = sc.store.getMarriage(husband, wife);
+
+        marriage = sc.store.getMarriage(husband, wife);
         sc.marriages.marriagesCache.put(marriageName, marriage);
-        
         return marriage;
     }
     
@@ -209,22 +211,27 @@ public class SaveHandler {
     public void removeMarriage(final Marriage marriage) {
         sc.store.deleteMarriage(marriage);
     }
+
+    public void removeMarriage(final String marriage) {
+        sc.store.deleteMarriage(marriage);
+    }
     
     public Engagement getEngagement(final String engagementName) {
         final Engagement engagement = new Engagement(engagementName, sc);
-        return getEngagement(engagement.getFHusband(), engagement.getFWife());
+        return getEngagement(engagement.getFutureSpouse1(), engagement.getFutureSpouse2());
     }
     
     public Engagement getEngagement(final SocialPlayer fHusband, final SocialPlayer fWife) {
-        final String engagementName = fHusband.getPlayerName() + Engagement.NAME_DELIMITER + fWife.getPlayerName();
-        if(sc.marriages.engagementsCache.containsKey(engagementName)) {
-            return sc.marriages.engagementsCache.get(engagementName);
+        Engagement engagement = null;
+        if (fHusband != null && fWife != null){
+            final String engagementName = fHusband.getPlayerName() + Engagement.NAME_DELIMITER + fWife.getPlayerName();
+            if(sc.marriages.engagementsCache.containsKey(engagementName)) {
+                return sc.marriages.engagementsCache.get(engagementName);
+            }
+
+            engagement = sc.store.getEngagement(fHusband, fWife);
+            sc.marriages.engagementsCache.put(engagementName, engagement);
         }
-        
-        final Engagement engagement = sc.store.getEngagement(fHusband, fWife);
-        
-        sc.marriages.engagementsCache.put(engagementName, engagement);
-        
         return engagement;
     }
     
@@ -241,6 +248,10 @@ public class SaveHandler {
     public void removeEngagement(final Engagement engagement) {
         sc.store.deleteEngagement(engagement);
     }
+
+    public void removeEngagement(final String engagement) {
+        sc.store.deleteEngagement(engagement);
+    }
     
     public List<String> getAllEngagements() {
         return sc.store.getAllEngagementNames();
@@ -248,18 +259,20 @@ public class SaveHandler {
     
     public Divorce getDivorce(final String divorceName) {
         final Divorce divorce = new Divorce(divorceName, sc);
-        return getDivorce(divorce.getExhusband(), divorce.getExwife());
+        return getDivorce(divorce.getExSpouse1(), divorce.getExSpouse2());
     }
     
-    public Divorce getDivorce(final SocialPlayer exHusband, final SocialPlayer exWife) {
-        final String divorceName = exHusband.getPlayerName() + Engagement.NAME_DELIMITER + exHusband.getPlayerName();
-        if(sc.marriages.divorcesCache.containsKey(divorceName)) {
-            return sc.marriages.divorcesCache.get(divorceName);
+    public Divorce getDivorce(final SocialPlayer exSpouse1, final SocialPlayer exSpouse2) {
+        Divorce divorce = null;
+        if(exSpouse1 != null && exSpouse2 != null && (exSpouse1.getPlayerName() != null || exSpouse2.getPlayerName() != null)){
+            final String divorceName = exSpouse1.getPlayerName() + Engagement.NAME_DELIMITER + exSpouse1.getPlayerName();
+            if(sc.marriages.divorcesCache.containsKey(divorceName)) {
+                return sc.marriages.divorcesCache.get(divorceName);
+            }
+
+            divorce = sc.store.getDivorce(exSpouse1, exSpouse2);
+            sc.marriages.divorcesCache.put(divorceName, divorce);
         }
-        
-        final Divorce divorce = sc.store.getDivorce(exHusband, exWife);
-        
-        sc.marriages.divorcesCache.put(divorceName, divorce);
         
         return divorce;
     }
@@ -276,6 +289,10 @@ public class SaveHandler {
     }
     
     public void removeDivorce(final Divorce divorce) {
+        sc.store.deleteDivorce(divorce);
+    }
+
+    public void removeDivorce(final String divorce) {
         sc.store.deleteDivorce(divorce);
     }
     

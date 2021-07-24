@@ -7,43 +7,43 @@ public class Marriage {
 	
 	public static final String NAME_DELIMITER = "+&";
 	
-	private SocialPlayer husband;
-	private SocialPlayer wife;
+	private SocialPlayer spouse1;
+	private SocialPlayer spouse2;
 	private String priest;
 	private String date;
 	
-	public Marriage(SocialPlayer husband, SocialPlayer wife) {
-		this.husband = husband;
-		this.wife = wife;
+	public Marriage(SocialPlayer spouse1, SocialPlayer spouse2) {
+		this.spouse1 = spouse1;
+		this.spouse2 = spouse2;
 	}
 	public Marriage(String marriageName, SocialCore sc) {
 		String data[] = marriageName.split("\\"+NAME_DELIMITER);
 		if (data.length > 1) {
-			this.husband = sc.save.getSocialPlayer(data[0]);
-			this.wife = sc.save.getSocialPlayer(data[1]);
+			spouse1 = sc.save.getSocialPlayer(data[0]);
+			spouse2 = sc.save.getSocialPlayer(data[1]);
 		}
 		else {
-			sc.log.severe("Failed to create marraige from name: "+marriageName);
+			sc.log.severe("Failed to create marriage from name: "+marriageName);
 		}
 	}
 	
 	//congat marriage
 	public String getName(){
-		return husband.getPlayerName()+NAME_DELIMITER+wife.getPlayerName();
+		return spouse1.getPlayerName()+NAME_DELIMITER+spouse2.getPlayerName();
 	}
 	
 	//setters and getters
-	public SocialPlayer getHusband() {
-		return husband;
+	public SocialPlayer getSpouse1() {
+		return spouse1;
 	}
-	public void setHusband(SocialPlayer husband) {
-		this.husband = husband;
+	public void setSpouse1(SocialPlayer spouse1) {
+		this.spouse1 = spouse1;
 	}
-	public SocialPlayer getWife() {
-		return wife;
+	public SocialPlayer getSpouse2() {
+		return spouse2;
 	}
-	public void setWife(SocialPlayer wife) {
-		this.wife = wife;
+	public void setSpouse2(SocialPlayer spouse2) {
+		this.spouse2 = spouse2;
 	}
 	public String getPriest() {
 		return priest;

@@ -2,6 +2,7 @@ package com.nicholasdoherty.socialcore.courts.stall;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.courts.Courts;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,14 +14,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.joda.time.DateTime;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by john on 1/6/15.
@@ -107,7 +109,32 @@ public class StallListener implements Listener {
         final BookMeta bookMeta = event.getPreviousBookMeta();
         if(bookMeta != null && bookMeta.hasDisplayName() && bookMeta.getDisplayName().contains("Court Case") &&
                 event.isSigning()) {
-            event.setSigning(false);
+            Location loc = event.getPlayer().getLocation();
+            bookMeta.setDisplayName(ChatColor.DARK_RED + "Court Case Document");
+            bookMeta.setTitle(ChatColor.DARK_RED + "Court Case");
+            bookMeta.setAuthor(event.getPlayer().getName());
+            bookMeta.setPages(event.getNewBookMeta().getPages());
+            bookMeta.setGeneration(BookMeta.Generation.TATTERED);
+            bookMeta.setLore(
+                    new ArrayList<String>(){{
+                        add(ChatColor.DARK_GREEN+"Name: "+ChatColor.YELLOW+ event.getPlayer().getName());
+                        add(ChatColor.DARK_GREEN + "Date: " + ChatColor.YELLOW + new SimpleDateFormat("MMM d, yyyy").format(new Date()));
+                        add(ChatColor.DARK_GREEN + "Location: " + ChatColor.YELLOW + loc.getWorld().getName());
+                        add(ChatColor.YELLOW + String.valueOf(loc.getBlockX()) + ChatColor.GRAY + "x "
+                                + ChatColor.YELLOW + String.valueOf(loc.getBlockY()) + ChatColor.GRAY + "y "
+                                + ChatColor.YELLOW + String.valueOf(loc.getBlockZ()) + ChatColor.GRAY + "z");
+                        add(ChatColor.GOLD + "Official Court Document");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "\"This case booklet is");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "official deed used by");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "the court system to");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "define your request");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "for any court issues.\"");
+                        }
+                    }
+            );
+            //bookMeta.setPages(event.getPreviousBookMeta().getPages());
+            bookMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            event.setNewBookMeta(bookMeta);
         }
     }
 }

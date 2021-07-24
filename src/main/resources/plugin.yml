@@ -2,9 +2,7 @@ name: SocialCore
 main: com.nicholasdoherty.socialcore.SocialCore
 version: 2.0
 authors: [theMightyChain,pascoej,Gummybearking,GenSecrets]
-depend:
-    - Vault
-    - Essentials
+depend: [Vault,Essentials]
 loadafter: [Vault,TownyChat,Essentials]
 softdepend: [ProtocolLib,WorldGuard,TownyChat]
 

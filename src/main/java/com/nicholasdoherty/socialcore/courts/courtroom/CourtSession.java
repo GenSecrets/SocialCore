@@ -148,7 +148,7 @@ public class CourtSession implements ConfigurationSerializable, PostCourtActionH
             startJudgeOfflineTime();
             return;
         }
-        courtRoom.sendMessage(ChatColor.GREEN + "Case-" + caze.getId() + " will be presided by the honorable Judge " + judge.getName());
+        courtRoom.sendMessage(ChatColor.GREEN + "" + caze.getPlantiff() + "'s case(" + caze.getId() + ") will be presided by the honorable Judge " + judge.getName());
         if(caze.getPlantiff() != null) {
             courtRoom.sendMessage(ChatColor.YELLOW + "Plaintiff: " + caze.getPlantiff().getName());
         }

@@ -1,5 +1,10 @@
 package com.nicholasdoherty.socialcore.marriages;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import org.bukkit.Bukkit;
@@ -12,8 +17,11 @@ import org.bukkit.entity.Player;
 /**
  * Created by john on 2/1/15.
  */
-public class PetnameCommand implements CommandExecutor {
-    @Override
+@CommandAlias("petname")
+@CommandPermission("socialcore.marriage.petname")
+@Description("Give your spouse a petname only they can see!")
+public class PetnameCommand extends BaseCommand {
+    @Default
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length != 1) {
             return false;

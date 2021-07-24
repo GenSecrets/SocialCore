@@ -3,16 +3,16 @@ package com.nicholasdoherty.socialcore.marriages;
 import org.bukkit.Material;
 
 public class MarriageGem {
-    private Material blockID;
-    private String name;
+    private final Material block;
+    private final String name;
     
-    public MarriageGem(final Material blockID, final String name) {
-        this.blockID = blockID;
+    public MarriageGem(final Material block, final String name) {
+        this.block = block;
         this.name = name;
     }
     
-    public Material getBlockID() {
-        return blockID;
+    public Material getBlock() {
+        return block;
     }
     
     public String getName() {

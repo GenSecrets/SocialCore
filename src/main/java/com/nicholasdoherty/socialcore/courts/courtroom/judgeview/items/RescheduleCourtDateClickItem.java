@@ -33,7 +33,7 @@ public class RescheduleCourtDateClickItem implements ClickItem {
         CalendarGUI.createAndOpen(p, time -> {
             judgeBaseView.assignDate(time);
             judgeBaseView.getInventoryGUI().open();
-        }, dateTime -> dateTime.isAfter(DateTime.now().plusMinutes(20)),
+        }, dateTime -> dateTime.isAfter(DateTime.now().plusMinutes(3)),
                 () -> judgeBaseView.getInventoryGUI().open(), Courts.getCourts().getDefaultDayGetter());
     }
     

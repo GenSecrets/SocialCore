@@ -63,10 +63,10 @@ public class GrantDivorce implements PostCourtAction, ConfigurationSerializable 
             return;
         }*/
         if(marriage != null) {
-            SocialCore.plugin.save.removeMarriage(marriage);
+            SocialCore.plugin.save.removeMarriage(marriage.getName());
             final Divorce divorce = Courts.getCourts().getDivorceManager().getDivorce(caze);
             if(divorce != null) {
-                SocialCore.plugin.save.removeDivorce(divorce);
+                SocialCore.plugin.save.removeDivorce(divorce.getName());
             }
         }
     }

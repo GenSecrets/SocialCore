@@ -5,45 +5,41 @@ import java.util.HashMap;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
-import com.nicholasdoherty.socialcore.marriages.Divorce;
-import com.nicholasdoherty.socialcore.marriages.Engagement;
-import com.nicholasdoherty.socialcore.marriages.Marriage;
 
 
 public class Marriages {
 	
 	public enum Status {
-		Single,ProposeFrom,ProposeTo,Engaged,Married;
+		Single, ProposeFrom, ProposeTo, Engaged, Married
 	}
 	
-	private SocialCore sc;
+	private final SocialCore sc;
 	
 	public HashMap<String,Marriage>marriagesCache;
 	public HashMap<String,Engagement>engagementsCache;
 	public HashMap<String,Divorce>divorcesCache;
 	public HashMap<SocialPlayer,SocialPlayer>proposals;
-	private HashMap<String,Long>kissings;
-	private ArrayList<String>pendingDivorces;
+	private final HashMap<String,Long> kisses;
+	private final ArrayList<String>pendingDivorces;
 	
-	public Marriages(SocialCore derp) {
-		sc = derp;
-		marriagesCache = new HashMap<String,Marriage>();
-		engagementsCache = new HashMap<String,Engagement>();
-		proposals = new HashMap<SocialPlayer,SocialPlayer>();//form -> proposedFrom : proposedTo
-		divorcesCache = new HashMap<String,Divorce>();
-		kissings = new HashMap<String,Long>();
-		pendingDivorces = new ArrayList<String>();
+	public Marriages(SocialCore plugin) {
+		sc = plugin;
+		marriagesCache = new HashMap<>();
+		engagementsCache = new HashMap<>();
+		proposals = new HashMap<>(); //form -> proposedFrom : proposedTo
+		divorcesCache = new HashMap<>();
+		kisses = new HashMap<>();
+		pendingDivorces = new ArrayList<>();
 	}
 	
 	public Status getStatus(SocialPlayer sp) {
-		
 		if (sp.isMarried())
 			return Status.Married;
 		if (sp.isEngaged())
 			return Status.Engaged;
-		if (proposals.keySet().contains(sp))
+		if (proposals.containsKey(sp))
 			return Status.ProposeFrom;
-		if (proposals.values().contains(sp))
+		if (proposals.containsValue(sp))
 			return Status.ProposeTo;
 		
 		return Status.Single;
@@ -51,15 +47,15 @@ public class Marriages {
 	
 	public boolean canPlayerKiss(String playerName) {
 		
-		if (!kissings.containsKey(playerName))
+		if (!kisses.containsKey(playerName))
 			return true;
 		
 		long currentTime = System.currentTimeMillis();
-		long saveTime = kissings.get(playerName);
+		long saveTime = kisses.get(playerName);
 		
 
 		if (saveTime+(sc.marriageConfig.kissingCooldown*1000) < currentTime) {
-			kissings.remove(playerName);
+			kisses.remove(playerName);
 			return true;
 		}
 		else {
@@ -67,7 +63,7 @@ public class Marriages {
 		}
 	}
 	public void kissPlayer(String playerName) {
-		kissings.put(playerName, System.currentTimeMillis());
+		kisses.put(playerName, System.currentTimeMillis());
 	}
 	
 	public ArrayList<String>getPendingDivorces(){

@@ -1,19 +1,20 @@
 package com.nicholasdoherty.socialcore;
 
+import com.nicholasdoherty.socialcore.courts.CourtTeleportationHandler;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inputlib.InputLib;
 import com.nicholasdoherty.socialcore.genders.GenderCommandHandler;
-import com.nicholasdoherty.socialcore.genders.GenderTabCompleter;
 import com.nicholasdoherty.socialcore.genders.Genders;
 import com.nicholasdoherty.socialcore.marriages.*;
 import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
 import com.nicholasdoherty.socialcore.utils.ColorUtil;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.nicholasdoherty.socialcore.welcomer.WelcomeCommandHandler;
 import com.voxmc.voxlib.gui.InventoryGUIManager;
-import com.voxmc.voxlib.util.VaultUtil;
-import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
+import com.earth2me.essentials.api.Economy;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -42,6 +43,8 @@ public class SocialCore extends JavaPlugin {
     private InputLib inputLib;
     private InventoryGUIManager inventoryGUIManager;
     private TimeConditionManager timeConditionManager;
+    private boolean isClockEnabled;
+    private boolean isVaultEnabled;
     // players
     public Map<String, SocialPlayer> socialPlayersCache;
     // Components
@@ -53,7 +56,6 @@ public class SocialCore extends JavaPlugin {
 
     // Plugin settings
     public String prefix;
-    public String consolePrefix;
     public String defaultAlias;
     public ChatColor errorColor;
     public ChatColor successColor;
@@ -95,14 +97,17 @@ public class SocialCore extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("[START] Initializing SocialCore...");
-        try {
-            VaultUtil.setup(getServer());
-        } catch(final NotSetupException e) {
-            getLogger().severe("Vault was not detected! Expect numerous errors.");
-        }
 
         plugin = this;
-        Clock.start(plugin);
+        manager = new PaperCommandManager(this);
+        manager.enableUnstableAPI("help");
+        try {
+            Clock.start(plugin);
+            isClockEnabled = true;
+        } catch (Exception e) {
+            isClockEnabled = false;
+            log.severe("Unable to initiate plugin clock, disabling SocialCore...");
+        }
         timeConditionManager = new TimeConditionManager();
         inventoryGUIManager = new InventoryGUIManager(this);
         inputLib = new InputLib(this);
@@ -117,9 +122,9 @@ public class SocialCore extends JavaPlugin {
         getLogger().info("Creating handlers for components and commands...");
         save = new SaveHandler(directory, this);
         store = new SQLStore();
-        getLogger().info("[SC Handler] Clock started!");
         getLogger().info("[SC Handler] Created Save and MySQL handlers");
-
+        if(isClockEnabled)
+            getLogger().info("[SC Handler] Clock started!");
 
         final CommandExecutor scCommandHandler = new SCCommandHandler(this);
         getCommand("socialcore").setExecutor(scCommandHandler);
@@ -135,6 +140,7 @@ public class SocialCore extends JavaPlugin {
 
         // SETUP EVENTS
         getServer().getPluginManager().registerEvents(new SCListener(this), this);
+        getServer().getPluginManager().registerEvents(new CourtTeleportationHandler(this), this);
         getLogger().info("Finished registering all listeners!");
         getLogger().info("[DONE] SocialCore has finished starting!");
     }
@@ -145,8 +151,12 @@ public class SocialCore extends JavaPlugin {
     
     @Override
     public void onDisable() {
-        Clock.save();
-        courts.onDisable();
+        if(isClockEnabled){
+            Clock.save();
+        }
+        if(isCourtsEnabled){
+            courts.onDisable();
+        }
         SCListener.riding.keySet().stream().filter(p -> p != null).forEach(p -> {
             final Player player = Bukkit.getPlayer(p);
             try {
@@ -196,7 +206,7 @@ public class SocialCore extends JavaPlugin {
             getCommand("aunengage").setExecutor(marriageCommandHandler);
             getCommand("status").setExecutor(new StatusCommand());
             getCommand("share").setExecutor(marriageCommandHandler);
-            getCommand("petname").setExecutor(new PetnameCommand());
+            //getCommand("petname").setExecutor(new PetnameCommand());
             getCommand("purgeinvalids").setExecutor(new PurgeInvalidCommand());
             getLogger().info("[SC Handler] Created marriages handler");
             marriageConfig = new MarriageConfig(this);
@@ -211,9 +221,10 @@ public class SocialCore extends JavaPlugin {
         if(getConfig().getBoolean("components.enable-genders")){
             configs.setupGendersConfig();
             genders = new Genders(this);
-            final CommandExecutor genderCommandHandler = new GenderCommandHandler(this, genders);
-            getCommand("gender").setExecutor(genderCommandHandler);
-            getCommand("gender").setTabCompleter(new GenderTabCompleter(this, genders));
+            manager.registerCommand(new GenderCommandHandler(this, genders));
+            manager.getCommandCompletions().registerAsyncCompletion("genderNames", n -> {
+                return genders.getGenderNames();
+            });
             getLogger().info("[SC Handler] Created genders handler");
             isGendersEnabled = true;
         } else {
@@ -224,13 +235,13 @@ public class SocialCore extends JavaPlugin {
     private void setupWelcomer(){
         if(getConfig().getBoolean("components.enable-welcomer")){
             configs.setupWelcomerConfig();
-            final CommandExecutor welcomeCommandHandler = new WelcomeCommandHandler(this);
-            getCommand("welcome").setExecutor(welcomeCommandHandler);
-            getCommand("wel").setExecutor(welcomeCommandHandler);
+            manager.registerCommand(new WelcomeCommandHandler(this));
             getLogger().info("[SC Handler] Created welcomer handler");
             isWelcomerEnabled = true;
         } else {
             isWelcomerEnabled = false;
         }
     }
+
+    public static Logger getStaticLogger(){ return Logger.getLogger("Minecraft"); }
 }

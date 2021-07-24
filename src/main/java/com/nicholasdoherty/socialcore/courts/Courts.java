@@ -122,7 +122,6 @@ public class Courts {
         plugin.getLogger().info("[COURTS] Registered commands!");
         for(final Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
-            //judgeManager.setPrefix(p);
         }
         plugin.getLogger().info("[COURTS] Updated online judge perms/prefixes!");
         new PrefixManager(this);
@@ -173,13 +172,6 @@ public class Courts {
     }
     
     public void onDisable() {
-        //try {
-        //    for(final Player p : Bukkit.getOnlinePlayers()) {
-        //        judgeManager.revertPrefix(p);
-        //    }
-        //} catch(final Exception e) {
-        //    e.printStackTrace();
-        //}
         if(!forceNotSave) {
             try {
                 courtsSaveManager.saveAll();

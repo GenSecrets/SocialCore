@@ -2,7 +2,7 @@ package com.nicholasdoherty.socialcore.courts.fines;
 
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.voxmc.voxlib.util.VaultUtil;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -50,7 +50,7 @@ public class Fine {
         if (rec == null) {
             try {
                 return VaultUtil.charge(senderO,amountToPay);
-            } catch (VaultUtil.NotSetupException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
@@ -61,7 +61,7 @@ public class Fine {
         boolean transfered;
         try {
             transfered = VaultUtil.transfer(senderO,recO,amountToPay);
-        } catch (VaultUtil.NotSetupException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             transfered = false;
         }

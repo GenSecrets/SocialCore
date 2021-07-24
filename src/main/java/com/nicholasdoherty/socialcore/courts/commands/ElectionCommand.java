@@ -9,8 +9,7 @@ import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.courts.objects.ApprovedCitizen;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.voxmc.voxlib.util.VaultUtil;
-import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -250,7 +249,7 @@ public class ElectionCommand implements CommandExecutor {
         final boolean charged;
         try {
             charged = VaultUtil.charge(p, cost);
-        } catch(final NotSetupException e) {
+        } catch(final Exception e) {
             e.printStackTrace();
             p.sendMessage(ChatColor.RED + "Payments are currently down.");
             return;
@@ -272,7 +271,7 @@ public class ElectionCommand implements CommandExecutor {
         } catch(final Exception e) {
             try {
                 VaultUtil.give(p, cost);
-            } catch(final NotSetupException e1) {
+            } catch(final Exception e1) {
                 e1.printStackTrace();
             }
             p.sendMessage(ChatColor.RED + "Error adding you to the election, you may already be running.");

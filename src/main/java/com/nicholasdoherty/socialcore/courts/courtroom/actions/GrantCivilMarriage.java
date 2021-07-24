@@ -34,7 +34,7 @@ public class GrantCivilMarriage implements PostCourtAction,ConfigurationSerializ
         Marriage oldMarriage = SocialCore.plugin.save.getMarriage(p1,p2);
         if (oldMarriage != null) {
             oldMarriage = SocialCore.plugin.save.getMarriage(p2,p1);
-            SocialCore.plugin.save.removeMarriage(oldMarriage);
+            SocialCore.plugin.save.removeMarriage(oldMarriage.getName());
             p1.setMarried(false);
             p2.setMarried(false);
             p1.setMarriedTo(null);
@@ -43,7 +43,7 @@ public class GrantCivilMarriage implements PostCourtAction,ConfigurationSerializ
         SocialCore sc = SocialCore.plugin;
         Engagement e = sc.save.getEngagement(p1,p2);
         if (e != null) {
-            sc.save.removeEngagement(e);
+            sc.save.removeEngagement(e.getName());
         }
         p1.setEngaged(false);
         p1.setEngagedTo("");

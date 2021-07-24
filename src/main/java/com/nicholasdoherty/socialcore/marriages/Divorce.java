@@ -7,44 +7,50 @@ public class Divorce {
 	
 	public static final String NAME_DELIMITER = "+&";
 	
-	private SocialPlayer exHusband;
-	private SocialPlayer exWife;
+	private SocialPlayer exSpouse1;
+	private SocialPlayer exSpouse2;
 	private String filedBy;
 	private String date;
 	
 	
-	public Divorce(SocialPlayer exHusband, SocialPlayer exWife) {
-		this.exHusband = exHusband;
-		this.exWife = exWife;
+	public Divorce(SocialPlayer exSpouse1, SocialPlayer exSpouse2) {
+		this.exSpouse1 = exSpouse1;
+		this.exSpouse2 = exSpouse2;
 	}
 	public Divorce(String name, SocialCore sc) {
-		String data[] = name.split("\\"+NAME_DELIMITER);
-		if (data.length > 1) {
-			this.exHusband = sc.save.getSocialPlayer(data[0]);
-			this.exWife = sc.save.getSocialPlayer(data[1]);
-		}
-		else {
-			sc.log.severe("Failed to create engagement from name: "+name);
+		try {
+			String[] data = name.split("\\"+NAME_DELIMITER);
+			if (data.length > 1) {
+				if (sc.save.getSocialPlayer(data[0]) != null && sc.save.getSocialPlayer(data[1]) != null){
+					this.exSpouse1 = sc.save.getSocialPlayer(data[0]);
+					this.exSpouse2 = sc.save.getSocialPlayer(data[1]);
+				}
+			}
+			else {
+				throw new Exception();
+			}
+		} catch (Exception e){
+			sc.log.severe("Failed to create divorce from name: "+name);
 		}
 	}
 	
 	
 	public String getName() {
-		return exHusband.getPlayerName()+NAME_DELIMITER+exWife.getPlayerName();
+		return exSpouse1.getPlayerName()+NAME_DELIMITER+exSpouse2.getPlayerName();
 	}
 	
 	
-	public SocialPlayer getExhusband() {
-		return exHusband;
+	public SocialPlayer getExSpouse1() {
+		return exSpouse1;
 	}
-	public void setExhusband(SocialPlayer exHusband) {
-		this.exHusband = exHusband;
+	public void setExSpouse1(SocialPlayer exSpouse1) {
+		this.exSpouse1 = exSpouse1;
 	}
-	public SocialPlayer getExwife() {
-		return exWife;
+	public SocialPlayer getExSpouse2() {
+		return exSpouse2;
 	}
-	public void setExWife(SocialPlayer exWife) {
-		this.exWife = exWife;
+	public void setExSpouse2(SocialPlayer exSpouse2) {
+		this.exSpouse2 = exSpouse2;
 	}
 	public String getDate(){
 		return date;

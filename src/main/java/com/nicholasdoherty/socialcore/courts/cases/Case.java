@@ -13,10 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by john on 1/3/15.
@@ -75,29 +72,29 @@ public class Case implements ConfigurationSerializable {
     }
     
     public static boolean isCaseBook(final ItemStack itemStack) {
-        if(itemStack == null || itemStack.getType() != Material.WRITABLE_BOOK) {
+        if(itemStack == null || itemStack.getType() != Material.WRITTEN_BOOK) {
             return false;
         }
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
             return false;
         }
         final String displayName = itemStack.getItemMeta().getDisplayName();
-        return displayName.contains(ChatColor.WHITE + "Court Case");
+        return displayName.contains(ChatColor.DARK_RED + "Court Case Document");
     }
     
     public static boolean isEmptyCaseBook(final ItemStack itemStack) {
-        if(itemStack == null || itemStack.getType() != Material.WRITABLE_BOOK) {
+        if(itemStack == null || itemStack.getType() != Material.WRITTEN_BOOK) {
             return false;
         }
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getDisplayName() == null) {
             return false;
         }
         final String displayName = itemStack.getItemMeta().getDisplayName();
-        return displayName.equals(ChatColor.WHITE + "Court Case");
+        return displayName.equals(ChatColor.DARK_RED + "Court Case Document");
     }
     
     public static ItemStack assignCaseNumberToBook(final ItemStack book, final int id) {
-        final String bookTitle = ChatColor.WHITE + "Court Case " + TextUtil.numberWithLeadingZeros(id, 5);
+        final String bookTitle = ChatColor.DARK_RED + "Court Case " + TextUtil.numberWithLeadingZeros(id, 5);
         final ItemMeta itemMeta = book.getItemMeta();
         itemMeta.setDisplayName(bookTitle);
         book.setItemMeta(itemMeta);
@@ -109,6 +106,18 @@ public class Case implements ConfigurationSerializable {
         final BookMeta bookMeta = (BookMeta) itemStack.getItemMeta();
         final String bookTitle = ChatColor.WHITE + "Court Case";
         bookMeta.setDisplayName(bookTitle);
+        bookMeta.setLore(
+                new ArrayList<String>(){
+                    {
+                        add(ChatColor.GOLD + "Only official once signed.");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "\"This case booklet is an");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "official deed used by");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "the court system to");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "define your request");
+                        add(ChatColor.BLUE + "" + ChatColor.ITALIC + "for any court issues.\"");
+                    }
+                }
+        );
         if(bookMeta.getPages().isEmpty()) {
             bookMeta.addPage(" ");
         } else {

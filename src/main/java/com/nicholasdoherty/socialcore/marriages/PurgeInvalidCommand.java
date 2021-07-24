@@ -13,8 +13,13 @@ public class PurgeInvalidCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        SocialCore.plugin.save.purgeInvalids();
-        commandSender.sendMessage(ChatColor.GREEN + "Removed invalid marriages.");
+        Thread thread = new Thread(){
+            public void run(){
+                SocialCore.plugin.save.purgeInvalids();
+                commandSender.sendMessage(ChatColor.GREEN + "Removed invalid marriages.");
+            }
+        };
+        thread.start();
         return true;
     }
 }

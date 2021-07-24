@@ -7,21 +7,21 @@ public class Engagement {
 	
 	public static final String NAME_DELIMITER = "+&";
 	
-	private SocialPlayer fHusband;
-	private SocialPlayer fWife;
+	private SocialPlayer futureSpouse1;
+	private SocialPlayer futureSpouse2;
 	private String date;
 	private long time;
 	
-	public Engagement(SocialPlayer fHusband, SocialPlayer fWife) {
-		this.fHusband = fHusband;
-		this.fWife = fWife;
+	public Engagement(SocialPlayer futureSpouse1, SocialPlayer futureSpouse2) {
+		this.futureSpouse1 = futureSpouse1;
+		this.futureSpouse2 = futureSpouse2;
 	}
 	
 	public Engagement(String engagementName, SocialCore sc) {
 		String data[] = engagementName.split("\\"+NAME_DELIMITER);
 		if (data.length > 1) {
-			this.fHusband = sc.save.getSocialPlayer(data[0]);
-			this.fWife = sc.save.getSocialPlayer(data[1]);
+			futureSpouse1 = sc.save.getSocialPlayer(data[0]);
+			futureSpouse2 = sc.save.getSocialPlayer(data[1]);
 		}
 		else {
 			sc.log.severe("Failed to create engagement from name: "+engagementName);
@@ -30,21 +30,21 @@ public class Engagement {
 	
 	//congat marriage
 	public String getName(){
-		return fHusband.getPlayerName()+NAME_DELIMITER+fWife.getPlayerName();
+		return futureSpouse1.getPlayerName()+NAME_DELIMITER+futureSpouse2.getPlayerName();
 	}
 	
 	//setters and getters
-	public SocialPlayer getFHusband() {
-		return fHusband;
+	public SocialPlayer getFutureSpouse1() {
+		return futureSpouse1;
 	}
-	public void setFHusband(SocialPlayer fHusband) {
-		this.fHusband = fHusband;
+	public void setFutureSpouse1(SocialPlayer futureSpouse1) {
+		this.futureSpouse1 = futureSpouse1;
 	}
-	public SocialPlayer getFWife() {
-		return fWife;
+	public SocialPlayer getFutureSpouse2() {
+		return futureSpouse2;
 	}
-	public void setFWife(SocialPlayer fWife) {
-		this.fWife = fWife;
+	public void setFutureSpouse2(SocialPlayer fWife) {
+		this.futureSpouse2 = fWife;
 	}
 	public String getDate() {
 		return date;

@@ -68,19 +68,19 @@ public class DivorceManager {
     }
     
     public void createCaseForDivorce(final Divorce divorce) {
-        final String plaintiffName = divorce.getExwife().getPlayerName();
+        final String plaintiffName = divorce.getExSpouse2().getPlayerName();
         final UUID plaintiffUUID = UUIDUtil.getUUID(plaintiffName);
         if(plaintiffUUID == null) {
             return;
         }
-        final String defendantName = divorce.getExhusband().getPlayerName();
+        final String defendantName = divorce.getExSpouse1().getPlayerName();
         final UUID defendantUUID = UUIDUtil.getUUID(defendantName);
         if(defendantUUID == null) {
             return;
         }
         final Citizen plaintiff = Courts.getCourts().getCitizenManager().toCitizen(plaintiffName, plaintiffUUID);
         final Citizen defendant = Courts.getCourts().getCitizenManager().toCitizen(defendantName, defendantUUID);
-        final ItemStack updatedBook = defaultDivorceBook(divorce.getExhusband().getPlayerName(), divorce.getExwife().getPlayerName(), Case.baseItemStack());
+        final ItemStack updatedBook = defaultDivorceBook(divorce.getExSpouse1().getPlayerName(), divorce.getExSpouse2().getPlayerName(), Case.baseItemStack());
         final Case caze = courts.getCaseManager().newCase(updatedBook, plaintiffName);
         caze.setPlantiff(plaintiff);
         caze.setDefendent(defendant);
@@ -90,15 +90,15 @@ public class DivorceManager {
     }
     
     public Case getCase(final Divorce divorce) {
-        final String husbandName = divorce.getExhusband().getPlayerName();
-        final String wifeName = divorce.getExwife().getPlayerName();
-        if(husbandName == null || wifeName == null) {
+        final String spouse1Name = divorce.getExSpouse1().getPlayerName();
+        final String spouse2Name = divorce.getExSpouse2().getPlayerName();
+        if(spouse1Name == null || spouse2Name == null) {
             return null;
         }
         for(final Case caze : Courts.getCourts().getCaseManager().getCases()) {
             if(caze.getCaseCategory() == CaseCategory.DIVORCE && caze.getDefendent() != null && caze.getPlantiff() != null) {
-                if(caze.getPlantiff().getName().equalsIgnoreCase(wifeName) && caze.getDefendent().getName().equalsIgnoreCase(husbandName)
-                        || caze.getPlantiff().getName().equalsIgnoreCase(husbandName) && caze.getDefendent().getName().equalsIgnoreCase(wifeName)) {
+                if(caze.getPlantiff().getName().equalsIgnoreCase(spouse2Name) && caze.getDefendent().getName().equalsIgnoreCase(spouse1Name)
+                        || caze.getPlantiff().getName().equalsIgnoreCase(spouse1Name) && caze.getDefendent().getName().equalsIgnoreCase(spouse2Name)) {
                     return caze;
                 }
             }

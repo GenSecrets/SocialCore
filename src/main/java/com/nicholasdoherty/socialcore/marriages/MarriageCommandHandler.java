@@ -5,10 +5,8 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
-import com.nicholasdoherty.socialcore.genders.Gender;
 import com.nicholasdoherty.socialcore.marriages.Marriages.Status;
-import com.voxmc.voxlib.util.VaultUtil;
-import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -86,6 +84,12 @@ public class MarriageCommandHandler implements CommandExecutor {
                 }
             } else if(cmd.getName().equalsIgnoreCase("marriages")) {//view all marriages in the db
                 int page = 0;
+                /*for(String s : sc.save.getAllMarriageNames()){
+                    Marriage m = sc.save.getMarriage(s);
+                    if(m == null){
+                        sc.save.removeMarriage(s);
+                    }
+                }*/
                 final List<String> allMarriages = sc.save.getAllMarriageNames();
                 if(args.length == 1) {
                     page = Integer.parseInt(args[0]) - 1;
@@ -93,9 +97,9 @@ public class MarriageCommandHandler implements CommandExecutor {
                 if(page < 0) {
                     page = 0;
                 }
-                final int perPage = 5;
+                final int perPage = 40;
                 int lowerbound = page * perPage;
-                int upperbound = lowerbound + 5;
+                int upperbound = lowerbound + perPage;
                 if(upperbound >= allMarriages.size()) {
                     upperbound = allMarriages.size();
                     if(upperbound < 0) {
@@ -113,7 +117,11 @@ public class MarriageCommandHandler implements CommandExecutor {
                     if(upperbound - lowerbound > 0) {
                         for(final String s : allMarriages.subList(lowerbound, upperbound)) {
                             final Marriage m = sc.save.getMarriage(s);
-                            player.sendMessage(ChatColor.GREEN + m.getHusband().getPlayerName() + " to " + m.getWife().getPlayerName() + " on " + m.getDate() + " by " + m.getPriest());
+                            if(m != null) {
+                                player.sendMessage(ChatColor.GRAY+"- " +ChatColor.GREEN + m.getSpouse1().getPlayerName() + " to " + m.getSpouse2().getPlayerName() + " on " + m.getDate() + " by " + m.getPriest());
+                            } else {
+                                sc.save.removeMarriage(s);
+                            }
                         }
                         if(allMarriages.size() - 1 > upperbound) {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Type &c/marriages " + (page + 2) + "&6 to read the next page."));
@@ -127,6 +135,12 @@ public class MarriageCommandHandler implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "You do not have permission to view a list of marriages!");
                 }
             } else if(cmd.getName().equalsIgnoreCase("engagements")) {//view all marriages in the db
+                /*for (String s : sc.save.getAllEngagements()){
+                    Engagement e = sc.save.getEngagement(s);
+                    if(e == null) {
+                        sc.save.removeEngagement(e);
+                    }
+                }*/
                 final List<String> allEngagements = sc.save.getAllEngagements();
                 int page = 0;
                 if(args.length == 1) {
@@ -135,9 +149,9 @@ public class MarriageCommandHandler implements CommandExecutor {
                 if(page < 0) {
                     page = 0;
                 }
-                final int perPage = 5;
+                final int perPage = 40;
                 int lowerbound = page * perPage;
-                int upperbound = lowerbound + 5;
+                int upperbound = lowerbound + perPage;
                 if(upperbound >= allEngagements.size()) {
                     upperbound = allEngagements.size();
                     if(upperbound < 0) {
@@ -151,11 +165,15 @@ public class MarriageCommandHandler implements CommandExecutor {
                     }
                 }
                 if(player.hasPermission("sc.view.engagements")) {
-                    player.sendMessage(ChatColor.GOLD + "These are the marriages on the server: (Page " + (page + 1) + ')');
+                    player.sendMessage(ChatColor.GOLD + "These are the engagements on the server: (Page " + (page + 1) + ')');
                     if(upperbound - lowerbound > 0) {
                         for(final String s : allEngagements.subList(lowerbound, upperbound)) {
                             final Engagement e = sc.save.getEngagement(s);
-                            player.sendMessage(ChatColor.GREEN + e.getFHusband().getPlayerName() + " and " + e.getFWife().getPlayerName() + " on " + e.getDate());
+                            if(e != null){
+                                player.sendMessage(ChatColor.GRAY+"- " +ChatColor.GREEN + e.getFutureSpouse1().getPlayerName() + " and " + e.getFutureSpouse2().getPlayerName() + " on " + e.getDate());
+                            } else {
+                                sc.save.removeEngagement(s);
+                            }
                         }
                         if(allEngagements.size() - 1 > upperbound) {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Type &c/engagements " + (page + 2) + "&6 to read the next page."));
@@ -193,26 +211,26 @@ public class MarriageCommandHandler implements CommandExecutor {
                             }
                             player.sendMessage(ChatColor.GREEN + "You have accepted " + proposeTo.getPlayerName() + "'s hand in marriage! Congratulations!");
                             sc.marriages.proposals.remove(proposeFrom);
-                            
+
                             final Engagement e = new Engagement(proposeTo, proposeFrom);
                             final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
                             e.setDate(dateBuilder);
                             e.setTime(System.currentTimeMillis());
-                            
+
                             proposeFrom.setEngaged(true);
                             proposeFrom.setEngagedTo(proposeTo.getPlayerName());
                             proposeTo.setEngaged(true);
                             proposeTo.setEngagedTo(proposeFrom.getPlayerName());
-                            
+
                             sc.save.saveEngagement(e);
                             sc.save.saveSocialPlayer(proposeFrom);
                             sc.save.saveSocialPlayer(proposeTo);
-                            
+
                             out:
                             for(final ItemStack item : p.getInventory().getContents()) {
                                 if(item != null) {
                                     for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
-                                        if(gem.getBlockID() == item.getType()) {
+                                        if(gem.getBlock() == item.getType()) {
                                             if(item.getItemMeta() != null) {
                                                 if(item.getItemMeta().getDisplayName() != null) {
                                                     if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -236,7 +254,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                     }
                                 }
                             }
-                            
+
                             Bukkit.getServer().getOnlinePlayers().stream().filter(pr -> pr.hasPermission("sc.priest")).forEach(pr -> pr.sendMessage(ChatColor.GREEN + proposeTo.getPlayerName() + " and " + proposeFrom.getPlayerName() + " have become engaged!"));
                         } else {
                             player.sendMessage(ChatColor.RED + "You have not been proposed to!");
@@ -264,7 +282,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + "You aren't allowed to marry yourself!");
                             return true;
                         }
-                        
+
                         final SocialPlayer proposeTo = sc.save.getSocialPlayer(player.getName());
                         final SocialPlayer proposeFrom = sc.save.getSocialPlayer(p.getName());
                         for(final String divorceName : sc.save.getAllDivorces()) {
@@ -308,7 +326,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             default:
                                 break;
                         }
-                        
+
                         switch(sc.marriages.getStatus(proposeFrom)) {
                             case Married:
                                 player.sendMessage(ChatColor.RED + "That player is already married! This isn't a polygamy state!");
@@ -327,12 +345,12 @@ public class MarriageCommandHandler implements CommandExecutor {
                             default:
                                 break;
                         }
-                        
+
                         if(proposeTo.getGender().getName() == proposeFrom.getGender().getName() && !player.hasPermission("sc.samesex")) {
                             player.sendMessage(ChatColor.RED + "Sorry, you need permission to have a samesex marriage.");
                             return true;
                         }
-                        
+
                         if(!player.hasPermission("sc.propose")) {
                             player.sendMessage(ChatColor.RED + "You do not have permision to marry another player!");
                             return true;
@@ -341,14 +359,14 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + proposeFrom.getPlayerName() + " does not have permission to marry!");
                             return true;
                         }
-                        
+
                         boolean okay = false;
-                        
+
                         out:
                         for(final ItemStack item : player.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
-                                    if(gem.getBlockID() == item.getType()) {
+                                    if(gem.getBlock() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -375,7 +393,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + "You must have a marriage gem in order to propose!");
                             return true;
                         }
-                        
+
                         sc.marriages.proposals.put(proposeFrom, proposeTo);
                         player.sendMessage(ChatColor.GREEN + "You have asked " + p.getName() + " for their hand in marriage!");
                         p.sendMessage(ChatColor.GREEN + player.getName() + " is asking for your hand in marriage! Type '/propose accept' to accept it, or '/propose deny' to crush their heart!");
@@ -397,10 +415,10 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + "Player '" + args[1] + "' cannot be found. Are they online?");
                             return true;
                         }
-                        
+
                         final SocialPlayer player1 = sc.save.getSocialPlayer(args[0]);
                         final SocialPlayer player2 = sc.save.getSocialPlayer(args[1]);
-                        
+
                         if(!player1.isEngaged()) {
                             player.sendMessage(ChatColor.RED + player1.getPlayerName() + " is not engaged!");
                             return true;
@@ -417,7 +435,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + player2.getPlayerName() + " is not engaged to " + player1.getPlayerName());
                             return true;
                         }
-                        
+
                         p1.sendMessage(ChatColor.GREEN + "Father " + player.getName() + " is beginning the ceremony...");
                         if(player.getLocation().distance(p1.getLocation()) > sc.marriageConfig.priestDistance) {
                             player.sendMessage(ChatColor.RED + "The priest is too far away from " + player1.getPlayerName() + '!');
@@ -437,19 +455,19 @@ public class MarriageCommandHandler implements CommandExecutor {
                             p2.sendMessage(ChatColor.RED + player1.getPlayerName() + " is too far away from " + player2.getPlayerName() + '!');
                             return true;
                         }
-                        
+
                         final Engagement e = sc.save.getEngagement(player1, player2);
-                        final Marriage m = new Marriage(e.getFHusband(), e.getFWife());
+                        final Marriage m = new Marriage(e.getFutureSpouse1(), e.getFutureSpouse2());
                         m.setPriest(player.getName());
                         final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
                         m.setDate(dateBuilder);
-                        
+
                         boolean okay = false;
                         out:
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
-                                    if(gem.getBlockID() == item.getType()) {
+                                    if(gem.getBlock() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -462,20 +480,20 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 }
                             }
                         }
-                        
+
                         if(!okay) {
                             player.sendMessage(ChatColor.RED + "Uh oh! " + player1.getPlayerName() + " has misplaced their marriage gem!");
                             p1.sendMessage(ChatColor.RED + "Uh oh! " + player1.getPlayerName() + " has misplaced their marriage gem!");
                             p2.sendMessage(ChatColor.RED + "Uh oh! " + player1.getPlayerName() + " has misplaced their marriage gem!");
                             return true;
                         }
-                        
+
                         okay = false;
                         out:
                         for(final ItemStack item : p2.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
-                                    if(gem.getBlockID() == item.getType()) {
+                                    if(gem.getBlock() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -499,7 +517,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 }
                             }
                         }
-                        
+
                         if(!okay) {
                             player.sendMessage(ChatColor.RED + "Uh oh! " + player2.getPlayerName() + " has misplaced their marriage gem!");
                             p1.sendMessage(ChatColor.RED + "Uh oh! " + player2.getPlayerName() + " has misplaced their marriage gem!");
@@ -510,7 +528,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         for(final ItemStack item : p1.getInventory().getContents()) {
                             if(item != null) {
                                 for(final MarriageGem gem : sc.marriageConfig.marriageGems) {
-                                    if(gem.getBlockID() == item.getType()) {
+                                    if(gem.getBlock() == item.getType()) {
                                         if(item.getItemMeta() != null) {
                                             if(item.getItemMeta().getDisplayName() != null) {
                                                 if(item.getItemMeta().getDisplayName().contains(gem.getName())) {
@@ -533,7 +551,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 }
                             }
                         }
-                        
+
                         sc.save.removeEngagement(e);
                         player1.setEngaged(false);
                         player1.setEngagedTo("");
@@ -546,7 +564,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sc.save.saveSocialPlayer(player1);
                         sc.save.saveSocialPlayer(player2);
                         sc.save.saveMarriage(m);
-                        
+
                         player.sendMessage(ChatColor.GREEN + "You have married " + player1.getPlayerName() + " and " + player2.getPlayerName() + '!');
                         String toSendPlayer1 = "You have taken " + player2.getPlayerName() + " to be your loftly wedded spouse. Happy ever after!";
                         String toSendPlayer2 = "You have taken " + player1.getPlayerName() + " to be your loftly wedded spouse. Happy ever after!";
@@ -563,6 +581,12 @@ public class MarriageCommandHandler implements CommandExecutor {
                 }
             } else if(cmd.getName().equalsIgnoreCase("divorces")) {
                 if(player.hasPermission("sc.view.divorces")) {
+                    /*for(final String s : sc.save.getAllDivorces()) {
+                        final Divorce e = sc.save.getDivorce(s);
+                        if(e ==null) {
+                            sc.save.removeDivorce(s);
+                        }
+                    }*/
                     final List<String> allDivorces = sc.save.getAllDivorces();
                     int page = 0;
                     if(args.length == 1) {
@@ -571,9 +595,9 @@ public class MarriageCommandHandler implements CommandExecutor {
                     if(page < 0) {
                         page = 0;
                     }
-                    final int perPage = 5;
+                    final int perPage = 40;
                     int lowerbound = page * perPage;
-                    int upperbound = lowerbound + 5;
+                    int upperbound = lowerbound + perPage;
                     if(upperbound >= allDivorces.size()) {
                         upperbound = allDivorces.size();
                         if(upperbound < 0) {
@@ -589,8 +613,10 @@ public class MarriageCommandHandler implements CommandExecutor {
                     player.sendMessage(ChatColor.GOLD + "These are the divorces on the server:");
                     if(upperbound - lowerbound > 0) {
                         for(final String s : allDivorces.subList(lowerbound, upperbound)) {
-                            final Engagement e = sc.save.getEngagement(s);
-                            player.sendMessage(ChatColor.GREEN + e.getFHusband().getPlayerName() + " and " + e.getFWife().getPlayerName() + " filed on " + e.getDate());
+                            final Divorce e = sc.save.getDivorce(s);
+                            if(e != null) {
+                                player.sendMessage(ChatColor.GRAY+"- " +ChatColor.GREEN + e.getExSpouse1().getPlayerName() + " and " + e.getExSpouse2().getPlayerName() + " filed on " + e.getDate());
+                            }
                         }
                         if(allDivorces.size() - 1 > upperbound) {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Type &c/divorces " + (page + 2) + "&6 to read the next page."));
@@ -612,25 +638,25 @@ public class MarriageCommandHandler implements CommandExecutor {
                             return true;
                         }
                         if(sc.marriages.getPendingDivorces().contains(p1.getPlayerName())) {
-                            
+
                             for(final String s : sc.save.getAllDivorces()) {
                                 final Divorce d = sc.save.getDivorce(s);
                                 if(d.getFiledBy().equalsIgnoreCase(p1.getPlayerName())) {
                                     player.sendMessage(ChatColor.RED + "You have already filed for a divorce. Please be patient while a lawyer looks into your case. Type /divorce cancel to cancel the divorce");
                                     return true;
                                 }
-                                if(d.getExhusband().getPlayerName().equalsIgnoreCase(player.getName())) {
+                                if(d.getExSpouse1().getPlayerName().equalsIgnoreCase(player.getName())) {
                                     player.sendMessage(ChatColor.RED + "Your spouse has already filed for a divorce. Please be patient while a lawyer looks into your case.");
                                     return true;
                                 }
-                                if(d.getExwife().getPlayerName().equalsIgnoreCase(player.getName())) {
+                                if(d.getExSpouse2().getPlayerName().equalsIgnoreCase(player.getName())) {
                                     player.sendMessage(ChatColor.RED + "Your spouse has already filed for a divorce. Please be patient while a lawyer looks into your case.");
                                     return true;
                                 }
                             }
-                            
+
                             final SocialPlayer p2 = sc.save.getSocialPlayer(p1.getMarriedTo());
-                            
+
                             final Divorce divorce = new Divorce(p1, p2);
                             final Case alreadyCase = Courts.getCourts().getDivorceManager().getCase(divorce);
                             if(alreadyCase != null && alreadyCase.getCaseCategory() == CaseCategory.DIVORCE && !alreadyCase.isDone()) {
@@ -642,7 +668,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 if(!VaultUtil.charge(player, cost)) {
                                     player.sendMessage(ChatColor.RED + "You do not have the " + cost + " voxels to file for divorce.");
                                 }
-                            } catch(final NotSetupException e) {
+                            } catch(final Exception e) {
                                 return false;
                             }
                             player.sendMessage(ChatColor.GREEN + "You have been charged " + cost + " voxels by filing for divorce.");
@@ -651,15 +677,15 @@ public class MarriageCommandHandler implements CommandExecutor {
                             divorce.setFiledBy(player.getName());
                             Courts.getCourts().getDivorceManager().createCaseForDivorce(divorce);
                             sc.save.saveDivorce(divorce);
-                            
+
                             sc.marriages.getPendingDivorces().remove(p1.getPlayerName());
                             player.sendMessage(ChatColor.AQUA + "A divorce has been filed for you and " + p1.getMarriedTo() + ". A lawyer must review your application. Type /divorce cancel to cancel.");
-                            
+
                             final Player pl = Bukkit.getServer().getPlayer(p1.getMarriedTo());
                             if(pl != null) {
                                 pl.sendMessage(ChatColor.YELLOW + p1.getPlayerName() + " has filed for a divorce :(");
                             }
-                            
+
                             Bukkit.getServer().getOnlinePlayers().stream().filter(p -> p.hasPermission("sc.lawyer")).forEach(p -> p.sendMessage(ChatColor.GREEN + "Lawyer, " + p1.getPlayerName() + " has filed for a divorce against " + p1.getMarriedTo()));
                         } else {
                             for(final String s : sc.save.getAllDivorces()) {
@@ -668,16 +694,16 @@ public class MarriageCommandHandler implements CommandExecutor {
                                     player.sendMessage(ChatColor.RED + "You have already filed for a divorce. Please be patient while a lawyer looks into your case. Type /divorce cancel to cancel the divorce");
                                     return true;
                                 }
-                                if(d.getExhusband().getPlayerName().equalsIgnoreCase(player.getName())) {
+                                if(d.getExSpouse1().getPlayerName().equalsIgnoreCase(player.getName())) {
                                     player.sendMessage(ChatColor.RED + "Your spouse has already filed for a divorce. Please be patient while a lawyer looks into your case.");
                                     return true;
                                 }
-                                if(d.getExwife().getPlayerName().equalsIgnoreCase(player.getName())) {
+                                if(d.getExSpouse2().getPlayerName().equalsIgnoreCase(player.getName())) {
                                     player.sendMessage(ChatColor.RED + "Your spouse has already filed for a divorce. Please be patient while a lawyer looks into your case.");
                                     return true;
                                 }
                             }
-                            
+
                             player.sendMessage(ChatColor.GOLD + "Are you sure you wish to divorce " + p1.getMarriedTo() + "? Type /divorce again to confirm.");
                             sc.marriages.getPendingDivorces().add(p1.getPlayerName());
                         }
@@ -695,15 +721,15 @@ public class MarriageCommandHandler implements CommandExecutor {
                                 break;
                             }
                         }
-                        
+
                         if(divorce == null) {
                             player.sendMessage(ChatColor.RED + "You have not filed for a divorce!");
                             return true;
                         }
-                        
+
                         sc.save.removeDivorce(divorce);
                         player.sendMessage(ChatColor.GREEN + "Your filing has been removed from the queue. Hopefully you two can work things out.");
-                        
+
                         final Player pl = Bukkit.getServer().getPlayer(p.getMarriedTo());
                         if(pl != null) {
                             pl.sendMessage(ChatColor.YELLOW + "Your spouse has removed their request for a divorce. Hopefully you two can work things out.");
@@ -723,7 +749,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + args[0] + " is not married to " + args[1] + '!');
                             return true;
                         }
-                        
+
                         Divorce divorce = null;
                         for(final String s : sc.save.getAllDivorces()) {
                             final Divorce d = sc.save.getDivorce(s);
@@ -736,37 +762,37 @@ public class MarriageCommandHandler implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + "That divorce could not be found!");
                             return true;
                         }
-                        
+
                         final Player pl = Bukkit.getServer().getPlayer(divorce.getFiledBy());
                         if(pl != null) {
                             pl.sendMessage(ChatColor.AQUA + "Lawyer " + player.getName() + " is reviewing your request to divorce " + p1.getMarriedTo());
                         }
-                        
+
                         final Marriage marriage = sc.save.getMarriage(p1, p2);
-                        
+
                         sc.save.removeMarriage(marriage);
                         sc.save.removeDivorce(divorce);
-                        
+
                         player.sendMessage(ChatColor.GREEN + p1.getPlayerName() + " and " + p2.getPlayerName() + " are now divorced!");
-                        
+
                         final Player pl1 = Bukkit.getServer().getPlayer(p1.getPlayerName());
                         final Player pl2 = Bukkit.getServer().getPlayer(p2.getPlayerName());
-                        
+
                         if(pl1 != null) {
                             pl1.sendMessage(ChatColor.YELLOW + "You and " + p1.getMarriedTo() + " are now divorced. Better luck next time.");
                         }
                         if(pl2 != null) {
                             pl2.sendMessage(ChatColor.YELLOW + "You and " + p2.getMarriedTo() + " are now divorced. Better luck next time.");
                         }
-                        
+
                         p1.setMarried(false);
                         p1.setMarriedTo("");
                         p2.setMarried(false);
                         p2.setMarriedTo("");
-                        
+
                         sc.save.saveSocialPlayer(p1);
                         sc.save.saveSocialPlayer(p2);
-                        
+
                         for(final Player p : Bukkit.getServer().getOnlinePlayers()) {
                             p.sendMessage(ChatColor.YELLOW + "[SocialCore] " + p1.getPlayerName() + " and " + p2.getPlayerName() + " are now divorced :(");
                         }
@@ -777,7 +803,7 @@ public class MarriageCommandHandler implements CommandExecutor {
             } else if(cmd.getName().equalsIgnoreCase("adivorce")) {
                 if(player.hasPermission("sc.admin")) {
                     if(args.length > 1) {
-                        
+
                         final SocialPlayer sp1 = sc.save.getSocialPlayer(args[0]);
                         final SocialPlayer sp2 = sc.save.getSocialPlayer(args[1]);
                         sp1.setEngaged(false);
@@ -788,24 +814,24 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sp2.setEngagedTo("");
                         sp2.setMarried(false);
                         sp2.setMarriedTo("");
-                        
+
                         sc.save.saveSocialPlayer(sp1);
                         sc.save.saveSocialPlayer(sp2);
-                        
+
                         final Divorce divorce = sc.save.getDivorce(sp1, sp2);
                         if(divorce == null) {
                             player.sendMessage(ChatColor.RED + "This is not a valid divorce");
                             return true;
                         }
                         sc.save.removeDivorce(divorce);
-                        
+
                         final Marriage marriage = sc.save.getMarriage(sp1, sp2);
                         if(marriage == null) {
                             player.sendMessage(ChatColor.RED + "This is not a valid marriage");
                             return true;
                         }
                         sc.save.removeMarriage(marriage);
-                        
+
                         player.sendMessage(ChatColor.GREEN + "Forced divorce.");
                     } else {
                         player.sendMessage(ChatColor.RED + "Usage: /adivorce <player1> <player2>");
@@ -816,10 +842,10 @@ public class MarriageCommandHandler implements CommandExecutor {
             } else if(cmd.getName().equalsIgnoreCase("amarry")) {
                 if(player.hasPermission("sc.admin")) {
                     if(args.length > 1) {
-                        
+
                         final SocialPlayer sp1 = sc.save.getSocialPlayer(args[0]);
                         final SocialPlayer sp2 = sc.save.getSocialPlayer(args[1]);
-                        
+
                         sp1.setEngaged(false);
                         sp1.setEngagedTo("");
                         sp1.setMarried(true);
@@ -828,17 +854,17 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sp2.setEngagedTo("");
                         sp2.setMarried(true);
                         sp2.setMarriedTo(args[0]);
-                        
+
                         sc.save.saveSocialPlayer(sp1);
                         sc.save.saveSocialPlayer(sp2);
-                        
+
                         final Marriage marriage = new Marriage(sp1, sp2);
                         marriage.setPriest(player.getName());
                         final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
                         marriage.setDate(dateBuilder);
-                        
+
                         sc.save.saveMarriage(marriage);
-                        
+
                         player.sendMessage(ChatColor.GREEN + "Force marriage.");
                     } else {
                         player.sendMessage(ChatColor.RED + "Usage: /amarry <player1> <player2>");
@@ -849,9 +875,9 @@ public class MarriageCommandHandler implements CommandExecutor {
             } else if(cmd.getName().equalsIgnoreCase("share")) {
                 final Player p1 = (Player) sender;
                 final SocialPlayer sp1 = sc.save.getSocialPlayer(p1.getName());
-                
+
                 final Player p2 = Bukkit.getServer().getPlayer(sp1.getMarriedTo());
-                
+
                 if(!p1.hasPermission("sc.marriage.share") && !p2.hasPermission("sc.marriage.share")) {
                     p1.sendMessage(ChatColor.RED + "Your couple does not have permission to the sharing mechanic.");
                     return true;
@@ -886,10 +912,10 @@ public class MarriageCommandHandler implements CommandExecutor {
                     Engagement engagement = null;
                     for(final String eName : sc.save.getAllEngagements()) {
                         final Engagement engagement1 = sc.save.getEngagement(eName);
-                        if(engagement1.getFHusband().getPlayerName().equalsIgnoreCase(p1.getName())) {
+                        if(engagement1.getFutureSpouse1().getPlayerName().equalsIgnoreCase(p1.getName())) {
                             engagement = engagement1;
                         }
-                        if(engagement1.getFWife().getPlayerName().equalsIgnoreCase(p1.getName())) {
+                        if(engagement1.getFutureSpouse2().getPlayerName().equalsIgnoreCase(p1.getName())) {
                             engagement = engagement1;
                         }
                     }
@@ -897,11 +923,11 @@ public class MarriageCommandHandler implements CommandExecutor {
                         sender.sendMessage(ChatColor.RED + "You are not engaged.");
                         return true;
                     }
-                    engagement.getFHusband().setEngaged(false);
-                    engagement.getFWife().setEngaged(false);
+                    engagement.getFutureSpouse1().setEngaged(false);
+                    engagement.getFutureSpouse2().setEngaged(false);
                     sc.save.removeEngagement(engagement);
-                    final Player hus = Bukkit.getPlayer(engagement.getFHusband().getPlayerName());
-                    final Player wife = Bukkit.getPlayer(engagement.getFWife().getPlayerName());
+                    final Player hus = Bukkit.getPlayer(engagement.getFutureSpouse1().getPlayerName());
+                    final Player wife = Bukkit.getPlayer(engagement.getFutureSpouse2().getPlayerName());
                     if(hus.isOnline()) {
                         hus.sendMessage(ChatColor.BLUE + "You have been unengaged.");
                     }
@@ -928,10 +954,10 @@ public class MarriageCommandHandler implements CommandExecutor {
                 Engagement engagement = null;
                 for(final String eName : sc.save.getAllEngagements()) {
                     final Engagement engagement1 = sc.save.getEngagement(eName);
-                    if(engagement1.getFHusband().getPlayerName().equalsIgnoreCase(p1.getName())) {
+                    if(engagement1.getFutureSpouse1().getPlayerName().equalsIgnoreCase(p1.getName())) {
                         engagement = engagement1;
                     }
-                    if(engagement1.getFWife().getPlayerName().equalsIgnoreCase(p1.getName())) {
+                    if(engagement1.getFutureSpouse2().getPlayerName().equalsIgnoreCase(p1.getName())) {
                         engagement = engagement1;
                     }
                 }
@@ -939,10 +965,10 @@ public class MarriageCommandHandler implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + p1.getName() + " is not engaged.");
                     return true;
                 }
-                engagement.getFHusband().setEngaged(false);
-                engagement.getFWife().setEngaged(false);
-                final Player hus = Bukkit.getPlayer(engagement.getFHusband().getPlayerName());
-                final Player wife = Bukkit.getPlayer(engagement.getFWife().getPlayerName());
+                engagement.getFutureSpouse1().setEngaged(false);
+                engagement.getFutureSpouse2().setEngaged(false);
+                final Player hus = Bukkit.getPlayer(engagement.getFutureSpouse1().getPlayerName());
+                final Player wife = Bukkit.getPlayer(engagement.getFutureSpouse2().getPlayerName());
                 if(hus.isOnline()) {
                     hus.sendMessage(ChatColor.BLUE + "You have been unengaged.");
                 }
@@ -950,7 +976,7 @@ public class MarriageCommandHandler implements CommandExecutor {
                     hus.sendMessage(ChatColor.BLUE + "You have been unengaged.");
                 }
                 sc.save.removeEngagement(engagement);
-                sender.sendMessage(ChatColor.GREEN + "You have successfully unengaged " + engagement.getFHusband().getPlayerName() + " and " + engagement.getFWife().getPlayerName());
+                sender.sendMessage(ChatColor.GREEN + "You have successfully unengaged " + engagement.getFutureSpouse1().getPlayerName() + " and " + engagement.getFutureSpouse2().getPlayerName());
             } else {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to force unengage somebody.");
             }

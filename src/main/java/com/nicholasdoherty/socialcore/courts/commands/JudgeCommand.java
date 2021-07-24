@@ -9,11 +9,10 @@ import com.nicholasdoherty.socialcore.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.courts.judges.JudgeManager;
 import com.nicholasdoherty.socialcore.courts.judges.gui.judgecasesview.JudgeStallGUI;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
+import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.voxmc.voxlib.VLocation;
 import com.voxmc.voxlib.util.TextUtil;
 import com.voxmc.voxlib.util.UUIDUtil;
-import com.voxmc.voxlib.util.VaultUtil;
-import com.voxmc.voxlib.util.VaultUtil.NotSetupException;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -208,7 +207,7 @@ public class JudgeCommand implements CommandExecutor {
             boolean didIt = false;
             try {
                 didIt = VaultUtil.charge(offlinePlayer, amount);
-            } catch(final NotSetupException e) {
+            } catch(final Exception e) {
                 e.printStackTrace();
             }
             if(didIt) {
