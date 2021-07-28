@@ -35,9 +35,6 @@ public class CategorySpecificView extends PaginatedItemView{
                 || caseCategory == CaseCategory.TRESPASSING || caseCategory == CaseCategory.OTHER ) {
             paginatedItems.add(new GrantBuildingPermitItem(this));
         }
-        if (caseCategory == CaseCategory.SAMESEX_MARRIAGE) {
-            paginatedItems.add(new GrantSameSexMarriageItem(judgeBaseView.getCourtSession()));
-        }
         if (caseCategory == CaseCategory.ABANDONED_CHEST) {
             paginatedItems.add(new GrantChestPermitItem(this));
         }

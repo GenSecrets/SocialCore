@@ -219,7 +219,6 @@ public class Courts {
         ConfigurationSerialization.registerClass(PostponeIndef.class);
         ConfigurationSerialization.registerClass(RescheduleCase.class);
         ConfigurationSerialization.registerClass(ThrowoutCase.class);
-        ConfigurationSerialization.registerClass(GrantSameSexMarriage.class);
         
         ConfigurationSerialization.registerClass(YayNayVote.class);
         ConfigurationSerialization.registerClass(GulityInnocentVote.class);

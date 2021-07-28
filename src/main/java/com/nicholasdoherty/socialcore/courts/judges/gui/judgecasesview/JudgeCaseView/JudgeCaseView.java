@@ -87,7 +87,7 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         caseInfoClickItem = new CaseInfoBookClickItem(caze,this);
         addActiveItem(0, caseInfoClickItem);
         addActiveItem(7, new AssignDefendentClickItem(this,this,caze));
-        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SAMESEX_MARRIAGE || caze.getCaseCategory() == CaseCategory.SEX_CHANGE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
+        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SEX_CHANGE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             addActiveItem(9, new ChangeViewClickItem(new CategorySpecificNoCourtActionsView(this,caze)) {
                 @Override
                 public ItemStack itemstack() {

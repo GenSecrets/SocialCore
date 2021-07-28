@@ -25,7 +25,7 @@ public class SCCommandHandler extends BaseCommand {
 	}
 
 	@Default
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, String[] args) {
 		if(!(sender instanceof Player)){
 			sender.sendMessage("You can only use this command in game!");
 			return true;
