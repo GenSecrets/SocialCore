@@ -81,8 +81,7 @@ public class SCCommandHandler extends BaseCommand {
 		
 	}
 
-	@Subcommand("version")
-	@CommandAlias("help")
+	@Subcommand("version|help")
 	@CommandPermission("socialcore.profile.version")
 	public void onVersion(CommandSender sender){
 		StringBuilder authors = new StringBuilder();

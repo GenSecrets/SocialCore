@@ -17,18 +17,6 @@ commands:
         usage: /ifelection <command>
         description: runs command if election is scheduled
         permission: sc.utility
-    petname:
-        usage: /petname [name]
-        description: Give your significant other a pet name
-        permission: sc.petname
-    purgeinvalids:
-        usage: /purgeinvalids
-        description: Purges invalid marriages / engagements or fixes them.
-        permission: sc.admin
-    status:
-        usage: /status <playername>
-        description: Tells the martial status of a player
-        permission: sc.status
     ttc:
         usage: /ttc
         permission: sc.admin
@@ -44,48 +32,9 @@ commands:
     election:
         usage: /election
         permission: sc.defaultperm
-    share:
-        usage: /<command>.
-        permission: sc.defaultperm
     secretary:
         usage: /secretary
         permission: sc.defaultperm
-    socialcore:
-        description: Displays the current version of social core
-        usage: /<command>.
-        permission: sc.basic
-    profile:
-        description: Displays the current version of social core
-        usage: /<command>.
-        permission: sc.basic
-    marriage:
-        description: View all marriage commands.
-        usage: /<command>.
-        permission: sc.marriage
-    marriages:
-        description: View all marriages
-        permission: sc.view.marriages
-    engagements:
-        description: View all engagements
-        permission: sc.view.engagements
-    propose:
-        description: Propose to a player
-        permission: sc.propose
-    unengage:
-        description: Unengage your partner
-        permission: sc.unengage
-    marry:
-        description: Marry two players
-        permission: sc.priest
-    divorce:
-        description: File a divorce or complete a divorce
-        permission: sc.fileDivorce
-    divorces:
-        description: View all pending divorces on the server
-        permission: sc.view.divorces
-    adivorce:
-        description: Force a divorce
-        permission: sc.admin
     policy:
         description: Policy command
     policies:
@@ -118,57 +67,12 @@ permissions:
     sc.gender.admin:
         description: Manage other players genders
         default: op
-    sc.status:
-        description: allows use of status command
-        default: true
-    sc.petname:
-        description: allows you to use /petname
-        default: true
-    sc.marriage:
-        description: Required to view all marriage commands
-        default: true
-    sc.marriage.piggyback:
-        description: Required to ride your spouse
-        default: false
-    sc.marriage.share:
-        description: Required to use the share command
-        default: false
-    sc.marriage.sharefood:
-        description: Required for married couples to share food with each other
-        default: false
-    sc.unengage:
-        description: Required to unengage
-        default: true
-    sc.view.marriages:
-        description: Required to view all marriages
-        default: true
-    sc.view.engagements:
-        description: Required to view all engagements
-        default: true
-    sc.propose:
-        description: Required to propose and accept/deny proposes
-        default: true
-    sc.priest:
-        description: Required to marry a couple
-        default: false
-    sc.lawyer:
-        description: Required to divorce a couple
-        default: false
-    sc.fileDivorce:
-        description: Required to file divorce
-        default: true
-    sc.view.divorces:
-        description: Required to view all pending divorces
-        default: true
     sc.admin:
         description: Required to marry a couple
         default: false
     sc.op:
         description: for the OP of admins bois
         default: op
-    sc.viewspouseinventory:
-        description: Allows player to view their spouse's inventory.
-        default: true
     courts.admin:
         description: Allows use of courts admin commands
         default: op
