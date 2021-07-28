@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.marriages;
+package com.nicholasdoherty.socialcore.marriages.configs;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.marriages.MarriageGem;
@@ -6,9 +6,7 @@ import com.nicholasdoherty.socialcore.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.ColorUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

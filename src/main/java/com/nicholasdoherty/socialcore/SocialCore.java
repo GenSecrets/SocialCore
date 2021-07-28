@@ -6,18 +6,19 @@ import com.nicholasdoherty.socialcore.courts.inputlib.InputLib;
 import com.nicholasdoherty.socialcore.genders.GenderCommandHandler;
 import com.nicholasdoherty.socialcore.genders.Genders;
 import com.nicholasdoherty.socialcore.marriages.*;
+import com.nicholasdoherty.socialcore.marriages.commands.*;
+import com.nicholasdoherty.socialcore.marriages.commands.main.*;
+import com.nicholasdoherty.socialcore.marriages.commands.main.perks.PetnameCommand;
+import com.nicholasdoherty.socialcore.marriages.commands.main.perks.ShareCommand;
+import com.nicholasdoherty.socialcore.marriages.configs.MarriageConfig;
 import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.time.Clock;
 import com.nicholasdoherty.socialcore.time.condition.TimeConditionManager;
 import com.nicholasdoherty.socialcore.utils.ColorUtil;
-import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.nicholasdoherty.socialcore.welcomer.WelcomeCommandHandler;
 import com.voxmc.voxlib.gui.InventoryGUIManager;
-import com.earth2me.essentials.api.Economy;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -126,11 +127,10 @@ public class SocialCore extends JavaPlugin {
         if(isClockEnabled)
             getLogger().info("[SC Handler] Clock started!");
 
-        final CommandExecutor scCommandHandler = new SCCommandHandler(this);
-        getCommand("socialcore").setExecutor(scCommandHandler);
-        getCommand("profile").setExecutor(scCommandHandler);
+        // SETUP PROFILE, STATUS, SOCIALCORE COMMANDS
+        manager.registerCommand(new SCCommandHandler(plugin));
 
-        // SETUP COMPONENTS
+        // SETUP OTHER SC COMPONENTS
         setupCourt();
         setupMarriages();
         setupGenders();
@@ -138,7 +138,7 @@ public class SocialCore extends JavaPlugin {
         getLogger().info("Finished creating handlers!");
         getLogger().info("Finished setting up all components and commands!");
 
-        // SETUP EVENTS
+        // SETUP EVENT HANDLING
         getServer().getPluginManager().registerEvents(new SCListener(this), this);
         getServer().getPluginManager().registerEvents(new CourtTeleportationHandler(this), this);
         getLogger().info("Finished registering all listeners!");
@@ -168,11 +168,21 @@ public class SocialCore extends JavaPlugin {
 
     private void setupPluginSettings(){
         defaultAlias = getConfig().getString("default-alias");
-        prefix = ChatColor.translateAlternateColorCodes('&',getConfig().getString("plugin-prefix")) + ChatColor.RESET;
-        errorColor = ColorUtil.convertToChatColor(getConfig().getString("colors.error"));
-        successColor = ColorUtil.convertToChatColor(getConfig().getString("colors.success"));
-        messageColor = ColorUtil.convertToChatColor(getConfig().getString("colors.messages"));
-        commandColor = ColorUtil.convertToChatColor(getConfig().getString("colors.commands"));
+        if(getConfig().contains("plugin-prefix")){
+            prefix = ChatColor.translateAlternateColorCodes('&',getConfig().getString("plugin-prefix")) + ChatColor.RESET;
+        }
+        if(getConfig().contains("colors.error")){
+            errorColor = ColorUtil.convertToChatColor(getConfig().getString("colors.error"));
+        }
+        if(getConfig().contains("colors.success")){
+            successColor = ColorUtil.convertToChatColor(getConfig().getString("colors.success"));
+        }
+        if(getConfig().contains("colors.messages")){
+            messageColor = ColorUtil.convertToChatColor(getConfig().getString("colors.messages"));
+        }
+        if(getConfig().contains("colors.commands")){
+            commandColor = ColorUtil.convertToChatColor(getConfig().getString("colors.commands"));
+        }
     }
 
     private void setupCourt(){
@@ -187,28 +197,19 @@ public class SocialCore extends JavaPlugin {
     }
 
     private void setupMarriages(){
-        if(getConfig().getBoolean("components.enable-marriages")){
+        if(getConfig().getBoolean("components.enable-marriagesOld")){
             configs.setupMarriagesConfig();
             marriages = new Marriages(this);
             whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist");
             getLogger().info("[SC Handler] Created piggyback whitelist config");
-            final CommandExecutor marriageCommandHandler = new MarriageCommandHandler(this);
-            getCommand("marriage").setExecutor(marriageCommandHandler);
-            getCommand("marriages").setExecutor(marriageCommandHandler);
-            getCommand("engagements").setExecutor(marriageCommandHandler);
-            getCommand("propose").setExecutor(marriageCommandHandler);
-            getCommand("marry").setExecutor(marriageCommandHandler);
-            getCommand("unengage").setExecutor(marriageCommandHandler);
-            getCommand("divorce").setExecutor(marriageCommandHandler);
-            getCommand("divorces").setExecutor(marriageCommandHandler);
-            getCommand("adivorce").setExecutor(marriageCommandHandler);
-            getCommand("amarry").setExecutor(marriageCommandHandler);
-            getCommand("aunengage").setExecutor(marriageCommandHandler);
-            getCommand("status").setExecutor(new StatusCommand());
-            getCommand("share").setExecutor(marriageCommandHandler);
-            //getCommand("petname").setExecutor(new PetnameCommand());
-            getCommand("purgeinvalids").setExecutor(new PurgeInvalidCommand());
-            getLogger().info("[SC Handler] Created marriages handler");
+            manager.registerCommand(new MarriageCommand(plugin));
+            manager.registerCommand(new ProposeCommand(plugin));
+            manager.registerCommand(new UnEngageCommand(plugin));
+            manager.registerCommand(new MarryCommand(plugin));
+            manager.registerCommand(new PetnameCommand(plugin));
+            manager.registerCommand(new ShareCommand(plugin));
+            getLogger().info("[SC Handler] Created marriage handlers");
+
             marriageConfig = new MarriageConfig(this);
             marriageConfig.loadConfig();
             isMarriagesEnabled = true;
@@ -222,9 +223,7 @@ public class SocialCore extends JavaPlugin {
             configs.setupGendersConfig();
             genders = new Genders(this);
             manager.registerCommand(new GenderCommandHandler(this, genders));
-            manager.getCommandCompletions().registerAsyncCompletion("genderNames", n -> {
-                return genders.getGenderNames();
-            });
+            manager.getCommandCompletions().registerAsyncCompletion("genderNames", n -> genders.getGenderNames());
             getLogger().info("[SC Handler] Created genders handler");
             isGendersEnabled = true;
         } else {

@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.marriages;
+package com.nicholasdoherty.socialcore.marriages.types;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;

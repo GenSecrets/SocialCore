@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.marriages;
+package com.nicholasdoherty.socialcore.marriages.types;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
@@ -27,7 +27,7 @@ public class Marriage {
 		}
 	}
 	
-	//congat marriage
+	//concatenated marriage
 	public String getName(){
 		return spouse1.getPlayerName()+NAME_DELIMITER+spouse2.getPlayerName();
 	}

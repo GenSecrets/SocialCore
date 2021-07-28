@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.marriages.Divorce;
-import com.nicholasdoherty.socialcore.marriages.Engagement;
-import com.nicholasdoherty.socialcore.marriages.Marriage;
+import com.nicholasdoherty.socialcore.marriages.types.Divorce;
+import com.nicholasdoherty.socialcore.marriages.types.Engagement;
+import com.nicholasdoherty.socialcore.marriages.types.Marriage;
 import org.bukkit.OfflinePlayer;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;

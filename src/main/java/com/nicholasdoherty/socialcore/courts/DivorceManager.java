@@ -6,7 +6,7 @@ import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.courts.cases.CaseStatus;
 import com.nicholasdoherty.socialcore.courts.objects.Citizen;
-import com.nicholasdoherty.socialcore.marriages.Divorce;
+import com.nicholasdoherty.socialcore.marriages.types.Divorce;
 import com.voxmc.voxlib.util.UUIDUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

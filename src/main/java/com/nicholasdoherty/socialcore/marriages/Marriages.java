@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
+import com.nicholasdoherty.socialcore.marriages.types.Divorce;
+import com.nicholasdoherty.socialcore.marriages.types.Engagement;
+import com.nicholasdoherty.socialcore.marriages.types.Marriage;
 
 
 public class Marriages {
@@ -15,9 +18,9 @@ public class Marriages {
 	
 	private final SocialCore sc;
 	
-	public HashMap<String,Marriage>marriagesCache;
-	public HashMap<String,Engagement>engagementsCache;
-	public HashMap<String,Divorce>divorcesCache;
+	public HashMap<String, Marriage>marriagesCache;
+	public HashMap<String, Engagement>engagementsCache;
+	public HashMap<String, Divorce>divorcesCache;
 	public HashMap<SocialPlayer,SocialPlayer>proposals;
 	private final HashMap<String,Long> kisses;
 	private final ArrayList<String>pendingDivorces;

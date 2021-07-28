@@ -5,8 +5,8 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.cases.Case;
 import com.nicholasdoherty.socialcore.courts.courtroom.PostCourtAction;
-import com.nicholasdoherty.socialcore.marriages.Divorce;
-import com.nicholasdoherty.socialcore.marriages.Marriage;
+import com.nicholasdoherty.socialcore.marriages.types.Divorce;
+import com.nicholasdoherty.socialcore.marriages.types.Marriage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 

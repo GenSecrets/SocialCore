@@ -3,12 +3,14 @@ package com.nicholasdoherty.socialcore.store;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.genders.Gender;
-import com.nicholasdoherty.socialcore.marriages.Divorce;
-import com.nicholasdoherty.socialcore.marriages.Engagement;
-import com.nicholasdoherty.socialcore.marriages.Marriage;
+import com.nicholasdoherty.socialcore.marriages.types.Divorce;
+import com.nicholasdoherty.socialcore.marriages.types.Engagement;
+import com.nicholasdoherty.socialcore.marriages.types.Marriage;
 
 import java.sql.*;
 import java.util.*;
+
+import static com.nicholasdoherty.socialcore.utils.MarriagesUtil.getMonth;
 
 /**
  * Created with IntelliJ IDEA.
@@ -662,37 +664,6 @@ public class SQLStore extends Store {
             }
         } catch(final Exception e) {
             e.printStackTrace();
-        }
-    }
-    
-    private String getMonth() {
-        switch(Calendar.getInstance().get(Calendar.MONTH)) {
-            case 0:
-                return "January";
-            case 1:
-                return "February";
-            case 2:
-                return "March";
-            case 3:
-                return "April";
-            case 4:
-                return "May";
-            case 5:
-                return "June";
-            case 6:
-                return "July";
-            case 7:
-                return "August";
-            case 8:
-                return "September";
-            case 9:
-                return "October";
-            case 10:
-                return "November";
-            case 11:
-                return "December";
-            default:
-                return "ERROR";
         }
     }
     
