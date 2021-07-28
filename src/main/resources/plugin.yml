@@ -13,6 +13,10 @@ commands:
         description: Welcome a player!
     welcome:
         description: Welcome a player!
+    gender:
+        description: Manage gender commands
+    marriage:
+        description: Marriage command
     ifelection:
         usage: /ifelection <command>
         description: runs command if election is scheduled
@@ -39,18 +43,6 @@ commands:
         description: Policy command
     policies:
         description: Policies command
-    amarry:
-        description: Force a marriage
-        permission: sc.admin
-    aunengage:
-        description: Force unengage
-        permission: sc.admin
-    fixmarriages:
-        description: fixes a bug
-        permission: sc.admin
-    gender:
-        description: Manage gender commands
-        permission: sc.gender.default
 permissions:
     sc.utility:
         description: Used for autocommand

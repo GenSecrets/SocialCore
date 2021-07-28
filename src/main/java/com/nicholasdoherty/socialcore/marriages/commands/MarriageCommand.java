@@ -38,7 +38,7 @@ public class MarriageCommand extends BaseCommand {
             player.sendMessage(ChatColor.AQUA + "/marriage - view list of marriage commands");
         }
         if(player.hasPermission("sc.view.marriages")) {
-            player.sendMessage(ChatColor.AQUA + "/marriages - view all marriagesOld on the server");
+            player.sendMessage(ChatColor.AQUA + "/marriages - view all marriages on the server");
         }
         if(player.hasPermission("sc.view.engagements")) {
             player.sendMessage(ChatColor.AQUA + "/engagements - view all engagements on the server");

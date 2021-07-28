@@ -197,7 +197,7 @@ public class SocialCore extends JavaPlugin {
     }
 
     private void setupMarriages(){
-        if(getConfig().getBoolean("components.enable-marriagesOld")){
+        if(getConfig().getBoolean("components.enable-marriages")){
             configs.setupMarriagesConfig();
             marriages = new Marriages(this);
             whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist");

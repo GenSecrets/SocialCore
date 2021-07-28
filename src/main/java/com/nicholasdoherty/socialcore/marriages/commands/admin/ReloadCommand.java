@@ -12,6 +12,6 @@ public class ReloadCommand {
     @CommandPermission("socialcore.marriage.admin.reload")
     public void runCommand(Player player){
         sc.marriageConfig.loadConfig();
-        player.sendMessage(ChatColor.GREEN + "Reloaded marriagesOld.");
+        player.sendMessage(ChatColor.GREEN + "Reloaded marriages.");
     }
 }
