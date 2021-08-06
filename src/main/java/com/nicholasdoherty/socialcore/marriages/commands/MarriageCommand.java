@@ -33,36 +33,45 @@ public class MarriageCommand extends BaseCommand {
         }
 
         Player player = (Player)sender;
+        ChatColor gray = ChatColor.GRAY;
+        ChatColor aqua = ChatColor.AQUA;
+        ChatColor yellow = ChatColor.YELLOW;
+        ChatColor red = ChatColor.RED;
+
         player.sendMessage(ChatColor.GOLD + "---------=Marriage Commands=---------");
-        if(player.hasPermission("sc.marriage")) {
-            player.sendMessage(ChatColor.AQUA + "/marriage - view list of marriage commands");
-        }
-        if(player.hasPermission("sc.view.marriages")) {
-            player.sendMessage(ChatColor.AQUA + "/marriages - view all marriages on the server");
-        }
-        if(player.hasPermission("sc.view.engagements")) {
-            player.sendMessage(ChatColor.AQUA + "/engagements - view all engagements on the server");
-        }
-        if(player.hasPermission("sc.propose")) {
-            player.sendMessage(ChatColor.AQUA + "/propose <player name> - propose to another player");
-            player.sendMessage(ChatColor.AQUA + "/propose accept - accept a proposal");
-            player.sendMessage(ChatColor.AQUA + "/propose deny - deny a proposal");
-        }
-        if(player.hasPermission("sc.unengage")) {
-            player.sendMessage(ChatColor.AQUA + "/unengage - To unengage your partner");
-        }
-        if(player.hasPermission("sc.priest")) {
-            player.sendMessage(ChatColor.AQUA + "/marry <player1> <player2> - marry two players");
-        }
-        if(player.hasPermission("sc.view.divorces")) {
-            player.sendMessage(ChatColor.AQUA + "/engagements - view all divorces on the server");
-        }
-        if(player.hasPermission("sc.fileDivorce")) {
-            player.sendMessage(ChatColor.AQUA + "/divorce - divorce your spouse");
-            player.sendMessage(ChatColor.AQUA + "/divorce cancel - cancel a pending divorce");
-        }
-        if(player.hasPermission("sc.lawyer")) {
-            player.sendMessage(ChatColor.AQUA + "/divorce <player1> <player2> - divorce two players");
+
+
+        if(player.hasPermission("socialcore.marriage")) {
+            player.sendMessage(aqua + "/marriage"+gray+" - "+yellow+ "View marriage commands & help");
+
+            if((player.hasPermission("socialcore.marriage.listall")) &&
+                    (player.hasPermission("socialcore.marriage.listall.engagements")) &&
+                    (player.hasPermission("socialcore.marriage.listall.marriages"))) {
+                player.sendMessage(aqua + "/marriage listall <marriages/engagements>"+gray+" - "+yellow+ "View all marriages or engagements on the server");
+            }
+            if(player.hasPermission("sc.propose")) {
+                player.sendMessage(aqua + "/propose <player name> - propose to another player");
+                player.sendMessage(aqua + "/propose accept - accept a proposal");
+                player.sendMessage(aqua + "/propose deny - deny a proposal");
+            }
+            if(player.hasPermission("sc.unengage")) {
+                player.sendMessage(aqua + "/unengage - To unengage your partner");
+            }
+            if(player.hasPermission("sc.priest")) {
+                player.sendMessage(aqua + "/marry <player1> <player2> - marry two players");
+            }
+            if(player.hasPermission("socialcore.marriage.admin")) {
+                player.sendMessage(red + "/marriage admin divorce <player1> <player2> - Divorce two players");
+                player.sendMessage(red + "/marriage admin marry <player1> <player2> - Marry two players");
+                player.sendMessage(red + "/marriage admin unengage <player1> <player2> - Unengage two players");
+                player.sendMessage(red + "/marriage admin purgeinvalids" +gray+ " - " +yellow+ "Purge invalid marriages and engagements from the database. ONLY DO THIS IF INSTRUCTED.");
+                player.sendMessage(red + "/marriage admin reload" +gray+ " - " +yellow+ "Reload the Marriage config files.");
+            }
+
+            player.sendMessage(aqua + "- Divorces" +gray+ ": "+yellow+" In order to divorce your spouse, visit the courts.");
+            if(player.hasPermission("socialcore.lawyer")) {
+                player.sendMessage(aqua + "- Judges" +gray+ ": "+yellow+" You may divorce people that have submitted cases through court.");
+            }
         }
     }
 

@@ -50,9 +50,9 @@ public class ShareCommand extends BaseCommand {
             player.openInventory(player2.getInventory());
             player2.sendMessage(ChatColor.AQUA + player.getName() + " is viewing your inventory!");
             player.sendMessage(ChatColor.AQUA + player2.getName() + "'s inventory");
-            if(player2.getOpenInventory() != null) {
-                player2.closeInventory();
-            }
+            //if(player2.getOpenInventory() != null) {
+            //    player2.closeInventory();
+            //}
         } else {
             player.sendMessage(ChatColor.RED + "Your Significant Other is too far away!");
         }
