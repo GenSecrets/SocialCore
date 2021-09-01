@@ -38,7 +38,7 @@ public class SocialCore extends JavaPlugin {
 
     // PLUGIN BASE
     public static SocialCore plugin;
-    private static PaperCommandManager manager;
+    public static PaperCommandManager manager;
 
     // Logger
     public final Logger log = Logger.getLogger("Minecraft");
