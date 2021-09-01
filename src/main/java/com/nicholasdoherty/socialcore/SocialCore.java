@@ -49,7 +49,6 @@ public class SocialCore extends JavaPlugin {
     private InventoryGUIManager inventoryGUIManager;
     private TimeConditionManager timeConditionManager;
     private boolean isClockEnabled;
-    private boolean isVaultEnabled;
     // players
     public Map<String, SocialPlayer> socialPlayersCache;
     // Components
