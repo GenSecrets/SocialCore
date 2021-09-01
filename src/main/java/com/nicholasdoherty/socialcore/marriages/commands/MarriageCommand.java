@@ -76,7 +76,7 @@ public class MarriageCommand extends BaseCommand {
     }
 
     @Subcommand("admin")
-    @CommandCompletion("divorce|marry|purgeinvalids|reload|unengage")
+    @CommandCompletion("divorce|marry|reload|unengage")
     @CommandPermission("socialcore.marriage.admin")
     public void onCommandAdmin(CommandSender sender, String[] args) {
         if(ErrorUtil.isNotPlayer(sender)){
@@ -93,10 +93,6 @@ public class MarriageCommand extends BaseCommand {
                 case "marry":
                     MarryCommand e = new MarryCommand(sc);
                     e.runCommand(player, args);
-                    break;
-                case "purgeinvalids":
-                    PurgeInvalidCommand p = new PurgeInvalidCommand(sc);
-                    p.runCommand(player);
                     break;
                 case "reload":
                     ReloadCommand r = new ReloadCommand(sc);
