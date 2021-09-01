@@ -31,12 +31,9 @@ public class GenderCommandHandler extends BaseCommand {
             sender.sendMessage(ChatColor.GOLD+"----------=Gender - "+sender.getName()+"=----------");
             sender.sendMessage(sc.commandColor + "Gender statistics");
             sender.sendMessage(sc.messageColor+"Your gender: " + sc.commandColor+sp.getGender().getName());
+
             for (Gender gender : genders.getGenders()) {
-                if (!gender.getName().equalsIgnoreCase("UNSPECIFIED")) {
-                    sender.sendMessage(sc.messageColor + "-" + gender.getName() + ": " + sc.commandColor + sc.save.getCountGender(gender.getName().toUpperCase()));
-                } else {
-                    sender.sendMessage(sc.messageColor + "-" + gender.getName() + ": " + sc.commandColor + sc.save.getCountGender("null"));
-                }
+                sender.sendMessage(sc.messageColor + "-" + gender.getName() + ": " + sc.commandColor + genders.getGenderCache().get(gender.getName()));
             }
             sender.sendMessage("");
             sender.sendMessage(sc.commandColor + "Gender commands");
@@ -97,6 +94,7 @@ public class GenderCommandHandler extends BaseCommand {
             if(other != null){
                 other.setGender(genders.getGender(genderName));
                 sc.save.saveSocialPlayer(other);
+                genders.loadGenderCache();
                 sender.sendMessage(sc.prefix+sc.messageColor+ "You have changed " + other.getPlayerName() + "'s gender to " + sc.commandColor + other.getGender().getName());
             } else {
                 sender.sendMessage(sc.prefix + sc.errorColor + "Could not find player!");
