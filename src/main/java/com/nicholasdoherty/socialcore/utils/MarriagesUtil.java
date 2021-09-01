@@ -72,6 +72,7 @@ public class MarriagesUtil {
             l.addAll(meta.getLore());
         }
         l = MarriagesUtil.removeLineWith(l, "Engaged on");
+        l = MarriagesUtil.removeLineWith(l, "4ever");
         l.add(player1.getPlayerName() + " + " + player2.getPlayerName() + " 4ever");
         l.add("Married on " + m.getDate() + " by " + m.getPriest());
         meta.setLore(l);
