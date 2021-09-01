@@ -3,6 +3,10 @@ package com.nicholasdoherty.socialcore;
 import com.nicholasdoherty.socialcore.courts.CourtTeleportationHandler;
 import com.nicholasdoherty.socialcore.courts.Courts;
 import com.nicholasdoherty.socialcore.courts.inputlib.InputLib;
+import com.nicholasdoherty.socialcore.emotes.EmoteCommand;
+import com.nicholasdoherty.socialcore.emotes.EmoteListener;
+import com.nicholasdoherty.socialcore.emotes.Emotes;
+import com.nicholasdoherty.socialcore.emotes.ForceEmoteCommand;
 import com.nicholasdoherty.socialcore.genders.GenderCommandHandler;
 import com.nicholasdoherty.socialcore.genders.Genders;
 import com.nicholasdoherty.socialcore.marriages.*;
@@ -52,6 +56,7 @@ public class SocialCore extends JavaPlugin {
     public Genders genders;
     private Courts courts;
     public Marriages marriages;
+    public Emotes emotes;
     public List<String> whitelistPiggybackWorlds;
     public String welcomerLastJoined;
 
@@ -66,6 +71,7 @@ public class SocialCore extends JavaPlugin {
     // Configs
     public SCConfigHandler configs;
     public boolean isCourtsEnabled = true;
+    public boolean isEmotesEnabled = true;
     public boolean isGendersEnabled = true;
     public boolean isMarriagesEnabled = true;
     public boolean isWelcomerEnabled = true;
@@ -135,6 +141,7 @@ public class SocialCore extends JavaPlugin {
         setupMarriages();
         setupGenders();
         setupWelcomer();
+        setupEmotes();
         getLogger().info("Finished creating handlers!");
         getLogger().info("Finished setting up all components and commands!");
 
@@ -239,6 +246,18 @@ public class SocialCore extends JavaPlugin {
             isWelcomerEnabled = true;
         } else {
             isWelcomerEnabled = false;
+        }
+    }
+
+    private void setupEmotes(){
+        if(getConfig().getBoolean("components.enable-emotes")){
+            emotes = new Emotes(this);
+            manager.registerCommand(new ForceEmoteCommand(this));
+            manager.registerCommand(new EmoteCommand(this));
+            getLogger().info("[SC Handler] Created emotes handler");
+            isEmotesEnabled = true;
+        } else {
+            isEmotesEnabled = false;
         }
     }
 
