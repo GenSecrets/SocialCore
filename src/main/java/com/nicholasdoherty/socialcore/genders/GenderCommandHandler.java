@@ -68,6 +68,7 @@ public class GenderCommandHandler extends BaseCommand {
                     if(genders.getAwaitingConfirmation().containsKey(sp.getPlayerName()) && genders.getAwaitingConfirmation().get(sp.getPlayerName()).getName().toUpperCase().equalsIgnoreCase(genderName.toUpperCase())){
                         sp.setGender(genders.getGender(genderName));
                         sc.save.saveSocialPlayer(sp);
+                        genders.loadGenderCache();
                         sender.sendMessage(sc.prefix+sc.messageColor+"You have chosen the gender: " + sc.commandColor + sp.getGender().getName());
                     } else if(genders.getAwaitingConfirmation().containsKey(sp.getPlayerName())){
                         genders.getAwaitingConfirmation().remove(sp.getPlayerName());
