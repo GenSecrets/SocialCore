@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore;
+package com.nicholasdoherty.socialcore.utils;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
