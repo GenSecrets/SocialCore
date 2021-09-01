@@ -1,10 +1,7 @@
 package com.nicholasdoherty.socialcore;
 
 import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,39 +36,40 @@ public class SCListener implements Listener {
             }
         }.runTaskLater(sc, 1));
     }
-    
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void playerJoin(final PlayerJoinEvent event) {
-        final Player p = event.getPlayer();
-        final String ign = p.getName();
-        final PermissionAttachment permissionAttachment = p.addAttachment(sc);
-        p.setMetadata("pa", new FixedMetadataValue(sc, permissionAttachment));
-        sc.store.create(p.getName());
-    }
-    
-    @EventHandler
+
+    @EventHandler //(priority = EventPriority.MONITOR)
     public void petnameJoin(final PlayerJoinEvent event) {
         final Player p = event.getPlayer();
-        final SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getName());
-        if(socialPlayer == null) {
+        SocialPlayer sp = sc.save.getSocialPlayer(p.getUniqueId().toString());
+        final PermissionAttachment permissionAttachment = p.addAttachment(sc);
+
+        p.setMetadata("pa", new FixedMetadataValue(sc, permissionAttachment));
+        if(sc.save.getSocialPlayer(p.getUniqueId().toString()) == null){
+            sc.store.create(p.getUniqueId().toString());
+        }
+
+        if (!event.getPlayer().hasPlayedBefore()) {
+            sc.welcomerLastJoined = event.getPlayer().getName();
+            String welcomeMessage = ChatColor.translateAlternateColorCodes('&', sc.getWelcomerConfig().getString("broadcast-message"));
+            sc.getServer().broadcastMessage(sc.prefix + ChatColor.RESET + welcomeMessage.replace("%player%", event.getPlayer().getName()));
+        }
+
+        if(!sp.isMarried()) {
             return;
         }
-        if(!socialPlayer.isMarried()) {
+        if(sp.getMarriedTo() == null) {
             return;
         }
-        if(socialPlayer.getMarriedTo() == null) {
-            return;
-        }
-        final Player marriedToP = Bukkit.getPlayer(socialPlayer.getMarriedTo());
-        if(marriedToP != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
-            marriedToP.sendMessage(SocialCore.plugin.marriageConfig.petNameLoginMessage.replace("{pet-name}", socialPlayer.getPetName()));
+        final OfflinePlayer marriedToP = sc.getServer().getOfflinePlayer(sp.getMarriedTo());
+        if(marriedToP.getPlayer() != null && marriedToP.isOnline() && sp.getPetName() != null) {
+            marriedToP.getPlayer().sendMessage(SocialCore.plugin.marriageConfig.petNameLoginMessage.replace("{pet-name}", sp.getPetName()));
         }
     }
     
     @EventHandler(priority = EventPriority.MONITOR)
     public void playerLeavePetname(final PlayerQuitEvent event) {
         final Player p = event.getPlayer();
-        final SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getName());
+        final SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getUniqueId().toString());
         if(socialPlayer == null) {
             return;
         }
@@ -81,9 +79,9 @@ public class SCListener implements Listener {
         if(socialPlayer.getMarriedTo() == null) {
             return;
         }
-        final Player marriedToP = Bukkit.getPlayer(socialPlayer.getMarriedTo());
-        if(marriedToP != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
-            marriedToP.sendMessage(SocialCore.plugin.marriageConfig.petNameLogoutMessage.replace("{pet-name}", socialPlayer.getPetName()));
+        final OfflinePlayer marriedToP = sc.getServer().getOfflinePlayer(socialPlayer.getMarriedTo());
+        if(marriedToP.getPlayer() != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
+            marriedToP.getPlayer().sendMessage(SocialCore.plugin.marriageConfig.petNameLogoutMessage.replace("{pet-name}", socialPlayer.getPetName()));
         }
     }
     
@@ -98,12 +96,16 @@ public class SCListener implements Listener {
             return;
         }
         final int changeby = e.getFoodLevel() - p1.getFoodLevel();
-        final SocialPlayer sp = sc.save.getSocialPlayer(p1.getName());
+        final SocialPlayer sp = sc.save.getSocialPlayer(p1.getUniqueId().toString());
         if(!sp.isMarried()) {
             return;
         }
-        final Player p2 = Bukkit.getPlayer(sp.getMarriedTo());
-        if(p2 == null) {
+        final OfflinePlayer op = Bukkit.getOfflinePlayer(sp.getMarriedTo());
+        if(op.getPlayer() == null) {
+            return;
+        }
+        Player p2 = op.getPlayer();
+        if(!p2.isOnline()) {
             return;
         }
         
@@ -137,12 +139,17 @@ public class SCListener implements Listener {
                 return;
             }
             
-            final SocialPlayer sp = sc.save.getSocialPlayer(p.getName());
+            final SocialPlayer sp = sc.save.getSocialPlayer(p.getUniqueId().toString());
             if(sp.isMarried()) {
-                final Player p2 = Bukkit.getServer().getPlayer(sp.getMarriedTo());
-                if(p2 == null) {
+                OfflinePlayer op = sc.getServer().getOfflinePlayer(sp.getMarriedTo());
+                if(op.getPlayer() == null){
                     return;
                 }
+                final Player p2 = op.getPlayer();
+                if(p2 == null || !(p2.isOnline())) {
+                    return;
+                }
+
                 if(!p.getWorld().equals(p2.getWorld())) {
                     return;
                 }
@@ -161,8 +168,8 @@ public class SCListener implements Listener {
         if(p == null) {
             return;
         }
-        if(riding.containsKey(p.getName())) {
-            riding.remove(p.getName());
+        if(riding.containsKey(p.getUniqueId().toString())) {
+            riding.remove(p.getUniqueId().toString());
             if(p.getVehicle() != null && p.getVehicle() instanceof Player) {
                 final Player other = (Player) p.getVehicle();
                 activatePiggyBackCooldown(p, other);
@@ -246,14 +253,14 @@ public class SCListener implements Listener {
         }
         
         if(!p.isSneaking()) {
-            if(riding.containsKey(p2.getName())) {
+            if(riding.containsKey(p2.getUniqueId().toString())) {
                 return;
             }
             if(p.getItemInHand().getType() != Material.SADDLE) {
                 return;
             }
-            final SocialPlayer player1 = sc.save.getSocialPlayer(p.getName());
-            final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getName());
+            final SocialPlayer player1 = sc.save.getSocialPlayer(p.getUniqueId().toString());
+            final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getUniqueId().toString());
             
             if(player1.getMarriedTo().equalsIgnoreCase(player2.getPlayerName())) {
                 if(!p.hasPermission("sc.marriage.piggyback") && !p2.hasPermission("sc.marriage.piggyback")) {
@@ -271,7 +278,7 @@ public class SCListener implements Listener {
                     p2.setPassenger(p);
                     p2.sendMessage(ChatColor.AQUA + "You are giving " + p.getName() + " a piggy-back ride!.");
                     p.sendMessage(ChatColor.AQUA + p2.getName() + " is giving you a piggy-back ride.");
-                    riding.put(p.getName(), p2.getName());
+                    riding.put(p.getUniqueId().toString(), p2.getUniqueId().toString());
                 }
             } else {
                 p.sendMessage(ChatColor.RED + "You can only ride your significant other.");
@@ -288,8 +295,8 @@ public class SCListener implements Listener {
             return;
         }
         
-        final SocialPlayer player1 = sc.save.getSocialPlayer(p.getName());
-        final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getName());
+        final SocialPlayer player1 = sc.save.getSocialPlayer(p.getUniqueId().toString());
+        final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getUniqueId().toString());
         
         if(player1.getMarriedTo().equalsIgnoreCase(player2.getPlayerName())) {
             
@@ -318,16 +325,5 @@ public class SCListener implements Listener {
             }
             sc.marriages.kissPlayer(p.getName());
         }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!event.getPlayer().hasPlayedBefore()) {
-            sc.welcomerLastJoined = event.getPlayer().getName();
-            String welcomeMessage = ChatColor.translateAlternateColorCodes('&', sc.getWelcomerConfig().getString("broadcast-message"));
-            sc.getServer().broadcastMessage(sc.prefix + ChatColor.RESET + welcomeMessage.replace("%player%", event.getPlayer().getName()));
-
-        }
-
     }
 }

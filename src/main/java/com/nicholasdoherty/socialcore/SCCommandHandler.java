@@ -3,6 +3,7 @@ package com.nicholasdoherty.socialcore;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.milkbowl.vault.chat.Chat;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -37,11 +38,11 @@ public class SCCommandHandler extends BaseCommand {
 		} else {
 			name = sender.getName();
 		}
-		SocialPlayer sp = SocialCore.plugin.save.getSocialPlayer(name);
-		if (sp == null) {
-			sender.sendMessage(ChatColor.RED + "Could not find player: " + name);
+		OfflinePlayer op = sc.getServer().getOfflinePlayer(name);
+		SocialPlayer sp = SocialCore.plugin.save.getSocialPlayer(op.getUniqueId().toString());
+		if (sp == null || op.getPlayer() == null) {
+			sender.sendMessage(sc.prefix + ChatColor.RED + "Could not find player" + ChatColor.GRAY + ": " + ChatColor.YELLOW + name);
 		} else {
-			OfflinePlayer op = sc.getServer().getOfflinePlayer(sp.getPlayerName());
 			SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd, y @ h:mma");
 			String join = sdf.format(new Date(op.getFirstPlayed()));
 			sender.sendMessage(ChatColor.GOLD+"----------=Social - "+sp.getPlayerName()+"=----------");

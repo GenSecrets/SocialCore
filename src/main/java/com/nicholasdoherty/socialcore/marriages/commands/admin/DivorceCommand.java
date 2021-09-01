@@ -6,6 +6,7 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.marriages.types.Divorce;
 import com.nicholasdoherty.socialcore.marriages.types.Marriage;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class DivorceCommand {
@@ -15,9 +16,16 @@ public class DivorceCommand {
     @CommandPermission("socialcore.marriage.admin.divorce")
     public void runCommand(Player player, String[] args) {
             if(args.length > 1) {
+                OfflinePlayer op1 = sc.getServer().getOfflinePlayer(args[0]);
+                OfflinePlayer op2 = sc.getServer().getOfflinePlayer(args[1]);
 
-                final SocialPlayer sp1 = sc.save.getSocialPlayer(args[0]);
-                final SocialPlayer sp2 = sc.save.getSocialPlayer(args[1]);
+                if(op1.getPlayer() == null || op2.getPlayer() == null){
+                    player.sendMessage("Could not find those players!");
+                    return;
+                }
+
+                final SocialPlayer sp1 = sc.save.getSocialPlayer(op1.getPlayer().getUniqueId().toString());
+                final SocialPlayer sp2 = sc.save.getSocialPlayer(op2.getPlayer().getUniqueId().toString());
                 sp1.setEngaged(false);
                 sp1.setEngagedTo("");
                 sp1.setMarried(false);

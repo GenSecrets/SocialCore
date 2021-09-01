@@ -6,18 +6,16 @@ import com.nicholasdoherty.socialcore.genders.Gender;
 import com.nicholasdoherty.socialcore.marriages.types.Divorce;
 import com.nicholasdoherty.socialcore.marriages.types.Engagement;
 import com.nicholasdoherty.socialcore.marriages.types.Marriage;
+import org.bukkit.Bukkit;
 
 import java.sql.*;
 import java.util.*;
-
-import static com.nicholasdoherty.socialcore.utils.MarriagesUtil.getMonth;
 
 /**
  * Created with IntelliJ IDEA.
  * User: john
  * Date: 11/14/13
  * Time: 1:04
- * To change this template use File | Settings | File Templates.
  */
 @SuppressWarnings({"SuspiciousMethodCalls", "unused"})
 public class SQLStore extends Store {
@@ -38,40 +36,30 @@ public class SQLStore extends Store {
                 final String dbURL = "jdbc:mysql://" + plugin.getConfig().get("sql.host") + '/' + plugin.getConfig().get("sql.dbname");
                 connection = DriverManager.getConnection(dbURL, user, pass);
                 try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore (name CHAR(25), PRIMARY KEY(name), race CHAR(25), lastChange BIGINT, gender CHAR(20), marriedTo CHAR(30), engagedTo CHAR(30), isMarried boolean, isEngaged boolean)");
+                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore (uuid CHAR(70), PRIMARY KEY(uuid), gender CHAR(20), marriedTo CHAR(70), engagedTo CHAR(70), isMarried boolean, isEngaged boolean, petName CHAR(70))");
                     preparedStatement.execute();
                 } catch(final Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_marriages (name CHAR(70), PRIMARY KEY(name), husband CHAR(25), wife CHAR(25), date CHAR(35), priest CHAR(35))");
+                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_marriages (id CHAR(70), PRIMARY KEY(id), spouse1 CHAR(70), spouse2 CHAR(70), date CHAR(35), marriedBy CHAR(70))");
                     preparedStatement.execute();
                 } catch(final Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_engagements (name CHAR(70), PRIMARY KEY(name), husband CHAR(25), wife CHAR(25), date CHAR(35), time BIGINT(35))");
+                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_engagements (id CHAR(70), PRIMARY KEY(id), spouse1 CHAR(70), spouse2 CHAR(70), date CHAR(35), time BIGINT(35), whoProposed CHAR(70))");
                     preparedStatement.execute();
                 } catch(final Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_divorces (name CHAR(70), PRIMARY KEY(name), husband CHAR(25), wife CHAR(25), date CHAR(35), filedBy CHAR(35))");
+                    final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS SocialCore_divorces (id CHAR(70), PRIMARY KEY(id), spouse1 CHAR(25), spouse2 CHAR(25), date CHAR(35), filedBy CHAR(25))");
                     preparedStatement.execute();
                 } catch(final Exception e) {
                     e.printStackTrace();
                 }
-                try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("ALTER TABLE SocialCore ADD (gender CHAR(20), marriedTo CHAR(30), engagedTo CHAR(30), isMarried boolean, isEngaged boolean);");
-                    preparedStatement.execute();
-                } catch(final Exception ignored) {
-                }
-                
-                try {
-                    final PreparedStatement preparedStatement = connection.prepareStatement("alter ignore table SocialCore ADD (pet_name char(30));");
-                    preparedStatement.execute();
-                } catch(final Exception ignored) {
-                }
+
                 try {
                     final String sql = "-- Create syntax for TABLE 'courts_case_history'\n" +
                             "CREATE TABLE  `courts_case_history` (\n" +
@@ -234,48 +222,17 @@ public class SQLStore extends Store {
         return null;
     }
     
-    public void fixTables() {
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement("alter table SocialCore_engagements modify name VARCHAR(70)");
-            preparedStatement.execute();
-        } catch(final Exception ignored) {
-        }
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement("alter table SocialCore_divorces modify name VARCHAR(70)");
-            preparedStatement.execute();
-        } catch(final Exception ignored) {
-        }
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement("alter table SocialCore_marriages modify name VARCHAR(70)");
-            preparedStatement.execute();
-        } catch(final Exception ignored) {
-        }
-    }
-    
-    public long getLastRaceChange(final String name) {
+    public SocialPlayer getSocialPlayer(final String uuid) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT lastChange FROM SocialCore WHERE name = ?");
-            preparedStatement.setString(1, name);
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore WHERE uuid = ?");
+            preparedStatement.setString(1, uuid);
             final ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
-                return rs.getLong("lastChange");
-            }
-        } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return 0;
-    }
-    
-    public SocialPlayer getSocialPlayer(final String name) {
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore WHERE name = ?");
-            preparedStatement.setString(1, name);
-            final ResultSet rs = preparedStatement.executeQuery();
-            if(rs.next()) {
-                final long lastChange = rs.getLong("lastChange");
                 String gender = rs.getString("gender");
+                String petName = rs.getString("petName");
+                final boolean isMarried = rs.getBoolean("isMarried");
+                final boolean isEngaged = rs.getBoolean("isEngaged");
                 if(gender == null) {
                     gender = "UNSPECIFIED";
                 } else {
@@ -289,159 +246,66 @@ public class SQLStore extends Store {
                 if(engagedTo == null) {
                     engagedTo = "";
                 }
-                final boolean isMarried = rs.getBoolean("isMarried");
-                final boolean isEngaged = rs.getBoolean("isEngaged");
-                final SocialPlayer socialPlayer = new SocialPlayer(name);
+
+                final SocialPlayer socialPlayer = new SocialPlayer(uuid);
+                socialPlayer.setGender(new Gender(gender));
                 socialPlayer.setEngaged(isEngaged);
                 socialPlayer.setEngagedTo(engagedTo);
                 socialPlayer.setMarried(isMarried);
                 socialPlayer.setMarriedTo(marriedTo);
-                socialPlayer.setGender(new Gender(gender));
-                socialPlayer.setPetName(rs.getString("pet_name"));
+                socialPlayer.setPetName(petName);
                 return socialPlayer;
             }
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
-        create(name);
-        return new SocialPlayer(name);
+        create(uuid);
+        return new SocialPlayer(uuid);
     }
     
     public List<String> getSocialPlayers() {
         final Connection conn = getConnection();
         final List<String> socialPlayers = new ArrayList<>();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name FROM SocialCore");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT uuid FROM SocialCore");
             final ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                socialPlayers.add(rs.getString("name"));
+                socialPlayers.add(rs.getString("uuid"));
             }
         } catch(final Exception e) {
             e.printStackTrace();
         }
         return socialPlayers;
     }
-    
-    /*public String getRace(String name) {
-        Connection conn = getConnection();
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT race FROM SocialCore WHERE name = ?");
-            preparedStatement.setString(1,name);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                String race = rs.getString("race");
-                if (race == null || race.equals(""))
-                    return null;
-                return rs.getString("race");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return null;
-    }*/
-    public void create(final String name) {
+
+    public void create(final String uuid) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore (name,race) VALUES(?,?)");
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, "DEFAULT");
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore (uuid) VALUES(?)");
+            preparedStatement.setString(1, uuid);
             preparedStatement.execute();
-        } catch(final SQLException ignored) {
+        } catch(final SQLException e) {
+            e.printStackTrace();
         }
     }
-    
-    /*public void setRace(String name, String race) {
-        Connection conn = getConnection();
-        try {
-            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET race = ? WHERE name = ?");
-            preparedStatement.setString(1, race);
-            preparedStatement.setString(2, name);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }*/
-    /*public void setLastRaceChange(String name, long time) {
-		Connection conn = getConnection();
-		try {
-			PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET lastChange = ? WHERE name = ?");
-			preparedStatement.setLong(1, time);
-			preparedStatement.setString(2, name);
-			preparedStatement.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
-	} */
+
     public void syncSocialPlayer(final SocialPlayer socialPlayer) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET race = ?, lastChange = ?, gender = ?, marriedTo = ?, engagedTo = ?, isMarried = ?, isEngaged = ?,pet_name = ? WHERE name = ?");
-            String race = "";
-            long lastRace = 5L;
-            preparedStatement.setString(1, race);
-            preparedStatement.setLong(2, lastRace);
-            preparedStatement.setString(3, socialPlayer.getGender().getName());
-            preparedStatement.setString(4, socialPlayer.getMarriedTo());
-            preparedStatement.setString(5, socialPlayer.getEngagedTo());
-            preparedStatement.setBoolean(6, socialPlayer.isMarried());
-            preparedStatement.setBoolean(7, socialPlayer.isEngaged());
-            preparedStatement.setString(8, socialPlayer.getPetName());
-            preparedStatement.setString(9, socialPlayer.getPlayerName());
+            final PreparedStatement preparedStatement = conn.prepareStatement("UPDATE SocialCore SET gender = ?, marriedTo = ?, engagedTo = ?, isMarried = ?, isEngaged = ?,petName = ? WHERE uuid = ?");
+            preparedStatement.setString(1, socialPlayer.getGender().getName());
+            preparedStatement.setString(2, socialPlayer.getMarriedTo());
+            preparedStatement.setString(3, socialPlayer.getEngagedTo());
+            preparedStatement.setBoolean(4, socialPlayer.isMarried());
+            preparedStatement.setBoolean(5, socialPlayer.isEngaged());
+            preparedStatement.setString(6, socialPlayer.getPetName());
+            preparedStatement.setString(7, socialPlayer.getUUID());
             preparedStatement.execute();
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
-    
-    public Marriage getMarriage(final SocialPlayer husband, final SocialPlayer wife) {
-        final Marriage marriage = new Marriage(husband, wife);
-        final String marriageName = husband.getPlayerName() + Marriage.NAME_DELIMITER + wife.getPlayerName();
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_marriages WHERE name = ?");
-            preparedStatement.setString(1, marriageName);
-            final ResultSet rs = preparedStatement.executeQuery();
-            if(rs.next()) {
-                marriage.setDate(rs.getString("date"));
-                marriage.setPriest(rs.getString("priest"));
-            }
-        } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return marriage;
-    }
-    
-    public void saveMarriage(final Marriage marriage) {
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_marriages (name,husband,wife,priest,date) values(?,?,?,?,?)");
-            preparedStatement.setString(1, marriage.getName());
-            preparedStatement.setString(2, marriage.getSpouse1().getPlayerName());
-            preparedStatement.setString(3, marriage.getSpouse2().getPlayerName());
-            preparedStatement.setString(4, marriage.getPriest());
-            preparedStatement.setString(5, marriage.getDate());
-            preparedStatement.execute();
-        } catch(final Exception ignored) {
-        }
-    }
-    
-    public void saveMarriage(final Marriage marriage, final boolean debug) {
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_marriages (name,husband,wife,priest,date) values(?,?,?,?,?)");
-            preparedStatement.setString(1, marriage.getName());
-            preparedStatement.setString(2, marriage.getSpouse1().getPlayerName());
-            preparedStatement.setString(3, marriage.getSpouse2().getPlayerName());
-            preparedStatement.setString(4, marriage.getPriest());
-            preparedStatement.setString(5, marriage.getDate());
-            preparedStatement.execute();
-        } catch(final Exception e) {
-            if(debug) {
-                e.printStackTrace();
-            }
-        }
-    }
-    
+
     public int getGenderStats(String genderName) {
         int genderCount = 14;
         final Connection conn = getConnection();
@@ -458,27 +322,76 @@ public class SQLStore extends Store {
         return genderCount;
     }
 
+    public Marriage getMarriage(final SocialPlayer spouse1, final SocialPlayer spouse2) {
+        final Marriage marriage = new Marriage(spouse1, spouse2);
+        final String marriageName = marriage.getName();
+        final Connection conn = getConnection();
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_marriages WHERE id = ?");
+            preparedStatement.setString(1, marriageName);
+            final ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) {
+                marriage.setDate(rs.getString("date"));
+                marriage.setPriest(rs.getString("marriedBy"));
+            }
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return marriage;
+    }
+    
+    public void saveMarriage(final Marriage marriage) {
+        final Connection conn = getConnection();
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_marriages (id,spouse1,spouse2,date,marriedBy) values(?,?,?,?,?)");
+            preparedStatement.setString(1, marriage.getName());
+            preparedStatement.setString(2, marriage.getSpouse1().getUUID());
+            preparedStatement.setString(3, marriage.getSpouse2().getUUID());
+            preparedStatement.setString(4, marriage.getDate());
+            preparedStatement.setString(5, marriage.getPriest());
+            preparedStatement.execute();
+        } catch(final Exception ignored) {
+        }
+    }
+    
+    public void saveMarriage(final Marriage marriage, final boolean debug) {
+        final Connection conn = getConnection();
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_marriages (id,spouse1,spouse2,date,marriedBy) values(?,?,?,?,?)");
+            preparedStatement.setString(1, marriage.getName());
+            preparedStatement.setString(2, marriage.getSpouse1().getUUID());
+            preparedStatement.setString(3, marriage.getSpouse2().getUUID());
+            preparedStatement.setString(4, marriage.getDate());
+            preparedStatement.setString(5, marriage.getPriest());
+            preparedStatement.execute();
+        } catch(final Exception e) {
+            if(debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public List<String> getAllMarriageNames() {
         final List<String> marriageNames = new ArrayList<>();
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name FROM SocialCore_marriages");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM SocialCore_marriages");
             final ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                marriageNames.add(rs.getString("name"));
+                marriageNames.add(rs.getString("id"));
             }
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return marriageNames;
     }
     
     public Engagement getEngagement(final SocialPlayer husband, final SocialPlayer wife) {
         final Engagement engagement = new Engagement(husband, wife);
-        final String engagementName = husband.getPlayerName() + Marriage.NAME_DELIMITER + wife.getPlayerName();
+        final String engagementName = engagement.getName();
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_engagements WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_engagements WHERE id = ?");
             preparedStatement.setString(1, engagementName);
             final ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
@@ -486,7 +399,7 @@ public class SQLStore extends Store {
                 engagement.setTime(rs.getLong("time"));
             }
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return engagement;
     }
@@ -494,10 +407,10 @@ public class SQLStore extends Store {
     public void saveEngagement(final Engagement engagement) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_engagements (name, husband, wife, date, time) values(?,?,?,?,?)");
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_engagements (id, spouse1, spouse2, date, time) values(?,?,?,?,?)");
             preparedStatement.setString(1, engagement.getName());
-            preparedStatement.setString(2, engagement.getFutureSpouse1().getPlayerName());
-            preparedStatement.setString(3, engagement.getFutureSpouse2().getPlayerName());
+            preparedStatement.setString(2, engagement.getFutureSpouse1().getUUID());
+            preparedStatement.setString(3, engagement.getFutureSpouse2().getUUID());
             preparedStatement.setString(4, engagement.getDate());
             preparedStatement.setLong(5, engagement.getTime());
             preparedStatement.execute();
@@ -509,23 +422,23 @@ public class SQLStore extends Store {
         final List<String> engagementNames = new ArrayList<>();
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name FROM SocialCore_engagements");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM SocialCore_engagements");
             final ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                engagementNames.add(rs.getString("name"));
+                engagementNames.add(rs.getString("id"));
             }
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return engagementNames;
     }
     
     public Divorce getDivorce(final SocialPlayer husband, final SocialPlayer wife) {
         final Divorce divorce = new Divorce(husband, wife);
-        final String divorceName = husband.getPlayerName() + Marriage.NAME_DELIMITER + wife.getPlayerName();
+        final String divorceName = divorce.getName();
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_divorces WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM SocialCore_divorces WHERE id = ?");
             preparedStatement.setString(1, divorceName);
             final ResultSet rs = preparedStatement.executeQuery();
             if(rs.next()) {
@@ -533,7 +446,7 @@ public class SQLStore extends Store {
                 divorce.setFiledBy(rs.getString("filedBy"));
             }
         } catch(final SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return divorce;
     }
@@ -541,10 +454,10 @@ public class SQLStore extends Store {
     public void saveDivorce(final Divorce divorce) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_divorces (name, husband, wife, date, filedby) values(?,?,?,?,?)");
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore_divorces (id, spouse1, spouse2, date, filedby) values(?,?,?,?,?)");
             preparedStatement.setString(1, divorce.getName());
-            preparedStatement.setString(2, divorce.getExSpouse1().getPlayerName());
-            preparedStatement.setString(3, divorce.getExSpouse2().getPlayerName());
+            preparedStatement.setString(2, divorce.getExSpouse1().getUUID());
+            preparedStatement.setString(3, divorce.getExSpouse2().getUUID());
             preparedStatement.setString(4, divorce.getDate());
             preparedStatement.setString(5, divorce.getFiledBy());
             preparedStatement.execute();
@@ -557,10 +470,10 @@ public class SQLStore extends Store {
         final List<String> divorceNames = new ArrayList<>();
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name FROM SocialCore_divorces");
+            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT id FROM SocialCore_divorces");
             final ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
-                divorceNames.add(rs.getString("name"));
+                divorceNames.add(rs.getString("id"));
             }
         } catch(final SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -571,7 +484,7 @@ public class SQLStore extends Store {
     public void deleteDivorce(final Divorce d) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_divorces WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_divorces WHERE id = ?");
             preparedStatement.setString(1, d.getName());
             preparedStatement.execute();
         } catch(final Exception ignored) {
@@ -581,7 +494,7 @@ public class SQLStore extends Store {
     public void deleteDivorce(final String s) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_divorces WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_divorces WHERE id = ?");
             preparedStatement.setString(1, s);
             preparedStatement.execute();
         } catch(final Exception ignored) {
@@ -591,7 +504,7 @@ public class SQLStore extends Store {
     public void deleteMarriage(final Marriage m) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_marriages WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_marriages WHERE id = ?");
             preparedStatement.setString(1, m.getName());
             preparedStatement.execute();
         } catch(final Exception ignored) {
@@ -601,7 +514,7 @@ public class SQLStore extends Store {
     public void deleteMarriage(final String m) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_marriages WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_marriages WHERE id = ?");
             preparedStatement.setString(1, m);
             preparedStatement.execute();
         } catch(final Exception ignored) {
@@ -611,7 +524,7 @@ public class SQLStore extends Store {
     public void deleteEngagement(final Engagement e) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_engagements WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_engagements WHERE id = ?");
             preparedStatement.setString(1, e.getName());
             preparedStatement.execute();
         } catch(final Exception ignored) {
@@ -621,93 +534,10 @@ public class SQLStore extends Store {
     public void deleteEngagement(final String e) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_engagements WHERE name = ?");
+            final PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM SocialCore_engagements WHERE id = ?");
             preparedStatement.setString(1, e);
             preparedStatement.execute();
         } catch(final Exception ignored) {
-        }
-    }
-    
-    public void fixEngagements() {
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name, gender, engagedTo FROM SocialCore WHERE isEngaged=1");
-            final ResultSet rs = preparedStatement.executeQuery();
-            @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-            final Collection<String> peopleCovered = new ArrayList<>();
-            while(rs.next()) {
-                final String name = rs.getString("name");
-                final String engagedTo = rs.getString("engagedTo");
-                final String genderString = rs.getString("gender");
-                final Gender gender = new Gender(genderString);
-                Engagement engagement = null;
-                if(gender.getName().equalsIgnoreCase("MALE")) {
-                    final SocialPlayer husband = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer wife = plugin.save.getSocialPlayer(engagedTo);
-                    if(husband != null && wife != null) {
-                        engagement = new Engagement(husband, wife);
-                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
-                        engagement.setDate(dateBuilder);
-                    }
-                } else {
-                    final SocialPlayer wife = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer husband = plugin.save.getSocialPlayer(engagedTo);
-                    if(husband != null && wife != null) {
-                        engagement = new Engagement(husband, wife);
-                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
-                        engagement.setDate(dateBuilder);
-                    }
-                }
-                if(engagement != null) {
-                    saveEngagement(engagement);
-                }
-            }
-        } catch(final Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void fixMarriages() {
-        final Connection conn = getConnection();
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("SELECT name, gender, marriedTo FROM SocialCore WHERE isMarried=1");
-            final ResultSet rs = preparedStatement.executeQuery();
-            final Collection<String> peopleCovered = new ArrayList<>();
-            while(rs.next()) {
-                final String name = rs.getString("name");
-                final String marriedTo = rs.getString("marriedTo");
-                final String genderString = rs.getString("gender");
-                final Gender gender = new Gender(genderString);
-                Marriage marriage = null;
-                if(gender.getName().equalsIgnoreCase("MALE")) {
-                    final SocialPlayer husband = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer wife = plugin.save.getSocialPlayer(marriedTo);
-                    if(husband != null && wife != null) {
-                        marriage = new Marriage(husband, wife);
-                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
-                        marriage.setDate(dateBuilder);
-                        marriage.setPriest("Unknown");
-                    }
-                } else {
-                    final SocialPlayer wife = plugin.save.getSocialPlayer(name);
-                    final SocialPlayer husband = plugin.save.getSocialPlayer(marriedTo);
-                    if(husband != null && wife != null) {
-                        marriage = new Marriage(husband, wife);
-                        final String dateBuilder = getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
-                        marriage.setDate(dateBuilder);
-                        marriage.setPriest("Unknown");
-                    }
-                }
-                if(marriage != null) {
-                    if(!peopleCovered.contains(marriage.getSpouse2()) && !peopleCovered.contains(marriage.getSpouse1())) {
-                        saveMarriage(marriage, true);
-                        peopleCovered.add(marriedTo);
-                        peopleCovered.add(name);
-                    }
-                }
-            }
-        } catch(final Exception e) {
-            e.printStackTrace();
         }
     }
 }

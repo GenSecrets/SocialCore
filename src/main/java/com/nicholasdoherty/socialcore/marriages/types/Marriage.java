@@ -29,7 +29,7 @@ public class Marriage {
 	
 	//concatenated marriage
 	public String getName(){
-		return spouse1.getPlayerName()+NAME_DELIMITER+spouse2.getPlayerName();
+		return spouse1.getUUID() + NAME_DELIMITER + spouse2.getUUID();
 	}
 	
 	//setters and getters

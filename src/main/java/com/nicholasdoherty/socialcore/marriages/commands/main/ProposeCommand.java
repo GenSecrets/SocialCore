@@ -51,8 +51,8 @@ public class ProposeCommand extends BaseCommand {
                 return;
             }
 
-            final SocialPlayer proposeTo = sc.save.getSocialPlayer(player.getName());
-            final SocialPlayer proposeFrom = sc.save.getSocialPlayer(p.getName());
+            final SocialPlayer proposeTo = sc.save.getSocialPlayer(player.getUniqueId().toString());
+            final SocialPlayer proposeFrom = sc.save.getSocialPlayer(p.getUniqueId().toString());
             for(final String divorceName : sc.save.getAllDivorces()) {
                 if(divorceName.contains(proposeFrom.getPlayerName()) || divorceName.contains(proposeTo.getPlayerName())) {
                     final Divorce divorce = sc.save.getDivorce(divorceName);
@@ -175,7 +175,7 @@ public class ProposeCommand extends BaseCommand {
         }
 
         Player player = (Player)sender;
-        final SocialPlayer proposeFrom = sc.save.getSocialPlayer(player.getName());
+        final SocialPlayer proposeFrom = sc.save.getSocialPlayer(player.getUniqueId().toString());
         if(sc.marriages.getStatus(proposeFrom) == Marriages.Status.ProposeFrom) {
             final SocialPlayer proposeTo = sc.marriages.proposals.get(proposeFrom);
             final Player p = Bukkit.getServer().getPlayer(proposeTo.getPlayerName());
@@ -197,7 +197,7 @@ public class ProposeCommand extends BaseCommand {
         }
 
         Player player = (Player)sender;
-        final SocialPlayer proposeFrom = sc.save.getSocialPlayer(player.getName());
+        final SocialPlayer proposeFrom = sc.save.getSocialPlayer(player.getUniqueId().toString());
         if(sc.marriages.getStatus(proposeFrom) == Marriages.Status.ProposeFrom) {
             final SocialPlayer proposeTo = sc.marriages.proposals.get(proposeFrom);
             final Player p = Bukkit.getServer().getPlayer(proposeTo.getPlayerName());

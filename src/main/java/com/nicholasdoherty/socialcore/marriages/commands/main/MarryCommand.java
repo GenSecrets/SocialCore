@@ -51,8 +51,8 @@ public class MarryCommand extends BaseCommand {
                 return;
             }
 
-            final SocialPlayer player1 = sc.save.getSocialPlayer(args[0]);
-            final SocialPlayer player2 = sc.save.getSocialPlayer(args[1]);
+            final SocialPlayer player1 = sc.save.getSocialPlayer(p1.getUniqueId().toString());
+            final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getUniqueId().toString());
 
             if(!player1.isEngaged()) {
                 player.sendMessage(ChatColor.RED + player1.getPlayerName() + " is not engaged!");

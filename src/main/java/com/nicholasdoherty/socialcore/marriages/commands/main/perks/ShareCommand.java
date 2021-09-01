@@ -29,7 +29,7 @@ public class ShareCommand extends BaseCommand {
         }
 
         final Player player = (Player) sender;
-        final SocialPlayer sp1 = sc.save.getSocialPlayer(player.getName());
+        final SocialPlayer sp1 = sc.save.getSocialPlayer(player.getUniqueId().toString());
 
         final Player player2 = Bukkit.getServer().getPlayer(sp1.getMarriedTo());
 

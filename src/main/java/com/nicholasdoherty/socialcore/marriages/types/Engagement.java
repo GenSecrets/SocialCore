@@ -30,7 +30,7 @@ public class Engagement {
 	
 	//congat marriage
 	public String getName(){
-		return futureSpouse1.getPlayerName()+NAME_DELIMITER+futureSpouse2.getPlayerName();
+		return futureSpouse1.getUUID()+NAME_DELIMITER+futureSpouse2.getUUID();
 	}
 	
 	//setters and getters

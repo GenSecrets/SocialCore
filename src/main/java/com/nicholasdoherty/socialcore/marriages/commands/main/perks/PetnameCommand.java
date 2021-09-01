@@ -35,7 +35,7 @@ public class PetnameCommand extends BaseCommand {
         }
 
         Player p = (Player) sender;
-        SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getName());
+        SocialPlayer socialPlayer = sc.save.getSocialPlayer(p.getUniqueId().toString());
         if (!socialPlayer.isMarried() || socialPlayer.getMarriedTo() == null) {
             p.sendMessage(ChatColor.RED + "You are not married.");
             return;

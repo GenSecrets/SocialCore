@@ -36,7 +36,7 @@ public class Divorce {
 	
 	
 	public String getName() {
-		return exSpouse1.getPlayerName()+NAME_DELIMITER+exSpouse2.getPlayerName();
+		return exSpouse1.getUUID()+NAME_DELIMITER+exSpouse2.getUUID();
 	}
 	
 	
