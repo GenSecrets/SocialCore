@@ -12,7 +12,9 @@ import java.util.List;
 public class MarriagesUtil {
     public static int[] paginateLists(int page, String[] args, List<String> listItems){
         if(args.length == 1) {
-            page = Integer.parseInt(args[0]) - 1;
+            page = 0;
+        } else if (args.length == 2) {
+            page = Integer.parseInt(args[1]) - 1;
         }
         if(page < 0) {
             page = 0;
