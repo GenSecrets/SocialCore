@@ -280,9 +280,16 @@ public class SQLStore extends Store {
     public void create(final String uuid) {
         final Connection conn = getConnection();
         try {
-            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore (uuid) VALUES(?)");
+            final PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO SocialCore (uuid, gender, marriedTo, engagedTo, isMarried, isEngaged, petName) VALUES(?,?,?,?,?,?,?)");
             preparedStatement.setString(1, uuid);
+            preparedStatement.setString(2, "UNSPECIFIED");
+            preparedStatement.setString(3, "");
+            preparedStatement.setString(4, "");
+            preparedStatement.setBoolean(5, false);
+            preparedStatement.setBoolean(6, false);
+            preparedStatement.setString(7, "");
             preparedStatement.execute();
+            SocialCore.plugin.genders.loadGenderCache();
         } catch(final SQLException e) {
             e.printStackTrace();
         }
@@ -309,7 +316,8 @@ public class SQLStore extends Store {
         int genderCount = 14;
         final Connection conn = getConnection();
         try {
-            final String sql = "SELECT COUNT(gender) AS 'rows' FROM SocialCore WHERE gender LIKE '"+genderName+"'";
+
+            final String sql = "SELECT COUNT(gender) AS 'rows' FROM SocialCore WHERE gender LIKE '"+genderName.toUpperCase()+"'";
             final PreparedStatement preparedStatement = conn.prepareStatement(sql);
             final ResultSet rs = preparedStatement.executeQuery();
             rs.next();
