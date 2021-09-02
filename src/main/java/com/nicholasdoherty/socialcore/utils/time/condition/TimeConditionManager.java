@@ -1,6 +1,6 @@
-package com.nicholasdoherty.socialcore.time.condition;
+package com.nicholasdoherty.socialcore.utils.time.condition;
 
-import com.nicholasdoherty.socialcore.time.Clock;
+import com.nicholasdoherty.socialcore.utils.time.Clock;
 
 import java.util.ArrayList;
 import java.util.HashSet;

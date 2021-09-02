@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.time;
+package com.nicholasdoherty.socialcore.utils.time;
 
 /**
  * Created by john on 8/6/14.

@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.time.condition;
+package com.nicholasdoherty.socialcore.utils.time.condition;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 

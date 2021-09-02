@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.time;
+package com.nicholasdoherty.socialcore.utils.time;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.voxmc.voxlib.util.ConfigAccessor;
