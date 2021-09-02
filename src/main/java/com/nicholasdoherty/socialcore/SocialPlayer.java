@@ -1,9 +1,8 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.genders.Gender;
+import com.nicholasdoherty.socialcore.components.genders.Gender;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 

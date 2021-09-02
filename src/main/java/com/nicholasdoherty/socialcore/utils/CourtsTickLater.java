@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.utils;
 
-import com.nicholasdoherty.socialcore.courts.Courts;
+import com.nicholasdoherty.socialcore.components.courts.Courts;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**

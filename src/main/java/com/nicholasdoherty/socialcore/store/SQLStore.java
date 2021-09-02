@@ -2,11 +2,10 @@ package com.nicholasdoherty.socialcore.store;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
-import com.nicholasdoherty.socialcore.genders.Gender;
-import com.nicholasdoherty.socialcore.marriages.types.Divorce;
-import com.nicholasdoherty.socialcore.marriages.types.Engagement;
-import com.nicholasdoherty.socialcore.marriages.types.Marriage;
-import org.bukkit.Bukkit;
+import com.nicholasdoherty.socialcore.components.genders.Gender;
+import com.nicholasdoherty.socialcore.components.marriages.types.Divorce;
+import com.nicholasdoherty.socialcore.components.marriages.types.Engagement;
+import com.nicholasdoherty.socialcore.components.marriages.types.Marriage;
 
 import java.sql.*;
 import java.util.*;

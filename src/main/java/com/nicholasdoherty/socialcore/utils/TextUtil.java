@@ -1,6 +1,6 @@
 package com.nicholasdoherty.socialcore.utils;
 
-import com.nicholasdoherty.socialcore.courts.objects.Citizen;
+import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 
 import java.text.DateFormat;
 import java.text.ParseException;

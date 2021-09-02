@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.utils;
 
 import com.nicholasdoherty.socialcore.SocialPlayer;
-import com.nicholasdoherty.socialcore.marriages.types.Marriage;
+import com.nicholasdoherty.socialcore.components.marriages.types.Marriage;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.SimpleDateFormat;
