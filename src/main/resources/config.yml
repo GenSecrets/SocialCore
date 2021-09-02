@@ -10,6 +10,8 @@ components:
   enable-marriages: true
   enable-genders: true
   enable-welcomer: true
+  enable-emotes: true
+  enable-ignore: true
 # Message colors!
 colors:
  error: '&c'
