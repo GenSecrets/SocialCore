@@ -1,12 +1,12 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.components.courts.CourtTeleportationHandler;
+import com.nicholasdoherty.socialcore.listeners.CourtTeleportationHandler;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.inputlib.InputLib;
 import com.nicholasdoherty.socialcore.components.emotes.EmoteCommand;
 import com.nicholasdoherty.socialcore.components.emotes.Emotes;
 import com.nicholasdoherty.socialcore.components.emotes.ForceEmoteCommand;
-import com.nicholasdoherty.socialcore.components.genders.GenderCommandHandler;
+import com.nicholasdoherty.socialcore.components.genders.GenderCommand;
 import com.nicholasdoherty.socialcore.components.genders.Genders;
 import com.nicholasdoherty.socialcore.components.marriages.*;
 import com.nicholasdoherty.socialcore.components.marriages.commands.*;
@@ -14,6 +14,7 @@ import com.nicholasdoherty.socialcore.components.marriages.commands.main.*;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.perks.PetnameCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.perks.ShareCommand;
 import com.nicholasdoherty.socialcore.components.marriages.configs.MarriageConfig;
+import com.nicholasdoherty.socialcore.listeners.SCListener;
 import com.nicholasdoherty.socialcore.store.SQLStore;
 import com.nicholasdoherty.socialcore.utils.time.Clock;
 import com.nicholasdoherty.socialcore.utils.time.condition.TimeConditionManager;
@@ -227,7 +228,7 @@ public class SocialCore extends JavaPlugin {
         if(getConfig().getBoolean("components.enable-genders")){
             configs.setupGendersConfig();
             genders = new Genders(this);
-            manager.registerCommand(new GenderCommandHandler(this, genders));
+            manager.registerCommand(new GenderCommand(this, genders));
             manager.getCommandCompletions().registerAsyncCompletion("genderNames", n -> genders.getGenderNames());
             getLogger().info("[SC Handler] Created genders handler");
             isGendersEnabled = true;
