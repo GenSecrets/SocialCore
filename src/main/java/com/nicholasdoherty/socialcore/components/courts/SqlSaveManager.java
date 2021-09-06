@@ -907,4 +907,11 @@ public class SqlSaveManager {
             final ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 final Case caze = resultSetToCase(resultSet);
-              
+                cases.add(caze);
+            }
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return cases;
+    }
+}
