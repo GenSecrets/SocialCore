@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 import co.aikar.commands.PaperCommandManager;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class SocialCore extends JavaPlugin {
 
     // PLUGIN BASE
@@ -99,7 +98,6 @@ public class SocialCore extends JavaPlugin {
     public static PaperCommandManager getCommandManager() { return manager; }
     public static SocialCore getPlugin() { return plugin; }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
         getLogger().info("[START] Initializing SocialCore...");
