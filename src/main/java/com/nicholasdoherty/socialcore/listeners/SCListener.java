@@ -1,5 +1,7 @@
-package com.nicholasdoherty.socialcore;
+package com.nicholasdoherty.socialcore.listeners;
 
+import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -248,7 +250,7 @@ public class SCListener implements Listener {
         }
         
         final Player p2 = (Player) e.getRightClicked();
-        if(p2 == null) {
+        if(p2 == null || !sc.getServer().getOnlinePlayers().contains(p2)) {
             return;
         }
         

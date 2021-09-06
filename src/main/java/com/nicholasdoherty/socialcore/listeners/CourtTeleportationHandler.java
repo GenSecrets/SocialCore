@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.components.courts;
+package com.nicholasdoherty.socialcore.listeners;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import org.bukkit.ChatColor;
