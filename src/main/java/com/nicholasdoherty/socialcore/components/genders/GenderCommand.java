@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 @CommandAlias("gender")
 @CommandPermission("socialcore.genders")
 @Description("Assign yourself or another player to a gender!")
-public class GenderCommandHandler extends BaseCommand {
+public class GenderCommand extends BaseCommand {
     
     private final SocialCore sc;
     private final Genders genders;
     
-    public GenderCommandHandler(final SocialCore sc, Genders genderHandler) {
+    public GenderCommand(final SocialCore sc, Genders genderHandler) {
         this.sc = sc;
         this.genders = genderHandler;
     }
