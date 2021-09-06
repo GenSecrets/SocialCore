@@ -71,7 +71,6 @@ public class SocialCore extends JavaPlugin {
     public boolean isCourtsEnabled = true;
     public boolean isEmotesEnabled = true;
     public boolean isGendersEnabled = true;
-    public boolean isIgnoreEnabled = true;
     public boolean isMarriagesEnabled = true;
     public boolean isWelcomerEnabled = true;
     public FileConfiguration courtsConfig;
@@ -141,7 +140,6 @@ public class SocialCore extends JavaPlugin {
         setupGenders();
         setupWelcomer();
         setupEmotes();
-        setupIgnore();
         getLogger().info("Finished creating handlers!");
         getLogger().info("Finished setting up all components and commands!");
 
@@ -258,17 +256,6 @@ public class SocialCore extends JavaPlugin {
             isEmotesEnabled = true;
         } else {
             isEmotesEnabled = false;
-        }
-    }
-
-    private void setupIgnore(){
-        if(getConfig().getBoolean("components.enable-ignore")){
-            //ignore = new Ignore(this);
-            //manager.registerCommand(new IgnoreCommandHandler(this));
-            getLogger().info("[SC Handler] Created ignore handler");
-            isIgnoreEnabled = true;
-        } else {
-            isIgnoreEnabled = false;
         }
     }
 
