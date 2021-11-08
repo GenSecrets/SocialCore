@@ -12,22 +12,22 @@ import java.util.Map;
  * Created by john on 2/15/15.
  */
 public class CourtsLangManager {
-    private Map<CaseCategory, String> caseCategoryDescriptions = new HashMap<>();
-    private String confirmNominateSelfMessage;
-    private String citizenSubmitted,citizenCooldown,citizenCaseAlreadyFiled,citizenCaseBookEmpty,citizenConfirm,citizenGaveCourtDocuments;
-    private String secretaryRequestingMessage,secretaryRequestedConfirmMessage, secretaryRequestedAcceptMessage, secretaryRequestedDenyMessage,
+    final private Map<CaseCategory, String> caseCategoryDescriptions = new HashMap<>();
+    final private String confirmNominateSelfMessage;
+    final private String citizenSubmitted,citizenCooldown,citizenCaseAlreadyFiled,citizenCaseBookEmpty,citizenConfirm,citizenGaveCourtDocuments;
+    final private String secretaryRequestingMessage,secretaryRequestedConfirmMessage, secretaryRequestedAcceptMessage, secretaryRequestedDenyMessage,
         secretaryRequesterAcceptedMessage,secretaryRequesterDeniedMessage,secretaryRemovedMessage,notSecretaryMessage;
-    private String judgePrefix,courtSessionPlaintiffPrefix,courtSessionDefendantPrefix;
-    private String electionNoSlots;
-    private String courtNotInSession;
+    final private String judgePrefix,courtSessionPlaintiffPrefix,courtSessionDefendantPrefix;
+    final private String electionNoSlots;
+    final private String courtNotInSession;
     private String policyIcon;
     public CourtsLangManager(ConfigurationSection langSection) {
         if (langSection.contains("case-category-descriptions")) {
-            ConfigurationSection caseCategoryDescripitonsSection = langSection.getConfigurationSection("case-category-descriptions");
-            for (String key : caseCategoryDescripitonsSection.getKeys(false)) {
+            ConfigurationSection caseCategoryDescriptionsSection = langSection.getConfigurationSection("case-category-descriptions");
+            for (String key : caseCategoryDescriptionsSection.getKeys(false)) {
                 CaseCategory caseCategory = CaseCategory.fromString(key.toUpperCase());
                 if (caseCategory != null) {
-                    caseCategoryDescriptions.put(caseCategory, VoxStringUtils.color(caseCategoryDescripitonsSection.getString(key)));
+                    caseCategoryDescriptions.put(caseCategory, VoxStringUtils.color(caseCategoryDescriptionsSection.getString(key)));
                 }
             }
         }

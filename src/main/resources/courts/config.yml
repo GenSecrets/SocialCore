@@ -73,13 +73,15 @@ court-session-end-effects:
       volume: 3
       pitch: 0.4
 judge-permissions:
-  - "towny.chat.justice"
-  - "sc.title.judge"
-  - "magicspells.cast.judgeinspect"
-  - "magicspells.cast.royal-gavel"
-  - "lwc.shownotices"
+ #  - "towny.chat.justice"
+ #  - "sc.title.judge"
+ #  - "magicspells.cast.judgeinspect"
+ #  - "magicspells.cast.royal-gavel"
+ #  - "lwc.shownotices"
+  - "group.judge"
 secretary-permissions:
-  - "towny.chat.justice"
+ #  - "towny.chat.justice"
+  - "group.secretary"
 case-filing-cost: 100
 category-config:
   abandoned:
@@ -88,15 +90,17 @@ court-rooms:
   test-courtroom:
     effects-location: "new_vb,-1458,103,433"
     judge-chair-location: "new_vb,-1460,103,433"
+    sec-desk-location: "new_vb,-1460,103,433"
     region: court
     tp-location: "new_vb,-1394,105,433"
 fine-payment-interval: 5m
 fine-payment-percentage: 15
 judge-approval-rate-demoted: 40
 judge-approval-rate-required: 60
-judge-inactive-days-allowed: 15
-judge-required-votes: 300
-max-judges: 4
+judge-inactive-days-allowed: 14
+judge-term-days-allowed: 180
+judge-required-votes: 115
+max-judges: 12
 max-judge-offline-time: 14d
 citizen-stall-document-cooldown: 5m
 nominate-cost: 10000
@@ -111,6 +115,11 @@ notifier:
     judge-inactive-judge:
       base-message: "&6[&eCourt&6]&c You were inactive for too many days and have been removed from office"
       timeout: 3d
+    judge-term-reached-all:
+      base-message: "&6[&eCourt&6]&e Judge {judge-name}&c's term limit of 6 months has been reached and they have been removed from office"
+    judge-term-reached:
+      base-message: "&6[&eCourt&6]&c Your term limit of 6 months has been reached and you have been removed from office"
+      timeout: 180d
     judge-nominated-all:
       base-message: "&6[&eCourt&6]&e {player-name}&a has been nominated to become a judge. Type &6/election&a to review the candidates."
     judge-nominated-self:

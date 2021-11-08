@@ -30,7 +30,7 @@ public class GrantCivilMarriageItem implements ClickItem{
         return new ItemStackBuilder(Material.GOLD_INGOT).setDurability((short) 2)
                 .setName(ChatColor.GREEN + "Grant Divorce")
                 .addLore(ChatColor.GRAY + "<Left click to grant"
-                        ,ChatColor.GRAY + "divorce between the plaintiff"
+                        ,ChatColor.GRAY + "marriage between the plaintiff"
                         ,ChatColor.GRAY + "and defendant>").toItemStack();
     }
 }

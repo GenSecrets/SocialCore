@@ -43,9 +43,8 @@ public class CourtTeleportationHandler implements Listener {
         }
 
         //Ensure Action is only left or right clicking air
-        if((event.getAction() != Action.RIGHT_CLICK_AIR &&
-                event.getAction() != Action.LEFT_CLICK_AIR) ||
-                event.getClickedBlock() != null){
+        if(event.getAction() != Action.LEFT_CLICK_AIR ||
+                ((event.getAction() == Action.RIGHT_CLICK_AIR) && (event.useItemInHand() == Event.Result.DEFAULT))) {
             return;
         }
 
@@ -58,15 +57,14 @@ public class CourtTeleportationHandler implements Listener {
             // If display name contains "&9Building Permit"
             if(name.contains(ChatColor.BLUE + "Building Permit")){
                 teleportBuildingPermit(event, main);
+                event.setCancelled(true);
 
 
             // If display name contains "&4Court Case Document"
             //   and the Action is left clicking the air only
-            } else if(name.contains(ChatColor.DARK_RED + "Court Case Document") &&
-                    event.useItemInHand() != Event.Result.DEFAULT) {
-                event.getPlayer().sendMessage(event.getAction().name()); // DEBUG
-                event.getPlayer().sendMessage(event.useItemInHand().name()); // DEBUG
+            } else if(name.contains(ChatColor.DARK_RED + "Court Case")) {
                 teleportCourtCase(event, main);
+                event.setCancelled(true);
             }
         }
     }

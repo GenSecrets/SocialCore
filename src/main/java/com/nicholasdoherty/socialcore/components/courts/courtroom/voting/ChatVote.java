@@ -19,10 +19,10 @@ public abstract class ChatVote extends Vote {
         super(map);
     }
     
-    public synchronized void onChat(final Player p, final String text) {
+    public synchronized boolean onChat(final Player p, final String text) {
         final UUID uuid = p.getUniqueId();
         if(!canVote(uuid)) {
-            return;
+            return false;
         }
         boolean changing = false;
         if(hasVoted(uuid)) {
@@ -30,7 +30,7 @@ public abstract class ChatVote extends Vote {
         }
         final VoteValue approves = voteValue(text);
         if(approves == null) {
-            return;
+            return false;
         }
         vote(uuid, approves);
         final String message = message(approves, changing);
@@ -40,6 +40,7 @@ public abstract class ChatVote extends Vote {
             }
             p.sendMessage(message);
         });
+        return true;
     }
     
     public abstract String message(VoteValue voteValue, boolean changing);

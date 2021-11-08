@@ -3,8 +3,9 @@ package com.nicholasdoherty.socialcore.components.marriages.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.nicholasdoherty.socialcore.SocialCore;
-import com.nicholasdoherty.socialcore.components.marriages.commands.admin.*;
+import com.nicholasdoherty.socialcore.components.marriages.commands.admin.DivorceCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.admin.MarryCommand;
+import com.nicholasdoherty.socialcore.components.marriages.commands.admin.ReloadCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.admin.UnEngageCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.listall.Engagements;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.listall.Marriages;
@@ -49,15 +50,15 @@ public class MarriageCommand extends BaseCommand {
                     (player.hasPermission("socialcore.marriage.listall.marriages"))) {
                 player.sendMessage(aqua + "/marriage listall <marriages/engagements>"+gray+" - "+yellow+ "View all marriages or engagements on the server");
             }
-            if(player.hasPermission("sc.propose")) {
+            if(player.hasPermission("socialcore.marriage.propose")) {
                 player.sendMessage(aqua + "/propose <player name> - propose to another player");
                 player.sendMessage(aqua + "/propose accept - accept a proposal");
                 player.sendMessage(aqua + "/propose deny - deny a proposal");
             }
-            if(player.hasPermission("sc.unengage")) {
+            if(player.hasPermission("socialcore.marriage.unengage")) {
                 player.sendMessage(aqua + "/unengage - To unengage your partner");
             }
-            if(player.hasPermission("sc.priest")) {
+            if(player.hasPermission("socialcore.marriage.priest")) {
                 player.sendMessage(aqua + "/marry <player1> <player2> - marry two players");
             }
             if(player.hasPermission("socialcore.marriage.admin")) {

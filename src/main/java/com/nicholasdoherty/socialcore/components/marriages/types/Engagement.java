@@ -3,16 +3,25 @@ package com.nicholasdoherty.socialcore.components.marriages.types;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 
+import java.util.UUID;
+
 public class Engagement {
 	
 	public static final String NAME_DELIMITER = "+&";
 	
 	private SocialPlayer futureSpouse1;
 	private SocialPlayer futureSpouse2;
+	private UUID proposed;
 	private String date;
 	private long time;
 	
 	public Engagement(SocialPlayer futureSpouse1, SocialPlayer futureSpouse2) {
+		this.futureSpouse1 = futureSpouse1;
+		this.futureSpouse2 = futureSpouse2;
+	}
+
+	public Engagement(SocialPlayer futureSpouse1, SocialPlayer futureSpouse2, UUID proposed) {
+		this.proposed = proposed;
 		this.futureSpouse1 = futureSpouse1;
 		this.futureSpouse2 = futureSpouse2;
 	}
@@ -39,6 +48,18 @@ public class Engagement {
 	}
 	public void setFutureSpouse1(SocialPlayer futureSpouse1) {
 		this.futureSpouse1 = futureSpouse1;
+	}
+
+	public UUID getWhoProposed() {
+		return proposed;
+	}
+
+	public void setWhoProposed(UUID proposed) {
+		this.proposed = proposed;
+	}
+
+	public void setWhoProposed(String proposed) {
+		this.proposed = UUID.fromString(proposed);
 	}
 	public SocialPlayer getFutureSpouse2() {
 		return futureSpouse2;

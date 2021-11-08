@@ -1,9 +1,11 @@
 package com.nicholasdoherty.socialcore.components.genders;
 
+import com.nicholasdoherty.socialcore.SocialCore;
+import com.nicholasdoherty.socialcore.SocialPlayer;
+import org.bukkit.Bukkit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.nicholasdoherty.socialcore.SocialCore;
 import java.util.List;
 
 public class Genders {
@@ -33,14 +35,36 @@ public class Genders {
 
 	public void loadGenderCache() {
 		sc.getLogger().info("[SC Handler] Counting cache for genders...");
-		for (Gender gender : getGenders()) {
-			if (!gender.getName().equalsIgnoreCase("UNSPECIFIED")) {
-				genderCountCache.put(gender.getName(), sc.save.getCountGender(gender.getName().toUpperCase()));
-			} else {
-				int count = sc.save.getCountGender("UNSPECIFIED");
-				genderCountCache.put(gender.getName(), count);
+		Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+			HashMap<String, Integer> genderCounts = sc.save.getGenderCounts(getGenderNames());
+			for (Gender gender : getGenders()) {
+				genderCountCache.put(gender.getName(), genderCounts.get(gender.getName().toUpperCase()));
 			}
-		}
+		});
+	}
+
+	public void adjustGenderCache(SocialPlayer sp, boolean increase) {
+		sc.getLogger().info("[SC Handler] Updating cache for genders...");
+		int genderCount = genderCountCache.get(sp.getGender().getName());
+		if(increase)
+			genderCount++;
+		if(!increase)
+			genderCount--;
+
+		genderCountCache.remove(sp.getGender().getName());
+		genderCountCache.put(sp.getGender().getName(), genderCount);
+	}
+
+	public void adjustGenderCache(Gender gender, boolean increase) {
+		sc.getLogger().info("[SC Handler] Updating cache for genders...");
+		int genderCount = genderCountCache.get(gender.getName());
+		if(increase)
+			genderCount++;
+		if(!increase)
+			genderCount--;
+
+		genderCountCache.remove(gender.getName());
+		genderCountCache.put(gender.getName(), genderCount);
 	}
 
 	public HashMap<String,Gender> getAwaitingConfirmation() {

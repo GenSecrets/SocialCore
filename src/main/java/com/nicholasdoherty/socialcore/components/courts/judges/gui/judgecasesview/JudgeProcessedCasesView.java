@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.courts.judges.gui.judgecasesview;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseManager;
@@ -35,8 +36,9 @@ public class JudgeProcessedCasesView extends PaginatedItemView {
         unprocessed.addAll(caseManager.casesByStatus(CaseStatus.COURT_DATE_SET));
         List<ClickItem> secCaseClickItems = new ArrayList<>();
         for (Case caze : unprocessed) {
-            secCaseClickItems.add(new JudgeCaseClickItem(caze,this));
+            secCaseClickItems.add(new JudgeCaseClickItem(caze, this));
         }
+
         this.setPaginatedItems(secCaseClickItems);
     }
 

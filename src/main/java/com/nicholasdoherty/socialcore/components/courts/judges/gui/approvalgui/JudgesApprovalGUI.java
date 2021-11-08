@@ -1,7 +1,7 @@
 package com.nicholasdoherty.socialcore.components.courts.judges.gui.approvalgui;
 
-import com.voxmc.voxlib.gui.InventoryGUI;
 import com.nicholasdoherty.socialcore.components.courts.judges.JudgeManager;
+import com.voxmc.voxlib.gui.InventoryGUI;
 import org.bukkit.entity.Player;
 
 /**

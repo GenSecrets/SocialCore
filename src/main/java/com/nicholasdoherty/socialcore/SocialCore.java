@@ -1,25 +1,29 @@
 package com.nicholasdoherty.socialcore;
 
-import com.nicholasdoherty.socialcore.listeners.CourtTeleportationHandler;
+import co.aikar.commands.PaperCommandManager;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.inputlib.InputLib;
 import com.nicholasdoherty.socialcore.components.emotes.EmoteCommand;
 import com.nicholasdoherty.socialcore.components.emotes.Emotes;
+import com.nicholasdoherty.socialcore.components.emotes.FakeEmoteCommand;
 import com.nicholasdoherty.socialcore.components.emotes.ForceEmoteCommand;
 import com.nicholasdoherty.socialcore.components.genders.GenderCommand;
 import com.nicholasdoherty.socialcore.components.genders.Genders;
-import com.nicholasdoherty.socialcore.components.marriages.*;
-import com.nicholasdoherty.socialcore.components.marriages.commands.*;
-import com.nicholasdoherty.socialcore.components.marriages.commands.main.*;
+import com.nicholasdoherty.socialcore.components.marriages.Marriages;
+import com.nicholasdoherty.socialcore.components.marriages.commands.MarriageCommand;
+import com.nicholasdoherty.socialcore.components.marriages.commands.main.MarryCommand;
+import com.nicholasdoherty.socialcore.components.marriages.commands.main.ProposeCommand;
+import com.nicholasdoherty.socialcore.components.marriages.commands.main.UnEngageCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.perks.PetnameCommand;
 import com.nicholasdoherty.socialcore.components.marriages.commands.main.perks.ShareCommand;
 import com.nicholasdoherty.socialcore.components.marriages.configs.MarriageConfig;
+import com.nicholasdoherty.socialcore.components.welcomer.WelcomeCommandHandler;
+import com.nicholasdoherty.socialcore.listeners.CourtTeleportationHandler;
 import com.nicholasdoherty.socialcore.listeners.SCListener;
 import com.nicholasdoherty.socialcore.store.SQLStore;
+import com.nicholasdoherty.socialcore.utils.ColorUtil;
 import com.nicholasdoherty.socialcore.utils.time.Clock;
 import com.nicholasdoherty.socialcore.utils.time.condition.TimeConditionManager;
-import com.nicholasdoherty.socialcore.utils.ColorUtil;
-import com.nicholasdoherty.socialcore.components.welcomer.WelcomeCommandHandler;
 import com.voxmc.voxlib.gui.InventoryGUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,10 +32,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import co.aikar.commands.PaperCommandManager;
 
 public class SocialCore extends JavaPlugin {
 
@@ -55,7 +57,6 @@ public class SocialCore extends JavaPlugin {
     private Courts courts;
     public Marriages marriages;
     public Emotes emotes;
-    public List<String> whitelistPiggybackWorlds;
     public String welcomerLastJoined;
 
     // Plugin settings
@@ -95,7 +96,7 @@ public class SocialCore extends JavaPlugin {
     public FileConfiguration getMarriagesConfig() { return this.marriagesConfig; }
     public FileConfiguration getGendersConfig() { return this.gendersConfig; }
     public FileConfiguration getWelcomerConfig() { return this.welcomerConfig; }
-    public static PaperCommandManager getCommandManager() { return manager; }
+    public PaperCommandManager getCommandManager() { return manager; }
     public static SocialCore getPlugin() { return plugin; }
 
     @Override
@@ -204,7 +205,6 @@ public class SocialCore extends JavaPlugin {
         if(getConfig().getBoolean("components.enable-marriages")){
             configs.setupMarriagesConfig();
             marriages = new Marriages(this);
-            whitelistPiggybackWorlds = getConfig().getStringList("piggyback-world-whitelist");
             getLogger().info("[SC Handler] Created piggyback whitelist config");
             manager.registerCommand(new MarriageCommand(plugin));
             manager.registerCommand(new ProposeCommand(plugin));
@@ -250,9 +250,10 @@ public class SocialCore extends JavaPlugin {
         if(getConfig().getBoolean("components.enable-emotes")){
             emotes = new Emotes(this);
             manager.registerCommand(new ForceEmoteCommand(this));
+            manager.registerCommand(new FakeEmoteCommand(this));
             manager.registerCommand(new EmoteCommand(this));
             getLogger().info("[SC Handler] Created emotes handler");
-            isEmotesEnabled = true;
+            isEmotesEnabled = emotes.isEnabled;
         } else {
             isEmotesEnabled = false;
         }

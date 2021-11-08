@@ -5,6 +5,7 @@ import com.voxmc.voxlib.util.ConfigAccessor;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class Clock {
     private List<Runnable> run = new ArrayList<Runnable>();
     public Clock(SocialCore plugin) {
         this.plugin = plugin;
-        file = new ConfigAccessor(plugin, "time.yml");
+        file = new ConfigAccessor(plugin, "courts" + File.separator + "time.yml");
         file.saveDefaultConfig();
         file.reloadConfig();
         time = file.getConfig().getLong("time");

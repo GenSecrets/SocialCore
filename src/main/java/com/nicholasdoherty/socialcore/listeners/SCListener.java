@@ -2,7 +2,6 @@ package com.nicholasdoherty.socialcore.listeners;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
-import com.nicholasdoherty.socialcore.libraries.ParticleEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,7 +23,9 @@ public class SCListener implements Listener {
     public static Map<String, String> riding = new HashMap<>();
     SocialCore sc;
     Set<UUID> onPiggyBackCooldown = new HashSet<>();
-    
+    Set<UUID> onExpMsgCooldown = new HashSet<>();
+    Set<UUID> onFoodMsgCooldown = new HashSet<>();
+
     public SCListener(final SocialCore sc) {
         this.sc = sc;
     }
@@ -62,7 +63,7 @@ public class SCListener implements Listener {
         if(sp.getMarriedTo() == null) {
             return;
         }
-        final OfflinePlayer marriedToP = sc.getServer().getOfflinePlayer(sp.getMarriedTo());
+        final OfflinePlayer marriedToP = Bukkit.getOfflinePlayer(UUID.fromString(sp.getMarriedTo()));
         if(marriedToP.getPlayer() != null && marriedToP.isOnline() && sp.getPetName() != null) {
             marriedToP.getPlayer().sendMessage(SocialCore.plugin.marriageConfig.petNameLoginMessage.replace("{pet-name}", sp.getPetName()));
         }
@@ -81,7 +82,7 @@ public class SCListener implements Listener {
         if(socialPlayer.getMarriedTo() == null) {
             return;
         }
-        final OfflinePlayer marriedToP = sc.getServer().getOfflinePlayer(socialPlayer.getMarriedTo());
+        final OfflinePlayer marriedToP = Bukkit.getOfflinePlayer(UUID.fromString(socialPlayer.getMarriedTo()));
         if(marriedToP.getPlayer() != null && marriedToP.isOnline() && socialPlayer.getPetName() != null) {
             marriedToP.getPlayer().sendMessage(SocialCore.plugin.marriageConfig.petNameLogoutMessage.replace("{pet-name}", socialPlayer.getPetName()));
         }
@@ -102,7 +103,7 @@ public class SCListener implements Listener {
         if(!sp.isMarried()) {
             return;
         }
-        final OfflinePlayer op = Bukkit.getOfflinePlayer(sp.getMarriedTo());
+        final OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(sp.getMarriedTo()));
         if(op.getPlayer() == null) {
             return;
         }
@@ -112,7 +113,7 @@ public class SCListener implements Listener {
         }
         
         // If either partner in the marriage has the permission node, let it happen.
-        if(p1.hasPermission("sc.marriage.sharefood") || p2.hasPermission("sc.marriage.sharefood")) {
+        if(p1.hasPermission("socialcore.marriage.perks.sharefood") || p2.hasPermission("socialcore.marriage.perks.sharefood")) {
             final double distanceSquared = sc.marriageConfig.maxConsumeDistanceSquared;
             if(p2.getWorld().getName().equalsIgnoreCase(p1.getWorld().getName()) && p1.getLocation().distanceSquared(p2.getLocation()) <= distanceSquared) {
                 if(p1.hasMetadata("last-ate")) {
@@ -124,9 +125,27 @@ public class SCListener implements Listener {
                 e.setCancelled(true);
                 p1.setFoodLevel(p1.getFoodLevel() + changeby / 2);
                 p2.setFoodLevel(p2.getFoodLevel() + changeby / 2);
-                p1.sendMessage(ChatColor.AQUA + "You shared your food with " + p2.getName());
-                
-                p2.sendMessage(ChatColor.AQUA + p1.getName() + " shared their food with you");
+                if(!onFoodMsgCooldown.contains(p1.getUniqueId())){
+                    p1.sendMessage(ChatColor.AQUA + "You shared your food with " + p2.getName() + " since they are nearby.");
+                    onFoodMsgCooldown.add(p1.getUniqueId());
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            onFoodMsgCooldown.remove(p1.getUniqueId());
+                        }
+                    }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.foodMessageCooldown);
+                }
+
+                if(!onFoodMsgCooldown.contains(p2.getUniqueId())){
+                    p2.sendMessage(ChatColor.AQUA + p1.getName() + " is nearby and has shared their food with you.");
+                    onFoodMsgCooldown.add(p2.getUniqueId());
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            onFoodMsgCooldown.remove(p2.getUniqueId());
+                        }
+                    }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.foodMessageCooldown);
+                }
             }
         }
     }
@@ -143,7 +162,7 @@ public class SCListener implements Listener {
             
             final SocialPlayer sp = sc.save.getSocialPlayer(p.getUniqueId().toString());
             if(sp.isMarried()) {
-                OfflinePlayer op = sc.getServer().getOfflinePlayer(sp.getMarriedTo());
+                OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(sp.getMarriedTo()));
                 if(op.getPlayer() == null){
                     return;
                 }
@@ -158,8 +177,36 @@ public class SCListener implements Listener {
                 if(p.getLocation().distanceSquared(p2.getLocation()) > Math.pow(sc.marriageConfig.coupleXPDistance, 2)) {
                     return;
                 }
-                
+
                 p2.giveExp(e.getAmount());
+                if(!onExpMsgCooldown.contains(p.getUniqueId())){
+                    p.sendMessage(ChatColor.AQUA + "You shared your exp with " + p2.getName() + " since they are nearby.");
+                    onExpMsgCooldown.add(p.getUniqueId());
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            onExpMsgCooldown.remove(p.getUniqueId());
+                        }
+                    }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.expMessageCooldown);
+                }
+
+                if(!onExpMsgCooldown.contains(p2.getUniqueId())){
+                    p2.sendMessage(ChatColor.AQUA + p.getName() + " is nearby and has shared their exp with you.");
+                    onExpMsgCooldown.add(p2.getUniqueId());
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            onExpMsgCooldown.remove(p2.getUniqueId());
+                        }
+                    }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.expMessageCooldown);
+                }
+                onExpMsgCooldown.add(p2.getUniqueId());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        onExpMsgCooldown.remove(p2.getUniqueId());
+                    }
+                }.runTaskLater(SocialCore.plugin, SocialCore.plugin.marriageConfig.expMessageCooldown);
             }
         }
     }
@@ -265,11 +312,11 @@ public class SCListener implements Listener {
             final SocialPlayer player2 = sc.save.getSocialPlayer(p2.getUniqueId().toString());
             
             if(player1.getMarriedTo().equalsIgnoreCase(player2.getPlayerName())) {
-                if(!p.hasPermission("sc.marriage.piggyback") && !p2.hasPermission("sc.marriage.piggyback")) {
+                if(!p.hasPermission("socialcore.marriage.perks.piggyback") && !p2.hasPermission("socialcore.marriage.perks.piggyback")) {
                     p.sendMessage(ChatColor.RED + "Your couple does not have permission to piggyback.");
                     return;
                 }
-                if(!SocialCore.plugin.whitelistPiggybackWorlds.contains(p.getWorld().getName())) {
+                if(!sc.marriageConfig.whitelistPiggybackWorlds.contains(p.getWorld().getName())) {
                     p.sendMessage(ChatColor.RED + "Piggybacking is disabled in your world.");
                     return;
                 }
@@ -306,7 +353,8 @@ public class SCListener implements Listener {
             final Vector v2 = p2.getEyeLocation().toVector();
             final Vector v3 = v.midpoint(v2);
             final Location loc = v3.toLocation(p.getWorld());
-            ParticleEffect.HEART.display(loc, 1, 1, 1, 5, 20);
+            p.getWorld().spawnParticle(Particle.HEART, loc, 1, 1, 1, 5, 20);
+            //ParticleEffect.HEART.display(loc, 1, 1, 1, 5, 20);
             p.sendMessage(ChatColor.AQUA + "You have kissed " + p2.getName() + '.');
             p2.sendMessage(ChatColor.AQUA + p.getName() + " kisses you.");
             final int healAmount = sc.marriageConfig.kissHealAmount;

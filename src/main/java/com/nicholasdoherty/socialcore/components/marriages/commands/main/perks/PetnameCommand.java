@@ -30,6 +30,7 @@ public class PetnameCommand extends BaseCommand {
             return;
         }
         if (strings.length != 1) {
+            sender.sendMessage(ChatColor.RED + "Petnames can only be one word! '/petname YourPetNameHere");
             return;
         }
 
@@ -39,11 +40,13 @@ public class PetnameCommand extends BaseCommand {
             p.sendMessage(ChatColor.RED + "You are not married.");
             return;
         }
+
         SocialPlayer marriedTo = sc.save.getSocialPlayer(socialPlayer.getMarriedTo());
         if (marriedTo == null) {
             p.sendMessage(ChatColor.RED + "Could not find your SO, notify admins.");
             return;
         }
+
         String petName = strings[0];
         if (petName.length() > 29) {
             p.sendMessage(ChatColor.RED + "Pet name too long");

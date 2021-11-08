@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore.components.courts.stall;
 
 import com.nicholasdoherty.socialcore.components.courts.Courts;
-import com.voxmc.voxlib.util.ConfigAccessor;
 import com.voxmc.voxlib.VLocation;
+import com.voxmc.voxlib.util.ConfigAccessor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 

@@ -4,15 +4,6 @@ import com.nicholasdoherty.socialcore.SocialCore;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.gestern.gringotts.Gringotts;
-import org.gestern.gringotts.GringottsAccount;
-import org.gestern.gringotts.accountholder.AccountHolder;
-import org.gestern.gringotts.api.Eco;
-import org.gestern.gringotts.api.PlayerAccount;
-import org.gestern.gringotts.api.TransactionResult;
-import org.gestern.gringotts.api.impl.GringottsEco;
 import org.gestern.gringotts.api.impl.VaultConnector;
 
 public class VaultUtil {

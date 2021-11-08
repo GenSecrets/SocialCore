@@ -18,10 +18,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -33,48 +30,48 @@ import java.util.Map;
  */
 @CommandAlias("%emote")
 public class Emote extends BaseCommand {
-	String name,commmand,permission,emoteString,emoteStringTargetted,usage,emoteStringMale,permissionToBypassTargetBlacklist,emoteStringFemale,emoteStringMaleTargetted,emoteStringFemaleTargeted;
-	boolean canBetargeted;
-	boolean canBeUntargeted;
+	String name,command,permission,emoteString,emoteStringTargeted,usage,emoteStringMale,permissionToBypassTargetBlacklist,emoteStringFemale,emoteStringMaleTargeted,emoteStringFemaleTargeted;
+	boolean canBeTargeted;
+	boolean canBeUnTargeted;
 	List<String> targetBlacklist;
 	Map<String, Long> onCooldown = new HashMap<>();
 	private final EmoteExtender extender = new EmoteExtender();
 
-	public Emote(String name, String commmand, String permission, String emoteString, String emoteStringTargetted, String usage, String emoteStringMale, String emoteStringFemale, String emoteStringMaleTargetted, String emoteStringFemaleTargeted, List<String> targetBlacklist, String permissionToBypassTargetBlacklist) {
+	public Emote(String name, String command, String permission, String emoteString, String emoteStringTargeted, String usage, String emoteStringMale, String emoteStringFemale, String emoteStringMaleTargeted, String emoteStringFemaleTargeted, List<String> targetBlacklist, String permissionToBypassTargetBlacklist) {
 		this.name = name;
-		this.commmand = commmand;
+		this.command = command;
 		this.permission = permission;
 		this.emoteString = emoteString;
-		this.emoteStringTargetted = emoteStringTargetted;
+		this.emoteStringTargeted = emoteStringTargeted;
 		this.usage = usage;
 		this.emoteStringMale = emoteStringMale;
 		this.emoteStringFemale = emoteStringFemale;
-		this.emoteStringMaleTargetted = emoteStringMaleTargetted;
+		this.emoteStringMaleTargeted = emoteStringMaleTargeted;
 		this.emoteStringFemaleTargeted = emoteStringFemaleTargeted;
-		if (emoteStringTargetted != null || (emoteStringMaleTargetted != null && emoteStringFemaleTargeted !=null))
-			canBetargeted = true;
+		if (emoteStringTargeted != null || (emoteStringMaleTargeted != null && emoteStringFemaleTargeted !=null))
+			canBeTargeted = true;
 		if (emoteString != null || (emoteStringFemale != null && emoteStringMale != null))
-			canBeUntargeted =true;
+			canBeUnTargeted =true;
 		this.targetBlacklist = targetBlacklist;
 		this.permissionToBypassTargetBlacklist = permissionToBypassTargetBlacklist;
 	}
 
-	public Emote(String name, String commmand, String permission, String emoteString, String usage) {
+	public Emote(String name, String command, String permission, String emoteString, String usage) {
 		this.name = name;
-		this.commmand = commmand;
+		this.command = command;
 		this.permission = permission;
 		this.emoteString = emoteString;
 		this.usage = usage;
-		canBetargeted = false;
-		canBeUntargeted = true;
+		canBeTargeted = false;
+		canBeUnTargeted = true;
 	}
 
 	public boolean isCanBeUntargeted() {
-		return canBeUntargeted;
+		return canBeUnTargeted;
 	}
 
 	public boolean isCanBetargeted() {
-		return canBetargeted;
+		return canBeTargeted;
 	}
 
 	public String getEmoteStringMale() {
@@ -86,7 +83,7 @@ public class Emote extends BaseCommand {
 	}
 
 	public String getEmoteStringMaleTargetted() {
-		return emoteStringMaleTargetted;
+		return emoteStringMaleTargeted;
 	}
 
 	public String getEmoteStringFemaleTargeted() {
@@ -98,7 +95,7 @@ public class Emote extends BaseCommand {
 	}
 
 	public String getCommmand() {
-		return commmand;
+		return command;
 	}
 
 	public String getPermission() {
@@ -110,7 +107,7 @@ public class Emote extends BaseCommand {
 	}
 
 	public String getEmoteStringTargetted() {
-		return emoteStringTargetted;
+		return emoteStringTargeted;
 	}
 
 	@Default
@@ -217,14 +214,14 @@ public class Emote extends BaseCommand {
 		SocialPlayer sender = SocialCore.plugin.save.getSocialPlayer(p.getUniqueId().toString());
 		SocialPlayer reciv = SocialCore.plugin.save.getSocialPlayer(targeted.getUniqueId().toString());
 		Gender gender = new Gender("UNSPECIFIED");
-		String message = emoteStringTargetted;
+		String message = emoteStringTargeted;
 		if (!sender.getGender().getName().equalsIgnoreCase("unspecified") || !sender.getGender().getName().equalsIgnoreCase("null"))
 			gender = sender.getGender();
 		else if (!reciv.getGender().equals(gender))
 			gender = reciv.getGender();
-		if (sender.getGender().getName().equalsIgnoreCase("male") && emoteStringMaleTargetted != null)
-			message = emoteStringMaleTargetted;
-		else if (!sender.getGender().getName().equalsIgnoreCase("female") && emoteStringFemaleTargeted != null)
+		if (sender.getGender().getName().equalsIgnoreCase("male") && emoteStringMaleTargeted != null)
+			message = emoteStringMaleTargeted;
+		else if (sender.getGender().getName().equalsIgnoreCase("female") && emoteStringFemaleTargeted != null)
 			message = emoteStringFemaleTargeted;
 		message = ChatColor.translateAlternateColorCodes('&', message);
 		message = message.replace("<player>", p.getName());
@@ -263,5 +260,12 @@ public class Emote extends BaseCommand {
 
 	public String getUsage() {
 		return usage;
+	}
+
+	public static class EmoteComparator implements Comparator<Emote> {
+		@Override
+		public int compare(Emote o1, Emote o2) {
+			return o1.getName().compareTo(o2.getName());
+		}
 	}
 }

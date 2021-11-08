@@ -2,8 +2,8 @@ package com.nicholasdoherty.socialcore.components.marriages.configs;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.marriages.MarriageGem;
-import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.ColorUtil;
+import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -20,12 +20,15 @@ public class MarriageConfig {
     public int kissingCooldown;
     public int kissHealAmount;
     public long piggybackCooldown;
+    public long expMessageCooldown;
+    public long foodMessageCooldown;
     public double maxConsumeDistanceSquared;
     public double maxShareInventDistanceSquared;
     public String petNameLoginMessage;
     public String petNameLogoutMessage;
     public String petNameChangeSpouseMessage;
     public long divorceProposeCooldownMillis = 1000 * 60 * 60 * 24 * 2;
+    public List<String> whitelistPiggybackWorlds;
     SocialCore sc;
     
     public MarriageConfig(final SocialCore sc) {
@@ -57,8 +60,11 @@ public class MarriageConfig {
         kissHealAmount = sc.getMarriagesConfig().getInt("perks.kissing.kiss-heal-amount");
         // SHARING
         piggybackCooldown = VoxTimeUnit.getTicks(sc.getMarriagesConfig().getString("perks.piggyback.piggyback-cooldown"));
-        maxConsumeDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.food-share-distance", 5), 2);
-        maxShareInventDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.inventory-share-distance", 5), 2);
+        whitelistPiggybackWorlds = sc.getMarriagesConfig().getStringList("perks.piggyback.piggyback-world-whitelist");
+        foodMessageCooldown = VoxTimeUnit.getTicks(sc.getMarriagesConfig().getString("perks.sharing.food.food-message-cooldown"));
+        maxConsumeDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.food.food-share-distance", 5), 2);
+        maxShareInventDistanceSquared = Math.pow(sc.getMarriagesConfig().getDouble("perks.sharing.inv.inventory-share-distance", 5), 2);
+        expMessageCooldown = VoxTimeUnit.getTicks(sc.getMarriagesConfig().getString("perks.sharing.xp.xp-message-cooldown"));
         coupleXPDistance = sc.getMarriagesConfig().getInt("perks.sharing.xp.xp-bonus-distance");
         coupleXPPercent = sc.getMarriagesConfig().getDouble("perks.sharing.xp.xp-bonus-percent");
         // PETNAMES

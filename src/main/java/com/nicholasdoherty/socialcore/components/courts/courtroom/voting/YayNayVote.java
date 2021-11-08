@@ -18,6 +18,7 @@ public class YayNayVote extends ChatVote implements ConfigurationSerializable {
     public String summarizeResults() {
         int approvals = approvals();
         int disapprovals = disapprovals();
+        int abstains = abstains();
         if (votes() == 0) {
             return ChatColor.RED + "The vote resulted in a tie because nobody voted";
         }
@@ -50,13 +51,13 @@ public class YayNayVote extends ChatVote implements ConfigurationSerializable {
 
     @Override
     public VoteValue voteValue(String text) {
-        if (text.equalsIgnoreCase("yay")) {
+        if (text.equalsIgnoreCase("yay") || text.equalsIgnoreCase("yes") || text.equalsIgnoreCase("y")) {
             return VoteValue.APPROVE;
         }
-        if (text.equalsIgnoreCase("nay")) {
+        if (text.equalsIgnoreCase("nay") || text.equalsIgnoreCase("no") || text.equalsIgnoreCase("n")) {
             return VoteValue.DISAPPROVE;
         }
-        if (text.equalsIgnoreCase("abstain")) {
+        if (text.equalsIgnoreCase("abstain") || text.equalsIgnoreCase("pass")) {
             return VoteValue.ABSTAIN;
         }
         return null;
@@ -64,8 +65,8 @@ public class YayNayVote extends ChatVote implements ConfigurationSerializable {
     @Override
     public String[] helpMessage() {
         String[] helpMessage = {ChatColor.GREEN + "A yay/nay vote has been started",
-                ChatColor.GRAY + "Type " + ChatColor.GREEN + "yay" + ChatColor.GRAY + " to vote for the argument, ",
-                ChatColor.RED + "nay" + ChatColor.GRAY +" to vote against the argument, or " + ChatColor.YELLOW + "abstain to not vote or withdraw your vote."};
+                ChatColor.GRAY + "Type " + ChatColor.GREEN + "yay" + ChatColor.GRAY + " or " + ChatColor.GREEN + "yes" + ChatColor.GRAY + " to vote for the argument(plaintiff), ",
+                ChatColor.RED + "nay" + ChatColor.GRAY + " or " + ChatColor.RED + "no" + ChatColor.GRAY +" to vote against the argument, or " + ChatColor.YELLOW + "abstain " + ChatColor.GRAY + "to not vote or withdraw your vote."};
         return helpMessage;
     }
     public YayNayVote(Map<String, Object> map) {

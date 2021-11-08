@@ -15,15 +15,15 @@ import java.util.Map;
 /**
  * Created by john on 3/29/15.
  */
-public class SexChange implements PostCourtAction, ConfigurationSerializable {
+public class GenderChange implements PostCourtAction, ConfigurationSerializable {
     private int cazeId;
     private Gender gender;
 
-    public SexChange(Case caze, Gender gender) {
+    public GenderChange(Case caze, Gender gender) {
         this.cazeId = caze.getId();
         this.gender = gender;
     }
-    public SexChange(Map<String, Object> map) {
+    public GenderChange(Map<String, Object> map) {
         cazeId = (int) map.get("case-id");
         gender = new Gender((String) map.get("gender"));
     }
@@ -42,7 +42,7 @@ public class SexChange implements PostCourtAction, ConfigurationSerializable {
         if (caze == null)
             return;
         if (caze.getPlantiff() != null) {
-            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getName());
+            SocialPlayer socialPlayer = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getUuid().toString());
             if (socialPlayer != null) {
                 socialPlayer.setGender(gender);
                 SocialCore.plugin.save.saveSocialPlayer(socialPlayer);
@@ -52,6 +52,6 @@ public class SexChange implements PostCourtAction, ConfigurationSerializable {
 
     @Override
     public String prettyDescription() {
-        return ChatColor.GREEN + "Changes plaintiff's gender to " + gender.toString();
+        return ChatColor.GREEN + "Changes plaintiff's gender to " + gender.getName();
     }
 }

@@ -1,13 +1,13 @@
 package com.nicholasdoherty.socialcore.components.marriages;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.components.marriages.types.Divorce;
 import com.nicholasdoherty.socialcore.components.marriages.types.Engagement;
 import com.nicholasdoherty.socialcore.components.marriages.types.Marriage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Marriages {

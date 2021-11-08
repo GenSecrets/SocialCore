@@ -1,7 +1,9 @@
 package com.nicholasdoherty.socialcore.components.courts.cases;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,10 +15,12 @@ import java.util.*;
  */
 @SuppressWarnings({"TypeMayBeWeakened", "unused"})
 public class CaseManager{
-    private final Map<Integer,Case> cases;
+    private Map<Integer,Case> cases;
+    private final Courts courts;
 
-    public CaseManager(final List<Case> cases) {
+    public CaseManager(final List<Case> cases, Courts courts) {
         this.cases = new HashMap<>();
+        this.courts = courts;
         for (final Case caze : cases) {
             this.cases.put(caze.getId(),caze);
         }
@@ -38,6 +42,7 @@ public class CaseManager{
         return cases.get(id);
     }
     public List<Case> casesByStatus(final CaseStatus caseStatus) {
+        //updateCases();
         final List<Case> unprocessed = new ArrayList<>();
         for (final Case caze : cases.values()) {
             if (caze.getCaseStatus() == caseStatus) {
@@ -47,6 +52,7 @@ public class CaseManager{
         return unprocessed;
     }
     public List<Case> involvedCases(final UUID uuid, final boolean includeJudge) {
+        //updateCases();
         final List<Case> cases = new ArrayList<>();
         for (final Case caze : futureScheduledCases()) {
             final CourtDate courtDate = caze.getCourtDate();
@@ -61,6 +67,7 @@ public class CaseManager{
         return cases;
     }
     public List<Case> futureScheduledCases() {
+        //updateCases();
         final List<Case> futureCases = new ArrayList<>();
         for (final Case caze : cases.values()) {
             if (caze.getCourtDate() != null && caze.getCourtDate().getTime() > new Date().getTime()-1000*60*60) {
@@ -70,6 +77,7 @@ public class CaseManager{
         return futureCases;
     }
     public List<Case> allScheduledCases() {
+        //updateCases();
         final List<Case> scheduledCases = new ArrayList<>();
         for (final Case caze : cases.values()) {
             if (caze.getCourtDate() != null) {
@@ -78,8 +86,15 @@ public class CaseManager{
         }
         return scheduledCases;
     }
+    public void updateCases(){
+        this.cases = new HashMap<>();
+        for (final Case caze : courts.getSqlSaveManager().getCases()) {
+            this.cases.put(caze.getId(),caze);
+        }
+    }
     public Case caseByBook(final ItemStack itemInHand) {
-        if (itemInHand != null && itemInHand.getType() == Material.WRITABLE_BOOK && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
+        //updateCases();
+        if (itemInHand != null && itemInHand.getType() == Material.WRITTEN_BOOK && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName()) {
             final String displayName = itemInHand.getItemMeta().getDisplayName();
             if (!displayName.contains(ChatColor.WHITE + "Court Case ")) {
                 return null;
@@ -93,6 +108,7 @@ public class CaseManager{
         return null;
     }
     public void onJudgeDemoted(final Judge judge) {
+        //updateCases();
         for (final Case caze : cases.values()) {
             if (caze.getCaseStatus() == CaseStatus.COURT_DATE_SET && caze.getCourtDate() != null && caze.getCourtDate().getJudge().equals(judge)) {
                 caze.setCourtDate(null);
@@ -110,6 +126,7 @@ public class CaseManager{
     }
 
     public Collection<Case> getCases() {
+        //updateCases();
         return cases.values();
     }
 

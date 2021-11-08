@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.courts.judges.gui.approvalgui;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.inventorygui.gui.clickitems.ApprovalItem;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
@@ -27,20 +28,24 @@ public class JudgeApprovalView extends PaginatedItemView {
     
     @Override
     public void update() {
-        final JudgeManager judgeManager = Courts.getCourts().getJudgeManager();
-        final List<ClickItem> clickItemList = new ArrayList<>();
-        for(final Judge judge : judgeManager.getJudges()) {
-            if(judge != null) {
-                final ClickItem approvalItem = new ApprovalItem(this, judge);
-                clickItemList.add(approvalItem);
+        Bukkit.getScheduler().runTaskAsynchronously(SocialCore.getPlugin(), () -> {
+            final JudgeManager judgeManager = Courts.getCourts().getJudgeManager();
+            final List<ClickItem> clickItemList = new ArrayList<>();
+            for (final Judge judge : judgeManager.getJudges()) {
+                if (judge != null) {
+                    final ClickItem approvalItem = new ApprovalItem(this, judge);
+                        clickItemList.add(approvalItem);
+                }
             }
-        }
-        setPaginatedItems(clickItemList);
-        super.update();
+            Bukkit.getScheduler().runTask(SocialCore.getPlugin(), () -> {
+                setPaginatedItems(clickItemList);
+                super.update();
+            });
+        });
     }
     
     @Override
     public Inventory getBaseInventory() {
-        return Bukkit.createInventory(null, 54, "Judges");
+        return Bukkit.createInventory(null, 54, "Court Officials");
     }
 }

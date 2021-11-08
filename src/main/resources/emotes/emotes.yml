@@ -1,0 +1,15 @@
+emotes:
+  love:
+    command: "/love"
+    permission: "sc.emotes.love"
+    usage: "/love <target>"
+    emote-text: "&3**<player> feels the love**"
+    emote-text-male: "&9**<player> feels the love**"
+    emote-text-female: "&d**<player> feels the love**"
+    emote-text-targeted: "&3**<player> smothers <target> with love**"
+    emote-text-male-targeted: "&9**<player> smothers <target> with love**"
+    emote-text-female-targeted: "&d**<player> smothers <target> with love**"
+    target-blacklist:
+      - latingoddess
+      - Zombiemold
+    permission-to-bypass-target-blacklist: "sc.emotes.love.blacklistbypass"

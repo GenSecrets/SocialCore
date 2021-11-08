@@ -5,14 +5,11 @@ import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.cases.*;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.PostCourtAction;
-import com.nicholasdoherty.socialcore.components.courts.courtroom.actions.SexChange;
+import com.nicholasdoherty.socialcore.components.courts.courtroom.actions.GenderChange;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.PostCourtActionHolder;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.items.ModifyPostActionsClickItem;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.items.PostCourtActionsClickItem;
 import com.nicholasdoherty.socialcore.components.courts.inventorygui.gui.clickitems.CaseInfoBookClickItem;
-import com.voxmc.voxlib.gui.ClickItem;
-import com.voxmc.voxlib.gui.clickitems.ChangeViewClickItem;
-import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import com.nicholasdoherty.socialcore.components.courts.inventorygui.gui.clickitems.CaseInfoClickItem;
 import com.nicholasdoherty.socialcore.components.courts.judges.gui.judgecasesview.JudgeProcessedCasesView;
 import com.nicholasdoherty.socialcore.components.courts.judges.gui.judgecasesview.JudgeStallGUI;
@@ -21,6 +18,9 @@ import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.gui.c
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.gui.caseview.SecCaseView;
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.gui.caseview.ThrowoutClickItem;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.clickitems.ChangeViewClickItem;
+import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import com.voxmc.voxlib.util.ItemStackBuilder;
 import com.voxmc.voxlib.util.UUIDUtil;
 import com.voxmc.voxlib.util.VaultUtil;
@@ -62,9 +62,9 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         update();
     }
     public void addPostCourtAction(PostCourtAction postCourtAction) {
-        if (postCourtAction instanceof SexChange) {
+        if (postCourtAction instanceof GenderChange) {
             for (PostCourtAction postCourtAction1 : new HashSet<>(postCourtActions)) {
-                if (postCourtAction1 instanceof SexChange) {
+                if (postCourtAction1 instanceof GenderChange) {
                     postCourtActions.remove(postCourtAction1);
                 }
             }
@@ -87,7 +87,9 @@ public class JudgeCaseView extends PaginatedItemView implements AssignCategoryCl
         caseInfoClickItem = new CaseInfoBookClickItem(caze,this);
         addActiveItem(0, caseInfoClickItem);
         addActiveItem(7, new AssignDefendentClickItem(this,this,caze));
-        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE || caze.getCaseCategory() == CaseCategory.SEX_CHANGE || caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
+        if (caze.getCaseCategory() != null && caze.getCaseCategory() == CaseCategory.DIVORCE ||
+                caze.getCaseCategory() == CaseCategory.GENDER_CHANGE ||
+                caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             addActiveItem(9, new ChangeViewClickItem(new CategorySpecificNoCourtActionsView(this,caze)) {
                 @Override
                 public ItemStack itemstack() {

@@ -1,9 +1,9 @@
 package com.nicholasdoherty.socialcore.components.courts.policies.gui;
 
-import com.voxmc.voxlib.gui.InventoryGUI;
-import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy;
+import com.voxmc.voxlib.gui.InventoryGUI;
+import com.voxmc.voxlib.gui.views.PaginatedItemView;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 

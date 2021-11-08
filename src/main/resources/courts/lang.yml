@@ -16,11 +16,14 @@ vote-status:
   disapproved: "You have disapproved of this policy."
   abstained: "You have not yet voted on this policy."
 case-category-descriptions:
-  ABANDONED: "Cases concerning abandoned houses or towns"
+  GENDER_CHANGE: "When a player wishes to have their gender changed or reset."
   DIVORCE: "Divorce is when a married couple wishes to end their union."
-  OTHER: "Cases which do not fit in any other category"
-  TRESPASSING: "Trespassing involves a player repeatedly entering a player's property even after being asked to leave."
-  CIVIL_MARRIAGE: "When two players wish to be married by a judge, discreetly."
+  CIVIL_MARRIAGE: "When two players wish to be married by a Judge, discreetly without an announcement."
+  ABANDONED: "All types of land claims: abandoned claims, town claims, etc. Judges must ticket previous staff owned land."
+  MAYOR: "Transferring mayor status to another resident of the town when the mayor is inactive."
+  RESIDENT_EVICTION: "Reclaiming an inactive resident's belongings, or kicking an active resident who won't comply."
+  TRESPASSING: "When a player's build(ings) encroach on another player's owned property or town."
+  LAWSUIT: "Cases which are predefined lawsuits or do not fit in any other category."
 citizen-stall:
   case-already-filed: "&6[&eCourt&6]&c Case has already been filed"
   case-book-empty: "&6[&eCourt&6]&c This case book is empty. You need to fill it with the details of your case."

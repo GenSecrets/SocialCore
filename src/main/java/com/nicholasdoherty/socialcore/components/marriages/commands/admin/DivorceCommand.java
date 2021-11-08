@@ -1,31 +1,36 @@
 package com.nicholasdoherty.socialcore.components.marriages.commands.admin;
 
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
 import com.nicholasdoherty.socialcore.components.marriages.types.Divorce;
 import com.nicholasdoherty.socialcore.components.marriages.types.Marriage;
+import com.sk89q.minecraft.util.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class DivorceCommand {
     SocialCore sc;
     public DivorceCommand(SocialCore plugin) { this.sc = plugin; }
 
+    @CommandCompletion("@players")
     @CommandPermission("socialcore.marriage.admin.divorce")
     public void runCommand(Player player, String[] args) {
             if(args.length > 1) {
-                OfflinePlayer op1 = sc.getServer().getOfflinePlayer(args[0]);
-                OfflinePlayer op2 = sc.getServer().getOfflinePlayer(args[1]);
+                OfflinePlayer op1 = sc.getServer().getOfflinePlayer(UUID.fromString(args[1]));
+                OfflinePlayer op2 = sc.getServer().getOfflinePlayer(UUID.fromString(args[2]));
 
-                if(op1.getPlayer() == null || op2.getPlayer() == null){
-                    player.sendMessage("Could not find those players!");
-                    return;
-                }
+                //if(op1.getPlayer() == null || op2.getPlayer() == null){
+                //    player.sendMessage("Could not find those players!");
+                //    return;
+                //}
 
-                final SocialPlayer sp1 = sc.save.getSocialPlayer(op1.getPlayer().getUniqueId().toString());
-                final SocialPlayer sp2 = sc.save.getSocialPlayer(op2.getPlayer().getUniqueId().toString());
+                final SocialPlayer sp1 = sc.save.getSocialPlayer(op1.getUniqueId().toString());
+                final SocialPlayer sp2 = sc.save.getSocialPlayer(op2.getUniqueId().toString());
                 sp1.setEngaged(false);
                 sp1.setEngagedTo("");
                 sp1.setMarried(false);

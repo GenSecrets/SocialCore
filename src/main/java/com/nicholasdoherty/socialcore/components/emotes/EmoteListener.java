@@ -1,3 +1,4 @@
+/*
 package com.nicholasdoherty.socialcore.components.emotes;
 
 import com.nicholasdoherty.socialcore.utils.NearbyAPI;
@@ -19,13 +20,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+*/
 /**
  * Created with IntelliJ IDEA.
  * User: john
  * Date: 11/11/13
  * Time: 23:16
  * To change this template use File | Settings | File Templates.
- */
+ *//*
+
 public class EmoteListener implements Listener {
     SocialCore plugin;
     Emotes emotes;
@@ -150,3 +153,4 @@ public class EmoteListener implements Listener {
         }
     }
 }
+*/

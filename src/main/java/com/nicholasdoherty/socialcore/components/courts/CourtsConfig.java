@@ -4,10 +4,10 @@ import com.nicholasdoherty.socialcore.components.courts.cases.CaseCategory;
 import com.nicholasdoherty.socialcore.components.courts.cases.category.CategoryConfig;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.CourtRoom;
 import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
-import com.voxmc.voxlib.util.ItemUtil;
-import com.voxmc.voxlib.VLocation;
-import com.voxmc.voxlib.util.VoxEffects;
 import com.voxmc.voxlib.EssentialsItem;
+import com.voxmc.voxlib.VLocation;
+import com.voxmc.voxlib.util.ItemUtil;
+import com.voxmc.voxlib.util.VoxEffects;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Created by john on 1/3/15.
  */
 public class CourtsConfig {
-    private int maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeApprovalRateRequired,
+    private int maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeTermLimitDays, judgeApprovalRateRequired,
          judgeApprovalRateDemoted,judgeRequiredVotes,caseFilingCost,silenceLength;
     private long maxJudgeOfflineTicks,autoSaveInterval,finePaymentInterval,citizenStallDocumentCooldown;
     private List<EssentialsItem> processReward,courtVoteReward,judgementReward,sessionReward;
@@ -38,7 +38,7 @@ public class CourtsConfig {
 
 
 
-    public CourtsConfig(int maxJudges, int secretariesPerJudge, int judgeInactiveDaysAllowed, int judgeApprovalRateRequired,
+    public CourtsConfig(int maxJudges, int secretariesPerJudge, int judgeInactiveDaysAllowed, int judgeTermLimitDays, int judgeApprovalRateRequired,
                         int judgeApprovalRateDemoted, int judgeRequiredVotes, int caseFilingCost, List<EssentialsItem> processReward,
                         List<EssentialsItem> courtVoteReward, List<EssentialsItem> judgementReward,VoxEffects silenceCourtEffects,
                         int silenceLength, Map<String, CourtRoom> courtRoomMap, long maxJudgeOfflineTicks, long autoSaveInterval,
@@ -50,6 +50,7 @@ public class CourtsConfig {
         this.maxJudges = maxJudges;
         this.secretariesPerJudge = secretariesPerJudge;
         this.judgeInactiveDaysAllowed = judgeInactiveDaysAllowed;
+        this.judgeTermLimitDays = judgeTermLimitDays;
         this.judgeApprovalRateRequired = judgeApprovalRateRequired;
         this.judgeApprovalRateDemoted = judgeApprovalRateDemoted;
         this.judgeRequiredVotes = judgeRequiredVotes;
@@ -122,6 +123,10 @@ public class CourtsConfig {
 
     public int getJudgeInactiveDaysAllowed() {
         return judgeInactiveDaysAllowed;
+    }
+
+    public int getJudgeTermLimitDays() {
+        return judgeTermLimitDays;
     }
 
     public int getJudgeApprovalRateRequired() {
@@ -212,12 +217,13 @@ public class CourtsConfig {
     public String getDefaultWorld() { return defaultWorld; }
 
     public static CourtsConfig fromConfig(FileConfiguration section) {
-        int maxJudges = section.getInt("max-judges");
-        int secretariesPerJudge = section.getInt("secretaries-per-judge");
-        int judgeInactiveDaysAllowed = section.getInt("judge-inactive-days-allowed");
-        int judgeApprovalRateRequired = section.getInt("judge-approval-rate-required");
-        int judgeApprovalRateDemoted = section.getInt("judge-approval-rate-demoted");
-        int judgeRequiredVotes = section.getInt("judge-required-votes");
+        int maxJudges = section.getInt("max-judges", 12);
+        int secretariesPerJudge = section.getInt("secretaries-per-judge", 2);
+        int judgeInactiveDaysAllowed = section.getInt("judge-inactive-days-allowed", 14);
+        int judgeTermLimitDays = section.getInt("judge-term-days-allowed", 180);
+        int judgeApprovalRateRequired = section.getInt("judge-approval-rate-required", 60);
+        int judgeApprovalRateDemoted = section.getInt("judge-approval-rate-demoted", 40);
+        int judgeRequiredVotes = section.getInt("judge-required-votes", 100);
         ConfigurationSection rewardsSection = section.getConfigurationSection("rewards");
         List<EssentialsItem> processReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("process"));
         List<EssentialsItem> courtVoteReward = ItemUtil.itemsFromSection(rewardsSection.getStringList("court-vote"));
@@ -236,7 +242,8 @@ public class CourtsConfig {
                 VLocation tpLoc = VLocation.fromString(courtRoomSection.getString("tp-location"));
                 VLocation center = VLocation.fromString(courtRoomSection.getString("effects-location"));
                 VLocation judgeChairLoc = VLocation.fromString(courtRoomSection.getString("judge-chair-location"));
-                CourtRoom courtRoom = new CourtRoom(name,regionName,tpLoc,center,judgeChairLoc);
+                VLocation secDeskLoc = VLocation.fromString(courtRoomSection.getString("sec-desk-location"));
+                CourtRoom courtRoom = new CourtRoom(name,regionName,tpLoc,center,judgeChairLoc, secDeskLoc);
                 courtRoomMap.put(name, courtRoom);
             }
         }
@@ -307,7 +314,7 @@ public class CourtsConfig {
         if (section.contains("judge-default-tp-world")) {
             defaultWorld = section.getString("judge-default-tp-world");
         }
-        return new CourtsConfig(maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeApprovalRateRequired,judgeApprovalRateDemoted,judgeRequiredVotes,caseFilingCost,processReward,courtVoteReward,
+        return new CourtsConfig(maxJudges,secretariesPerJudge,judgeInactiveDaysAllowed,judgeTermLimitDays,judgeApprovalRateRequired,judgeApprovalRateDemoted,judgeRequiredVotes,caseFilingCost,processReward,courtVoteReward,
                 judgementReward,voxEffects,silenceLength, courtRoomMap,maxJudgeOfflineTicks,autoSaveInterval,nominateSelfCost,categoryConfigMap,finePaymentInterval,finePaymentPercentage,citizenStallDocumentCooldown,
                 timeBetweenVoteMessages,judgePermissions,secretaryPermissions,startSessionEffects,endSessionEffects,sessionReward,silenceMuteLength,maxFine,supportVoteDecayTicks,judgeTeleportEffects,minElectionWaitMillis,defaultWorld);
     }

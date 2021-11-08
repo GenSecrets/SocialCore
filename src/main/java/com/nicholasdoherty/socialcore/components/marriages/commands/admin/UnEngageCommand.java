@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.marriages.commands.admin;
 
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.marriages.types.Engagement;
@@ -11,15 +12,16 @@ public class UnEngageCommand {
     SocialCore sc;
     public UnEngageCommand(SocialCore plugin) { this.sc = plugin; }
 
+    @CommandCompletion("@players")
     @CommandPermission("socialcore.marriage.admin.unengage")
     public void runCommand(Player player, String[] args){
-        if(args.length != 1) {
+        if(args.length != 2) {
             player.sendMessage("Usage: /marriage admin unengage <player>");
             return;
         }
-        final Player p1 = Bukkit.getPlayer(args[0]);
+        final Player p1 = Bukkit.getPlayer(args[1]);
         if(p1 == null) {
-            player.sendMessage(ChatColor.RED + args[0] + " is not a valid player.");
+            player.sendMessage(ChatColor.RED + args[1] + " is not a valid player.");
             return;
         }
         Engagement engagement = null;

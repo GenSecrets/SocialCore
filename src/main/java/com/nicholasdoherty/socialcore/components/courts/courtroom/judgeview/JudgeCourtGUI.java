@@ -2,8 +2,9 @@ package com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview;
 
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.CourtSession;
-import com.voxmc.voxlib.gui.InventoryGUI;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
+import com.voxmc.voxlib.gui.InventoryGUI;
+import org.bukkit.Bukkit;
 
 /**
  * Created by john on 1/13/15.

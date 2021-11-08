@@ -19,6 +19,10 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -104,6 +108,13 @@ public class StallListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void preventCaseSigning(final PlayerEditBookEvent event) {
+        Properties prop = new Properties();
+        try {
+            InputStream is = new FileInputStream(SocialCore.getPlugin().getDataFolder() + File.separator + "..");
+            prop.load(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         final BookMeta bookMeta = event.getPreviousBookMeta();
         if(bookMeta != null && bookMeta.hasDisplayName() && bookMeta.getDisplayName().contains("Court Case") &&
                 event.isSigning()) {
@@ -116,6 +127,7 @@ public class StallListener implements Listener {
             bookMeta.setLore(
                     new ArrayList<String>(){{
                         add(ChatColor.DARK_GREEN+"Name: "+ChatColor.YELLOW+ event.getPlayer().getName());
+                        add(ChatColor.DARK_GREEN+"Server: "+ChatColor.YELLOW+ System.getProperty("vox.server"));
                         add(ChatColor.DARK_GREEN + "Date: " + ChatColor.YELLOW + new SimpleDateFormat("MMM d, yyyy").format(new Date()));
                         add(ChatColor.DARK_GREEN + "Location: " + ChatColor.YELLOW + loc.getWorld().getName());
                         add(ChatColor.YELLOW + String.valueOf(loc.getBlockX()) + ChatColor.GRAY + "x "
@@ -130,7 +142,6 @@ public class StallListener implements Listener {
                         }
                     }
             );
-            //bookMeta.setPages(event.getPreviousBookMeta().getPages());
             bookMeta.addEnchant(Enchantment.DURABILITY, 1, true);
             event.setNewBookMeta(bookMeta);
         }

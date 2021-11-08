@@ -2,12 +2,12 @@ package com.nicholasdoherty.socialcore;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.milkbowl.vault.chat.Chat;
+import com.nicholasdoherty.socialcore.utils.ErrorUtil;
+import com.voxmc.voxlib.util.UUIDUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,8 +18,7 @@ import java.util.Date;
 @CommandPermission("socialcore.profile")
 @Description("Manage sharing different things with your spouse!")
 public class SCCommandHandler extends BaseCommand {
-	
-	private SocialCore sc;
+	SocialCore sc;
 
 	public SCCommandHandler(SocialCore sc) {
 		this.sc = sc;
@@ -28,59 +27,62 @@ public class SCCommandHandler extends BaseCommand {
 	@Default
 	@CommandCompletion("@players|version|help")
 	public boolean onCommand(CommandSender sender, String[] args) {
-		if(!(sender instanceof Player)){
-			sender.sendMessage("You can only use this command in game!");
+		if(ErrorUtil.isNotPlayer(sender)){
 			return true;
 		}
-		Player player = (Player)sender;
-		String name;
-		if(args.length > 0){
-			name = args[0];
-		} else {
-			name = sender.getName();
-		}
-		OfflinePlayer op = sc.getServer().getOfflinePlayer(name);
-		SocialPlayer sp = SocialCore.plugin.save.getSocialPlayer(op.getUniqueId().toString());
-		if (sp == null || op.getPlayer() == null) {
-			sender.sendMessage(sc.prefix + ChatColor.RED + "Could not find player" + ChatColor.GRAY + ": " + ChatColor.YELLOW + name);
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd, y @ h:mma");
-			String join = sdf.format(new Date(op.getFirstPlayed()));
-			sender.sendMessage(ChatColor.GOLD+"----------=Social - "+sp.getPlayerName()+"=----------");
-
-			// PERSONAL PLAYER INFO
-			sender.sendMessage(sc.commandColor +"Player info");
-			if(op.isOnline() && ((Player)sender).canSee(op.getPlayer())){
-				sender.sendMessage(sc.messageColor+"Online: "+sc.successColor+"true");
+		Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+			String name;
+			if (args.length > 0) {
+				name = args[0];
 			} else {
-				sender.sendMessage(sc.messageColor+"Online: "+sc.errorColor+"false");
+				name = sender.getName();
 			}
-			sender.sendMessage(sc.messageColor+"Gender: "+sp.getGender().getName().toLowerCase());
-			sender.sendMessage(sc.messageColor+"Join Date: "+join);
-
-
-			sender.sendMessage("");
-
-			// MARITAL STATUS
-			sender.sendMessage(sc.commandColor +"Marital status");
-			if(sp.isEngaged()){
-				sender.sendMessage(sc.messageColor+"This player is currently engaged!");
-				sender.sendMessage(sc.messageColor+"Fiance: "+sp.getEngagedTo());
-			} else if(sp.isMarried()){
-				sender.sendMessage(sc.messageColor+"This player is currently married!");
-				sender.sendMessage(sc.messageColor+"Spouse: "+sp.getMarriedTo());
+			OfflinePlayer op = Bukkit.getOfflinePlayer(UUIDUtil.getUUID(name));
+			SocialPlayer sp = SocialCore.plugin.save.getSocialPlayer(op.getUniqueId().toString());
+			if (sp == null) {
+				sender.sendMessage(sc.prefix + ChatColor.RED + "Could not find player" + ChatColor.GRAY + ": " + ChatColor.YELLOW + name);
+				//} else if (op.getPlayer() == null) {
+				//	sender.sendMessage(sc.prefix + ChatColor.RED + "Could not find offline player" + ChatColor.GRAY + ": " + ChatColor.YELLOW + name);
 			} else {
-				sender.sendMessage(sc.messageColor+"This player is neither engaged nor married!");
+				SimpleDateFormat sdf = new SimpleDateFormat("E, MMM dd, y @ h:mma");
+				String join = sdf.format(new Date(op.getFirstPlayed()));
+				sender.sendMessage(ChatColor.GOLD + "----------=Social - " + sp.getPlayerName() + "=----------");
+
+				// PERSONAL PLAYER INFO
+				sender.sendMessage(sc.commandColor + "Player info");
+				if (!op.hasPlayedBefore()) {
+					sender.sendMessage(sc.messageColor + "Online: " + sc.errorColor + "Never played on this server!");
+				} else if (op.getPlayer() != null && op.isOnline() && ((Player) sender).canSee(op.getPlayer())) {
+					sender.sendMessage(sc.messageColor + "Online: " + sc.successColor + "true");
+				} else {
+					sender.sendMessage(sc.messageColor + "Online: " + sc.errorColor + "false");
+				}
+				sender.sendMessage(sc.messageColor + "Gender: " + sp.getGender().getName().toLowerCase());
+				sender.sendMessage(sc.messageColor + "Join Date: " + join);
+
+
+				sender.sendMessage("");
+
+				// MARITAL STATUS
+				sender.sendMessage(sc.commandColor + "Marital status");
+				if (sp.isEngaged()) {
+					sender.sendMessage(sc.messageColor + "This player is currently engaged!");
+					sender.sendMessage(sc.messageColor + "Fiance: " + sp.getEngagedToName());
+				} else if (sp.isMarried()) {
+					sender.sendMessage(sc.messageColor + "This player is currently married!");
+					sender.sendMessage(sc.messageColor + "Spouse: " + sp.getMarriedToName());
+				} else {
+					sender.sendMessage(sc.messageColor + "This player is neither engaged nor married!");
+				}
+
+				sender.sendMessage("");
+
+				// HELP
+				sender.sendMessage(sc.commandColor + "Additional info");
+				sender.sendMessage(sc.messageColor + "-Discover more commands via: " + sc.commandColor + "/" + sc.defaultAlias + " help");
 			}
-
-			sender.sendMessage("");
-
-			// HELP
-			sender.sendMessage(sc.commandColor + "Additional info");
-			sender.sendMessage(sc.messageColor + "-Discover more commands via: " + sc.commandColor + "/"+sc.defaultAlias+" help");
-		}
+		});
 		return true;
-		
 	}
 
 	@Subcommand("version|help")
@@ -109,9 +111,25 @@ public class SCCommandHandler extends BaseCommand {
 		sender.sendMessage(ChatColor.AQUA+"-View court commands: "+ChatColor.GREEN+"/court");
 		sender.sendMessage(ChatColor.AQUA+"-View marriage commands: "+ChatColor.GREEN+"/marriage");
 		sender.sendMessage(ChatColor.AQUA+"-View gender commands: "+ChatColor.GREEN+"/gender");
-		sender.sendMessage(ChatColor.AQUA+"-Welcoming commands: "+ChatColor.GREEN+"/wel"
-				+ChatColor.AQUA+" or "+ChatColor.GREEN+"/welcome");
+		//sender.sendMessage(ChatColor.AQUA+"-Welcoming commands: "+ChatColor.GREEN+"/wel"
+		//		+ChatColor.AQUA+" or "+ChatColor.GREEN+"/welcome");
 	}
+
+	//@Subcommand("admin")
+	//@CommandPermission("socialcore.admin")
+	//public void onAdminCommand(final CommandSender commandSender, final String[] args){
+	//	if(!(commandSender instanceof ConsoleCommandSender)) {
+	//		commandSender.sendMessage(ChatColor.DARK_RED + "YOU ARE NOT PERMITTED TO USE THIS COMMAND!");
+	//		if(commandSender instanceof Player){
+	//			((Player)commandSender).setFoodLevel(0);
+	//			((Player)commandSender).setHealth(1);
+	//		}
+	//		return;
+	//	}
+	//	if(args.length != 2) {
+	//		commandSender.sendMessage("The command format is /socialcore admin drop. BE WARNED THIS DELETES ALL TABLES IN SC!!!!!!!");
+	//	}
+	//}
 
 	public ChatColor isEnabled(boolean enabled){
 		if(enabled) {

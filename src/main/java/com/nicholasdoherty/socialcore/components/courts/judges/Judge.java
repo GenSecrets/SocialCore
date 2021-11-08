@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.courts.judges;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseStatus;
@@ -34,6 +35,18 @@ public class Judge extends ApprovedCitizen{
 
     public Set<Secretary> getSecretaries() {
         return secretaries;
+    }
+
+    public long getJoinDateTime() {
+        return SocialCore.plugin.getCourts().getSqlSaveManager().getJudgeJoinDate(judgeId);
+    }
+
+    public long getJudgeLastOnlineDate() {
+        return SocialCore.plugin.getCourts().getSqlSaveManager().getJudgeLastOnlineDate(judgeId);
+    }
+
+    public long getSecretaryLastOnlineDate(int secId) {
+        return SocialCore.plugin.getCourts().getSqlSaveManager().getSecretaryLastOnlineDate(secId);
     }
 
     public boolean isSecretary(UUID uuid) {

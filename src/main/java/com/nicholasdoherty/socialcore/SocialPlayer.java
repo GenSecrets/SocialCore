@@ -1,6 +1,8 @@
 package com.nicholasdoherty.socialcore;
 
 import com.nicholasdoherty.socialcore.components.genders.Gender;
+import com.voxmc.voxlib.util.UUIDUtil;
+import com.voxmc.voxlib.util.VoxStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -39,8 +41,14 @@ public class SocialPlayer {
 	public String getMarriedTo() {
 		return marriedTo;
 	}
+	public String getMarriedToName() {
+		return Bukkit.getOfflinePlayer(UUID.fromString(marriedTo)).getName();
+	}
 	public String getEngagedTo() {
 		return engagedTo;
+	}
+	public String getEngagedToName() {
+		return Bukkit.getOfflinePlayer(UUID.fromString(engagedTo)).getName();
 	}
 	public boolean isMarried() {
 		return isMarried;

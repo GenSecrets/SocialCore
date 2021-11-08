@@ -3,6 +3,7 @@ package com.nicholasdoherty.socialcore;
 import com.nicholasdoherty.socialcore.components.marriages.types.Divorce;
 import com.nicholasdoherty.socialcore.components.marriages.types.Engagement;
 import com.nicholasdoherty.socialcore.components.marriages.types.Marriage;
+import org.bukkit.Bukkit;
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,7 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class SaveHandler {
@@ -26,10 +29,10 @@ public class SaveHandler {
     }
     
     public List<SocialPlayer> allSocialPlayers() {
-        final List<String> names = sc.store.getSocialPlayers();
+        final List<String> uuids = sc.store.getSocialPlayers();
         final List<SocialPlayer> socialPlayers = new ArrayList<>();
-        for(final String name : names) {
-            final SocialPlayer socialPlayer = getSocialPlayer(name);
+        for(final String uuid : uuids) {
+            final SocialPlayer socialPlayer = getSocialPlayer(uuid);
             if(socialPlayer != null) {
                 socialPlayers.add(socialPlayer);
             }
@@ -53,11 +56,13 @@ public class SaveHandler {
     
     @SuppressWarnings("unchecked")
     public void saveSocialPlayer(final SocialPlayer socialPlayer) {
-        if(socialPlayer != null) {
-            sc.store.syncSocialPlayer(socialPlayer);
-        } else {
-            sc.log.severe("Cannot save a null player!");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+            if(socialPlayer !=null){
+                sc.store.syncSocialPlayer(socialPlayer);
+            } else{
+                sc.log.severe("Cannot save a null player!");
+            }
+        });
     }
     
     public Marriage getMarriage(final String marriageName) {
@@ -81,18 +86,23 @@ public class SaveHandler {
     
     @SuppressWarnings("unchecked")
     public void saveMarriage(final Marriage marriage) {
-        
-        if(marriage != null) {
-            sc.store.saveMarriage(marriage);
-            
-            sc.marriages.marriagesCache.put(marriage.getName(), marriage);
-        } else {
-            sc.log.severe("Cannot save a null marriage!");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+            if (marriage != null) {
+                sc.store.saveMarriage(marriage);
+
+                sc.marriages.marriagesCache.put(marriage.getName(), marriage);
+            } else {
+                sc.log.severe("Cannot save a null marriage!");
+            }
+        });
     }
 
     public int getCountGender(String genderName){
         return sc.store.getGenderStats(genderName);
+    }
+
+    public HashMap<String, Integer> getGenderCounts(List<String> names){
+        return sc.store.getGenderTotals(names);
     }
     
     public List<String> getAllMarriageNames() {
@@ -128,12 +138,14 @@ public class SaveHandler {
     
     @SuppressWarnings("unchecked")
     public void saveEngagement(final Engagement engagement) {
-        if(engagement != null) {
-            sc.store.saveEngagement(engagement);
-            sc.marriages.engagementsCache.put(engagement.getName(), engagement);
-        } else {
-            sc.log.severe("Cannot save a null engagement!");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+            if (engagement != null) {
+                sc.store.saveEngagement(engagement);
+                sc.marriages.engagementsCache.put(engagement.getName(), engagement);
+            } else {
+                sc.log.severe("Cannot save a null engagement!");
+            }
+        });
     }
     
     public void removeEngagement(final Engagement engagement) {
@@ -170,12 +182,14 @@ public class SaveHandler {
     
     @SuppressWarnings("unchecked")
     public void saveDivorce(final Divorce divorce) {
-        if(divorce != null) {
-            sc.store.saveDivorce(divorce);
-            sc.marriages.divorcesCache.put(divorce.getName(), divorce);
-        } else {
-            sc.log.severe("Cannot save a null divorce!");
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+            if (divorce != null) {
+                sc.store.saveDivorce(divorce);
+                sc.marriages.divorcesCache.put(divorce.getName(), divorce);
+            } else {
+                sc.log.severe("Cannot save a null divorce!");
+            }
+        });
     }
     
     public void removeDivorce(final Divorce divorce) {
@@ -191,19 +205,20 @@ public class SaveHandler {
     }
     
     private void saveJson(final JSONAware jsonObject, final String fileName, final String type) {
-        try {
-            
-            final FileWriter file = new FileWriter(directory + '/' + type + '/' + fileName + ".json");
-            file.write(jsonObject.toJSONString());
-            file.flush();
-            file.close();
-        } catch(final FileNotFoundException e) {
-            sc.log.severe("No file for player: " + fileName);
-        } catch(final IOException e) {
-            sc.log.severe("An error occurred while saving player: " + fileName);
-        } catch(final NullPointerException ignored) {
-            
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(sc, () -> {
+            try {
+                final FileWriter file = new FileWriter(directory + '/' + type + '/' + fileName + ".json");
+                file.write(jsonObject.toJSONString());
+                file.flush();
+                file.close();
+            } catch (final FileNotFoundException e) {
+                sc.log.severe("No file for player: " + fileName);
+            } catch (final IOException e) {
+                sc.log.severe("An error occurred while saving player: " + fileName);
+            } catch (final NullPointerException ignored) {
+
+            }
+        });
     }
     
     private JSONObject getJson(final String fileName, final String type) {

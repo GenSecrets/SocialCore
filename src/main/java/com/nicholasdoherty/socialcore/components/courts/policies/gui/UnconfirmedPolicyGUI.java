@@ -1,8 +1,8 @@
 package com.nicholasdoherty.socialcore.components.courts.policies.gui;
 
-import com.voxmc.voxlib.gui.InventoryGUI;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy;
+import com.voxmc.voxlib.gui.InventoryGUI;
 import org.bukkit.entity.Player;
 
 /**

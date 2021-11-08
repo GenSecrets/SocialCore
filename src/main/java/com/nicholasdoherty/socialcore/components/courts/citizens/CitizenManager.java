@@ -16,7 +16,7 @@ public class CitizenManager {
     public CitizenManager(Courts courts) {
         this.courts = courts;
         this.sqlSaveManager = courts.getSqlSaveManager();
-        courts.getPlugin().getServer().getPluginManager().registerEvents(new CitizenListener(this),courts.getPlugin());
+        courts.getPlugin().getServer().getPluginManager().registerEvents(new CitizenListener(this, courts.getJudgeManager()),courts.getPlugin());
     }
 
     public Citizen getCitizen(UUID uuid) {

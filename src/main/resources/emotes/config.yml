@@ -1,0 +1,12 @@
+# NOTE: no "emotes" will be read from this file. This is just used ONLY for settings
+radius: 50
+cooldown: 10
+target-must-be-in-range: true
+lang:
+  emote-command-base-string: "&6Usable emotes:"
+gender-replacements:
+  "<its>":
+    male: his
+    female: her
+    default: their
+    nonbinary: their

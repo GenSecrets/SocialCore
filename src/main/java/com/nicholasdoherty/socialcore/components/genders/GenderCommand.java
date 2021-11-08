@@ -4,10 +4,13 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.SocialPlayer;
+import com.voxmc.voxlib.util.UUIDUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 @CommandAlias("gender")
 @CommandPermission("socialcore.genders")
@@ -31,7 +34,7 @@ public class GenderCommand extends BaseCommand {
             Player player = (Player)sender;
             sender.sendMessage(ChatColor.GOLD+"----------=Gender - "+sender.getName()+"=----------");
             sender.sendMessage(sc.commandColor + "Gender statistics");
-            sender.sendMessage(sc.messageColor+"Your gender: " + sc.commandColor+sp.getGender().getName());
+            sender.sendMessage(sc.messageColor+"Your gender: " + sc.commandColor + sp.getGender().getName());
 
             for (Gender gender : genders.getGenders()) {
                 sender.sendMessage(sc.messageColor + "-" + gender.getName() + ": " + sc.commandColor + genders.getGenderCache().get(gender.getName()));
@@ -66,9 +69,10 @@ public class GenderCommand extends BaseCommand {
             if(genders.getGenderNames().contains(genderName.toUpperCase())){
                 if(sp.getGender().getName().equalsIgnoreCase("UNSPECIFIED")){
                     if(genders.getAwaitingConfirmation().containsKey(sp.getPlayerName()) && genders.getAwaitingConfirmation().get(sp.getPlayerName()).getName().toUpperCase().equalsIgnoreCase(genderName.toUpperCase())){
+                        genders.adjustGenderCache(sp.getGender(), false);
                         sp.setGender(genders.getGender(genderName));
                         sc.save.saveSocialPlayer(sp);
-                        genders.loadGenderCache();
+                        genders.adjustGenderCache(sp, true);
                         sender.sendMessage(sc.prefix+sc.messageColor+"You have chosen the gender: " + sc.commandColor + sp.getGender().getName());
                     } else if(genders.getAwaitingConfirmation().containsKey(sp.getPlayerName())){
                         genders.getAwaitingConfirmation().remove(sp.getPlayerName());
@@ -92,7 +96,7 @@ public class GenderCommand extends BaseCommand {
     @CommandCompletion("@genderNames @players")
     @CommandPermission("socialcore.genders.admin")
     public void setAdmin(CommandSender sender, String genderName, String playerName){
-        OfflinePlayer op = sc.getServer().getOfflinePlayer(playerName);
+        OfflinePlayer op = sc.getServer().getOfflinePlayer(UUID.fromString(playerName));
         if(op.getPlayer() == null){
             return;
         }
@@ -100,9 +104,10 @@ public class GenderCommand extends BaseCommand {
         if(genders.getGenderNames().contains(genderName.toUpperCase())){
             SocialPlayer other = sc.save.getSocialPlayer(op.getUniqueId().toString());
             if(other != null){
+                genders.adjustGenderCache(other.getGender(), false);
                 other.setGender(genders.getGender(genderName));
                 sc.save.saveSocialPlayer(other);
-                genders.loadGenderCache();
+                genders.adjustGenderCache(other, true);
                 sender.sendMessage(sc.prefix+sc.messageColor+ "You have changed " + other.getPlayerName() + "'s gender to " + sc.commandColor + other.getGender().getName());
             } else {
                 sender.sendMessage(sc.prefix + sc.errorColor + "Could not find player!");
@@ -116,7 +121,7 @@ public class GenderCommand extends BaseCommand {
     @CommandCompletion("@players")
     @CommandPermission("socialcore.genders.check.others")
     public boolean checkOtherPlayerGender(CommandSender sender, String name){
-        OfflinePlayer op = sc.getServer().getOfflinePlayer(name);
+        OfflinePlayer op = sc.getServer().getOfflinePlayer(UUIDUtil.getUUID(name));
         if(op.getPlayer() == null){
             return true;
         }

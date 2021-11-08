@@ -4,7 +4,8 @@ import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.cases.*;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseHistory.HistoryEntry;
 import com.nicholasdoherty.socialcore.components.courts.citizens.CitizenManager;
-import com.nicholasdoherty.socialcore.components.courts.commands.*;
+import com.nicholasdoherty.socialcore.components.courts.commands.CourtCommandHandler;
+import com.nicholasdoherty.socialcore.components.courts.commands.JudgeCommandHandler;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.CourtSessionManager;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.actions.*;
@@ -16,6 +17,7 @@ import com.nicholasdoherty.socialcore.components.courts.fines.FineManager;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.components.courts.judges.JudgeManager;
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.Secretary;
+import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.SecretaryAddRequest;
 import com.nicholasdoherty.socialcore.components.courts.notifications.BasicQueuedNotification;
 import com.nicholasdoherty.socialcore.components.courts.notifications.NotificationManager;
 import com.nicholasdoherty.socialcore.components.courts.notifications.VoteSummaryQueued;
@@ -24,13 +26,13 @@ import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.components.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.components.courts.prefix.PrefixManager;
 import com.nicholasdoherty.socialcore.components.courts.stall.StallManager;
-import com.voxmc.voxlib.util.SerializableUUID;
 import com.voxmc.voxlib.VLocation;
+import com.voxmc.voxlib.util.SerializableUUID;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by john on 1/3/15.
@@ -55,6 +57,7 @@ public class Courts {
     private final CitizenManager citizenManager;
     private final PolicyManager policyManager;
     private boolean forceNotSave;
+    public final Map<UUID, List<SecretaryAddRequest>> secretaryAddRequestMap = new HashMap<>();
     
     public Courts(final SocialCore plugin) {
         plugin.getLogger().info("[COURTS] Starting courts...");
@@ -62,7 +65,7 @@ public class Courts {
         this.plugin = plugin;
         registerSerializers();
         plugin.getLogger().info("[COURTS] Registered serializers!");
-        
+
         //DO NOT MODIFY
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
@@ -75,11 +78,11 @@ public class Courts {
         plugin.getLogger().info("[COURTS] Upgraded DB!");
         sqlSaveManager.clean();
         plugin.getLogger().info("[COURTS] Cleaned DB!");
-        try {
-            sqlSaveManager.purgeVotes();
-        } catch(final Exception e) {
-            e.printStackTrace();
-        }
+        //try {
+        //    sqlSaveManager.purgeVotes();
+        //} catch(final Exception e) {
+        //    e.printStackTrace();
+        //}
         plugin.getLogger().info("[COURTS] Purged outdated votes!");
         final long time1 = new Date().getTime();
         citizenManager = new CitizenManager(courts);
@@ -94,7 +97,7 @@ public class Courts {
         plugin.getLogger().info("[COURTS] Set up election manager!");
         judgeManager = new JudgeManager(this);
         plugin.getLogger().info("[COURTS] Set up judge manager!");
-        caseManager = new CaseManager(sqlSaveManager.getCases());
+        caseManager = new CaseManager(sqlSaveManager.getCases(), this);
         plugin.getLogger().info("[COURTS] Set up case manager!");
         stallManager = new StallManager(sqlSaveManager.getStalls());
         plugin.getLogger().info("[COURTS] Set up stall manager!");
@@ -112,13 +115,8 @@ public class Courts {
         final long time2 = new Date().getTime();
         final long diff = time2 - time1;
         plugin.getLogger().info("[COURTS] Took " + diff + "ms to deserialize " + caseManager.amount() + " cases");
-        new CourtCommand(this);
-        new ElectionCommand(this, electionManager);
-        new JudgesCommand(this, judgeManager);
-        new TestCommand(this);
-        new JudgeCommand(this, judgeManager);
-        new SecretaryCommand(this, judgeManager);
-        new IfElectionCommand(this, electionManager);
+        plugin.getCommandManager().registerCommand(new CourtCommandHandler(this, plugin));
+        plugin.getCommandManager().registerCommand(new JudgeCommandHandler(this, plugin));
         plugin.getLogger().info("[COURTS] Registered commands!");
         for(final Player p : Bukkit.getOnlinePlayers()) {
             judgeManager.setPerms(p);
@@ -212,7 +210,6 @@ public class Courts {
         ConfigurationSerialization.registerClass(FineDefendent.class);
         ConfigurationSerialization.registerClass(FinePlantiff.class);
         ConfigurationSerialization.registerClass(GrantBuildingPermit.class);
-        ConfigurationSerialization.registerClass(GrantChestPermit.class);
         ConfigurationSerialization.registerClass(GrantDivorce.class);
         ConfigurationSerialization.registerClass(JailDefendent.class);
         ConfigurationSerialization.registerClass(JailPlantiff.class);
@@ -273,5 +270,15 @@ public class Courts {
     
     public JudgeManager getJudgeManager() {
         return judgeManager;
+    }
+
+    public void removeSecretaryRequest(final SecretaryAddRequest secretaryAddRequest) {
+        if(secretaryAddRequestMap.containsKey(secretaryAddRequest.getSecretary().getUuid())) {
+            final List<SecretaryAddRequest> requests = secretaryAddRequestMap.get(secretaryAddRequest.getSecretary().getUuid());
+            requests.remove(secretaryAddRequest);
+            if(requests.isEmpty()) {
+                secretaryAddRequestMap.remove(secretaryAddRequest.getSecretary().getUuid());
+            }
+        }
     }
 }

@@ -2,9 +2,9 @@ package com.nicholasdoherty.socialcore.components.emotes;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import com.nicholasdoherty.socialcore.utils.NearbyAPI;
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.emotes.extend.EmoteExtender;
+import com.nicholasdoherty.socialcore.utils.NearbyAPI;
 import com.nicholasdoherty.socialcore.utils.VanishUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 @Description("Force a player to run an emote; similar to sudo but for emotes.")
 public class ForceEmoteCommand extends BaseCommand {
     private final EmoteExtender extender = new EmoteExtender();
-    @SuppressWarnings("FieldCanBeLocal")
     private final SocialCore sc;
     private final Emotes emotes;
     

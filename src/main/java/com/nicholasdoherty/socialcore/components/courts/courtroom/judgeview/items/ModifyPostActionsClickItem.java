@@ -2,9 +2,9 @@ package com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.ite
 
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.PostCourtActionHolder;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.postactionsview.PostActionsView;
-import com.voxmc.voxlib.util.ItemStackBuilder;
 import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.gui.InventoryView;
+import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

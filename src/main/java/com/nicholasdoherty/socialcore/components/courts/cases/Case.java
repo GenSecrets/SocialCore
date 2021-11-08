@@ -22,8 +22,8 @@ import java.util.*;
 public class Case implements ConfigurationSerializable {
     private final int id;
     private CaseStatus caseStatus;
-    private Citizen plantiff;
-    private Citizen defendent;
+    private Citizen plaintiff;
+    private Citizen defendant;
     private ItemStack caseBook;
     private boolean locked;
     private CaseCategory caseCategory;
@@ -39,11 +39,11 @@ public class Case implements ConfigurationSerializable {
         caseHistory = new CaseHistory();
     }
     
-    public Case(final int id, final CaseStatus caseStatus, final Citizen plantiff, final Citizen defendent, final ItemStack caseBook, final boolean locked, final CaseCategory caseCategory, final CaseMeta caseMeta) {
+    public Case(final int id, final CaseStatus caseStatus, final Citizen plaintiff, final Citizen defendant, final ItemStack caseBook, final boolean locked, final CaseCategory caseCategory, final CaseMeta caseMeta) {
         this.id = id;
         this.caseStatus = caseStatus;
-        this.plantiff = plantiff;
-        this.defendent = defendent;
+        this.plaintiff = plaintiff;
+        this.defendant = defendant;
         this.caseBook = caseBook;
         this.locked = locked;
         this.caseCategory = caseCategory;
@@ -55,8 +55,8 @@ public class Case implements ConfigurationSerializable {
         if(map.containsKey("case-status")) {
             caseStatus = CaseStatus.valueOf("" + map.get("case-status"));
         }
-        plantiff = (Citizen) map.get("plantiff");
-        defendent = (Citizen) map.get("defendant");
+        plaintiff = (Citizen) map.get("plaintiff");
+        defendant = (Citizen) map.get("defendant");
         caseBook = (ItemStack) map.get("case-book");
         if(map.containsKey("case-category")) {
             caseCategory = CaseCategory.valueOf((String) map.get("case-category"));
@@ -171,7 +171,7 @@ public class Case implements ConfigurationSerializable {
         if(Courts.getCourts().getDefaultDayGetter() != null) {
             if(courtDate == null && getCourtDate() != null) {
                 Courts.getCourts().getDefaultDayGetter().remove(getCourtDate());
-            } else {
+            } else if(courtDate != null) {
                 Courts.getCourts().getDefaultDayGetter().update(courtDate);
             }
             Courts.getCourts().getCourtSessionManager().registerSession(this);
@@ -210,19 +210,19 @@ public class Case implements ConfigurationSerializable {
     }
     
     public Citizen getPlantiff() {
-        return plantiff;
+        return plaintiff;
     }
     
     public void setPlantiff(final Citizen plantiff) {
-        this.plantiff = plantiff;
+        this.plaintiff = plantiff;
     }
     
     public Citizen getDefendent() {
-        return defendent;
+        return defendant;
     }
     
     public void setDefendent(final Citizen defendent) {
-        this.defendent = defendent;
+        this.defendant = defendent;
     }
     
     public int getId() {
@@ -248,12 +248,6 @@ public class Case implements ConfigurationSerializable {
     public CaseCategory getCaseCategory() {
         return caseCategory;
     }
-    
-    //public void submitDetails(ItemStack book, Citizen plantiff) {
-    //    caseBook = book.clone();
-    //    //this.plantiff = plantiff;
-    //    setCaseStatus(CaseStatus.UNPROCESSED, plantiff.getName());
-    //}
     
     public void setCaseCategory(final CaseCategory caseCategory) {
         this.caseCategory = caseCategory;
@@ -293,8 +287,8 @@ public class Case implements ConfigurationSerializable {
         if(caseStatus != null) {
             map.put("case-status", caseStatus.toString());
         }
-        map.put("plantiff", plantiff);
-        map.put("defendant", defendent);
+        map.put("plaintiff", plaintiff);
+        map.put("defendant", defendant);
         map.put("case-book", caseBook);
         if(caseCategory != null) {
             map.put("case-category", caseCategory.toString());

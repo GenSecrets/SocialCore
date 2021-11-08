@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.courts.citizens.stall;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.CourtSession;
 import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.JudgeCourtGUI;
@@ -8,6 +9,7 @@ import com.nicholasdoherty.socialcore.components.courts.judges.gui.judgecasesvie
 import com.nicholasdoherty.socialcore.components.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.components.courts.stall.StallType;
 import com.voxmc.voxlib.VLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -24,8 +26,8 @@ public class JudgeStall extends Stall {
         final Courts courts = Courts.getCourts();
         final Judge judge = courts.getJudgeManager().getJudge(p.getUniqueId());
         if (judge == null) {
-                p.sendMessage(ChatColor.RED + "You are not a judge.");
-                return;
+            p.sendMessage(ChatColor.RED + "You are not a judge.");
+            return;
         }
         final CourtSession courtSession = Courts.getCourts().getCourtSessionManager().getActiveCourtSession(judge,p.getLocation());
         if (courtSession != null) {

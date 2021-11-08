@@ -14,6 +14,7 @@ public abstract class Vote implements ConfigurationSerializable {
     private final Set<UUID> voted = new HashSet<>();
     private Set<SerializableUUID> approvals;
     private Set<SerializableUUID> disapprovals;
+    private Set<SerializableUUID> abstains;
     private Restricter restricter;
     private boolean open = true;
     
@@ -21,6 +22,7 @@ public abstract class Vote implements ConfigurationSerializable {
         this.restricter = restricter;
         approvals = new HashSet<>();
         disapprovals = new HashSet<>();
+        abstains = new HashSet<>();
     }
     
     @SuppressWarnings("unchecked")
@@ -54,23 +56,45 @@ public abstract class Vote implements ConfigurationSerializable {
         if(voteValue == VoteValue.APPROVE) {
             approve = true;
         }
+
         final SerializableUUID serializableUUID = new SerializableUUID(uuid);
-        if(approve) {
-            if(approvals.contains(serializableUUID)) {
-                return;
-            }
-            if(disapprovals.contains(serializableUUID)) {
-                disapprovals.remove(serializableUUID);
-            }
-            approvals.add(serializableUUID);
-        } else {
-            if(disapprovals.contains(serializableUUID)) {
-                return;
-            }
-            if(approvals.contains(serializableUUID)) {
-                approvals.remove(serializableUUID);
-            }
-            disapprovals.add(serializableUUID);
+        switch(voteValue) {
+            case APPROVE:
+                if(approvals.contains(serializableUUID)) {
+                    return;
+                }
+                if(disapprovals.contains(serializableUUID)) {
+                    disapprovals.remove(serializableUUID);
+                }
+                if(abstains.contains(serializableUUID)) {
+                    abstains.remove(serializableUUID);
+                }
+                approvals.add(serializableUUID);
+                break;
+            case DISAPPROVE:
+                if(disapprovals.contains(serializableUUID)) {
+                    return;
+                }
+                if(approvals.contains(serializableUUID)) {
+                    approvals.remove(serializableUUID);
+                }
+                if(abstains.contains(serializableUUID)) {
+                    abstains.remove(serializableUUID);
+                }
+                disapprovals.add(serializableUUID);
+                break;
+            default:
+                if(abstains.contains(serializableUUID)) {
+                    return;
+                }
+                if(approvals.contains(serializableUUID)) {
+                    approvals.remove(serializableUUID);
+                }
+                if(disapprovals.contains(serializableUUID)) {
+                    disapprovals.remove(serializableUUID);
+                }
+                abstains.add(serializableUUID);
+                break;
         }
     }
     
@@ -115,7 +139,11 @@ public abstract class Vote implements ConfigurationSerializable {
     public int disapprovals() {
         return disapprovals.size();
     }
-    
+
+    public int abstains() {
+        return abstains.size();
+    }
+
     public String percentWinString() {
         final Result result = result();
         final int votes = votes();

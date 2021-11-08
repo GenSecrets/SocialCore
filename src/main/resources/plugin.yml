@@ -17,66 +17,13 @@ commands:
         description: Manage gender commands
     marriage:
         description: Marriage command
-    ifelection:
-        usage: /ifelection <command>
-        description: runs command if election is scheduled
-        permission: sc.utility
-    ttc:
-        usage: /ttc
-        permission: sc.admin
     court:
         usage: /court
         permission: sc.defaultperm
-    judges:
-        usage: /judges
-        permission: sc.defaultperm
     judge:
         usage: /judge
-        permission: sc.defaultperm
-    election:
-        usage: /election
-        permission: sc.defaultperm
-    secretary:
-        usage: /secretary
         permission: sc.defaultperm
     policy:
         description: Policy command
     policies:
         description: Policies command
-permissions:
-    sc.utility:
-        description: Used for autocommand
-        default: op
-    sc.defaultperm:
-        description: all have
-        default: true
-    sc.gender.default:
-        description: Basic gender command
-        default: true
-    sc.gender.others:
-        description: Check someone else's gender
-        default: true
-    sc.gender.admin:
-        description: Manage other players genders
-        default: op
-    sc.admin:
-        description: Required to marry a couple
-        default: false
-    sc.op:
-        description: for the OP of admins bois
-        default: op
-    courts.admin:
-        description: Allows use of courts admin commands
-        default: op
-    courts.mastercases:
-        description: Allows viewing of /courts master cases
-        default: op
-    courts.run:
-        description: Allows nominating of self to an election for judge
-        default: false
-    courts.nopay:
-        description: Doesn't require payment for testing
-        default: false
-    courts.policy.delete:
-        description: Allow deleting policies without being a judge
-        default: op

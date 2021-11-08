@@ -2,7 +2,9 @@ package com.nicholasdoherty.socialcore.components.courts.judges.gui.judgecasesvi
 
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseCategory;
-import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.categoryspecific.*;
+import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.categoryspecific.GrantCivilMarriageItem;
+import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.categoryspecific.GrantDivorceItem;
+import com.nicholasdoherty.socialcore.components.courts.courtroom.judgeview.categoryspecific.genderChanges.*;
 import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.gui.clickitems.ChangeViewClickItem;
 import com.voxmc.voxlib.gui.views.PaginatedItemView;
@@ -37,10 +39,12 @@ public class CategorySpecificNoCourtActionsView extends PaginatedItemView{
         if (caze.getCaseCategory() == CaseCategory.DIVORCE) {
             clickItemList.add(new GrantDivorceItem(processedCasesView));
         }
-        if (caze.getCaseCategory() == CaseCategory.SEX_CHANGE) {
-            clickItemList.add(new UngenderedSexChangeItem(processedCasesView));
-            clickItemList.add(new FemaleSexChangeItem(processedCasesView));
-            clickItemList.add(new MaleSexChangeItem(processedCasesView));
+        if (caze.getCaseCategory() == CaseCategory.GENDER_CHANGE) {
+            clickItemList.add(new UnspecifiedGenderChangeItem(processedCasesView));
+            clickItemList.add(new FemaleGenderChangeItem(processedCasesView));
+            clickItemList.add(new MaleGenderChangeItem(processedCasesView));
+            clickItemList.add(new NonBinaryGenderChange(processedCasesView));
+            clickItemList.add(new OtherGenderChangeItem(processedCasesView));
         }
         if (caze.getCaseCategory() == CaseCategory.CIVIL_MARRIAGE) {
             clickItemList.add(new GrantCivilMarriageItem(processedCasesView));

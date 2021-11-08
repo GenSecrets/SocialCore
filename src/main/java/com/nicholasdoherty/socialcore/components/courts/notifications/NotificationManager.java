@@ -27,7 +27,7 @@ public class NotificationManager {
             public void run() {
                 doQueuedNotifications();
             }
-        }.runTaskTimer(courts.getPlugin(),40,40);
+        }.runTaskTimerAsynchronously(courts.getPlugin(),40,40);
         for (Player p : Bukkit.getOnlinePlayers()) {
             online.add(p.getUniqueId());
         }
@@ -189,7 +189,7 @@ public class NotificationManager {
                         if (notificationType != null) {
                             notificationTypes.add(notificationType);
                         }else {
-                            courts.getPlugin().getLogger().severe("Invalid notification type: " + nTS);
+                            courts.getPlugin().getLogger().severe("Invalid event notification type: " + nTS);
                         }
                     }
                     eventNotifs.put(messageEventType,notificationTypes);

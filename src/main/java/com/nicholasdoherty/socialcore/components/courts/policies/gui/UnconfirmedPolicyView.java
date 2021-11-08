@@ -1,11 +1,11 @@
 package com.nicholasdoherty.socialcore.components.courts.policies.gui;
 
 import com.nicholasdoherty.socialcore.components.courts.Courts;
-import com.voxmc.voxlib.gui.InventoryGUI;
-import com.voxmc.voxlib.gui.InventoryView;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy;
+import com.voxmc.voxlib.gui.InventoryGUI;
+import com.voxmc.voxlib.gui.InventoryView;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 

@@ -2,8 +2,6 @@ package com.nicholasdoherty.socialcore.components.courts.policies;
 
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy.State;
-import com.nicholasdoherty.socialcore.components.courts.policies.commands.PoliciesCommand;
-import com.nicholasdoherty.socialcore.components.courts.policies.commands.PolicyCommand;
 import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,14 +22,12 @@ public class PolicyManager {
         this.courts = courts;
         policyConfig = new PolicyConfig(courts.getPlugin().getCourtsConfig().getConfigurationSection("policy"));
         cache = Collections.synchronizedMap(new HashMap<>());
-        new PolicyCommand(courts, this);
-        new PoliciesCommand(courts, this);
         new BukkitRunnable() {
             @Override
             public void run() {
                 allPolicies().forEach(policy -> checkStateChange(policy));
             }
-        }.runTaskTimer(courts.getPlugin(), policyConfig.getPolicyCheckInterval(), policyConfig.getPolicyCheckInterval());
+        }.runTaskTimerAsynchronously(courts.getPlugin(), policyConfig.getPolicyCheckInterval(), policyConfig.getPolicyCheckInterval());
     }
     
     public List<Policy> allPolicies() {

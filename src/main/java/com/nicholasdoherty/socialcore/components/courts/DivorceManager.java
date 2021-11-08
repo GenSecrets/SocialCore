@@ -55,8 +55,8 @@ public class DivorceManager {
         if(caze.getCaseCategory() != null || caze.getPlantiff() == null || caze.getDefendent() == null) {
             return null;
         }
-        final SocialPlayer s1 = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getName());
-        final SocialPlayer s2 = SocialCore.plugin.save.getSocialPlayer(caze.getDefendent().getName());
+        final SocialPlayer s1 = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getUuid().toString());
+        final SocialPlayer s2 = SocialCore.plugin.save.getSocialPlayer(caze.getDefendent().getUuid().toString());
         if(s1 == null || s2 == null) {
             return null;
         }

@@ -1,5 +1,6 @@
 package com.nicholasdoherty.socialcore.components.courts.citizens.stall;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseManager;
@@ -7,6 +8,7 @@ import com.nicholasdoherty.socialcore.components.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.components.courts.stall.StallType;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
 import com.voxmc.voxlib.VLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -34,18 +36,18 @@ public class CitizensStall extends Stall {
         final CaseManager caseManager = Courts.getCourts().getCaseManager();
         final UUID uuid = p.getUniqueId();
         final ItemStack itemInHand = p.getInventory().getItemInMainHand();
-        if(onCooldown.contains(p.getUniqueId())) {
+        if (onCooldown.contains(p.getUniqueId())) {
             p.sendMessage(Courts.getCourts().getCourtsLangManager().getCitizenCooldown());
             return;
         }
-        if(p.getInventory().getItemInMainHand() != null) {
+        if (itemInHand != null) {
             final ItemStack item = p.getInventory().getItemInMainHand();
-            if(Case.isCaseBook(item)) {
-                if(isBookEmpty(itemInHand)) {
+            if (Case.isCaseBook(item)) {
+                if (isBookEmpty(itemInHand)) {
                     p.sendMessage(getCaseBookEmpty());
                     return;
                 }
-                if(!Case.isEmptyCaseBook(item)) {
+                if (!Case.isEmptyCaseBook(item)) {
                     p.sendMessage(getCaseAlreadyFiled());
                     return;
                 }
@@ -58,7 +60,7 @@ public class CitizensStall extends Stall {
             }
         }
         final int cost = Courts.getCourts().getCourtsConfig().getCaseFilingCost();
-        if(!firstClicks.contains(uuid)) {
+        if (!firstClicks.contains(uuid)) {
             p.sendMessage(getConfirmMessage(cost));
             firstClicks.add(uuid);
             final BukkitTask removeTask = new BukkitRunnable() {
@@ -69,17 +71,17 @@ public class CitizensStall extends Stall {
             }.runTaskLater(Courts.getCourts().getPlugin(), 100);
             timeoutRemove.put(uuid, removeTask);
         } else {
-            if(timeoutRemove.containsKey(uuid)) {
+            if (timeoutRemove.containsKey(uuid)) {
                 timeoutRemove.get(uuid).cancel();
                 timeoutRemove.remove(uuid);
                 firstClicks.remove(uuid);
             }
             try {
-                if(!VaultUtil.charge(p, cost)) {
+                if (!VaultUtil.charge(p, cost)) {
                     p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                     return;
                 }
-            } catch(final Exception e) {
+            } catch (final Exception e) {
                 p.sendMessage(ChatColor.RED + "Failed to charge you " + cost + " voxels.");
                 e.printStackTrace();
                 return;
@@ -95,7 +97,7 @@ public class CitizensStall extends Stall {
                 public void run() {
                     onCooldown.remove(uuid);
                 }
-            }.runTaskLater(Courts.getCourts().getPlugin(), cooldown);
+            }.runTaskLaterAsynchronously(Courts.getCourts().getPlugin(), cooldown);
         }
     }
     

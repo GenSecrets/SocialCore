@@ -26,6 +26,12 @@ public class ApprovedCitizen extends Citizen {
         this.approvals = approvals;
         this.disapprovals = disapprovals;
     }
+
+    public ApprovedCitizen(final int id, final String name, final UUID uuid, final Set<UUID> approvals, final Set<UUID> disapprovals) {
+        super(id, name, uuid);
+        this.approvals = approvals;
+        this.disapprovals = disapprovals;
+    }
     
     public ApprovedCitizen(final ApprovedCitizen approvedCitizen) {
         super(approvedCitizen);

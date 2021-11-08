@@ -15,16 +15,16 @@ import com.nicholasdoherty.socialcore.components.courts.policies.Policy;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy.State;
 import com.nicholasdoherty.socialcore.components.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.components.courts.stall.StallType;
-import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.SCSerializer;
+import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import com.voxmc.voxlib.VLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.*;
-import java.util.*;
 import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"UnusedParameters", "SqlDialectInspection"})
 public class SqlSaveManager {
     private final Courts courts;
-    
+
     public SqlSaveManager() {
         courts = Courts.getCourts();
     }
-    
+
     public void upgrade() {
         //prevent dupe courts_judges
         try {
@@ -53,7 +53,7 @@ public class SqlSaveManager {
         } catch(final Exception e) {
             //e.printStackTrace();
         }
-        
+
         //prevent dupe candidates
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("ALTER IGNORE TABLE election_candidates ADD UNIQUE INDEX canidate_unique (citizen_id)");
@@ -63,7 +63,7 @@ public class SqlSaveManager {
         }
         //Election should start
         try {
-            final PreparedStatement preparedStatement = getConnection().prepareStatement("CREATE TABLE `courts_election` (\n" +
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS `courts_election` (\n" +
                     "  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,\n" +
                     "  `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
                     "  `is_active` TINYINT(1) DEFAULT NULL,\n" +
@@ -73,7 +73,7 @@ public class SqlSaveManager {
         } catch(final Exception ignored) {
         }
     }
-    
+
     public Optional<Policy> setJudgeConfirmation(final Judge judge, final Policy policy, final boolean approve) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("REPLACE INTO courts_policies_judge_confirmations (judge_citizen_id,policy_id,approve) VALUES (?,?,?)");
@@ -87,7 +87,7 @@ public class SqlSaveManager {
         }
         return Optional.empty();
     }
-    
+
     public Optional<Policy> createPolicy(final String text, final Citizen author) {
         final int id = getDatabase().update("INSERT INTO courts_policies (`text`,author_citizen_id,state,creation_time) VALUES(?,?,?,?)")
                 .parameters(text, author.getId(), State.UNCONFIRMED.toString(), new Timestamp(new Date().getTime()))
@@ -95,13 +95,13 @@ public class SqlSaveManager {
                 .getAs(Integer.class).toBlocking().single();
         return getPolicy(id);
     }
-    
+
     public Optional<Policy> deletePolicy(final Long id) {
         getDatabase().update("DELETE FROM courts_policies WHERE id = ?")
                 .parameters(id).execute();
         return Optional.empty();
     }
-    
+
     public Optional<Policy> updatePolicyState(final Policy policy, final State state) {
         getDatabase().update("UPDATE courts_policies SET state = ? WHERE id = ?")
                 .parameters(state.toString(), policy.getId())
@@ -113,7 +113,7 @@ public class SqlSaveManager {
         }
         return updatePolicy(policy);
     }
-    
+
     public Optional<Policy> setCitizenVote(final Citizen citizen, final Policy policy, final boolean approve) {
         getDatabase()
                 .update("REPLACE INTO courts_policies_votes (voter_citizen_id,policy_id,approve) VALUES (?,?,?)")
@@ -121,12 +121,12 @@ public class SqlSaveManager {
                 .count().toBlocking().single();
         return updatePolicy(policy);
     }
-    
+
     public Optional<Policy> updatePolicy(final Policy policy) {
         policy.setStale(true);
         return getPolicy(policy.getId());
     }
-    
+
     public Optional<Policy> getPolicy(final int policyId) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_policies WHERE id = ?");
@@ -167,12 +167,12 @@ public class SqlSaveManager {
         }
         return Optional.empty();
     }
-    
+
     public List<Long> allPoliciesIds() {
         return getDatabase().select("SELECT id from courts_policies")
                 .getAs(Long.TYPE).toList().toBlocking().single();
     }
-    
+
     public void clean() {
         //remove invalid secretaries
         try {
@@ -187,7 +187,7 @@ public class SqlSaveManager {
         } catch(final SQLException e) {
             e.printStackTrace();
         }
-        
+
         //fix court dates
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_court_dates WHERE judge_id NOT IN (SELECT courts_judges.id FROM courts_judges)");
@@ -218,7 +218,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void purgeVotes() {
         final long purgeMillis = VoxTimeUnit.TICK.toMillis(Courts.getCourts().getCourtsConfig().getSupportVoteDecayTick());
         final Collection<UUID> allVoterUUIDs = new HashSet<>();
@@ -244,7 +244,7 @@ public class SqlSaveManager {
             }
         });
     }
-    
+
     public Citizen getCitizen(final UUID uuid) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_citizens WHERE uuid = ?");
@@ -259,7 +259,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Citizen getCitizen(final String name) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_citizens WHERE name = ?");
@@ -274,7 +274,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void endElection() {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_election SET is_active = 0");
@@ -285,7 +285,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void startElection() {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_election VALUES(DEFAULT,DEFAULT,1)");
@@ -294,7 +294,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public boolean isElection() {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_election WHERE is_active = 1");
@@ -303,15 +303,15 @@ public class SqlSaveManager {
             return false;
         }
     }
-    
+
     private Connection getConnection() {
         return courts.getPlugin().store.getConnection();
     }
-    
+
     private Database getDatabase() {
         return Database.from(getConnection());
     }
-    
+
     public Citizen getCitizen(final int id) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_citizens WHERE id = ?");
@@ -326,7 +326,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void updateCitizen(final Citizen citizen) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_citizens SET name = ? WHERE uuid = ?");
@@ -337,7 +337,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Citizen createCitizen(final UUID uuid, final String name) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_citizens (name,uuid) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -353,11 +353,11 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Set<Judge> getJudges() {
         final Set<Judge> judges = new HashSet<>();
         try {
-            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_judges");
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT id, citizen_id FROM courts_judges");
             final ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 final int judgeId = resultSet.getInt("id");
@@ -370,7 +370,58 @@ public class SqlSaveManager {
         }
         return judges;
     }
-    
+
+    public long getJudgeJoinDate(int judgeId) {
+        try {
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_judges where id = ?");
+            preparedStatement.setString(1, String.valueOf(judgeId));
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getLong("join_date");
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return -1L;
+    }
+
+    public long getJudgeLastOnlineDate(int judgeId) {
+        try {
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_judges where id = ?");
+            preparedStatement.setString(1, String.valueOf(judgeId));
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getLong("last_online_date");
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return -1L;
+    }
+
+    public long getSecretaryLastOnlineDate(int secId) {
+        try {
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_secretaries where id = ?");
+            preparedStatement.setString(1, String.valueOf(secId));
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getLong("last_online_date");
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return -1L;
+    }
+
+    public void createInitialVote(final Citizen citizen, final UUID uuid, final boolean approve) {
+        try {
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_votes (citizen_id,voter_uuid,approval) VALUES(?,?,?)");
+            preparedStatement.setInt(1, citizen.getId());
+            preparedStatement.setString(2, uuid.toString());
+            preparedStatement.setBoolean(3, approve);
+            preparedStatement.execute();
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateVote(final Citizen citizen, final UUID uuid, final boolean approve) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("REPLACE INTO courts_votes (citizen_id,voter_uuid,approval) VALUES(?,?,?)");
@@ -382,7 +433,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public ApprovedCitizen getApprovedCitizen(final Citizen citizen) {
         final Set<UUID> approvals = new HashSet<>();
         final Set<UUID> disapprovals = new HashSet<>();
@@ -404,7 +455,60 @@ public class SqlSaveManager {
         }
         return new ApprovedCitizen(citizen, approvals, disapprovals);
     }
-    
+
+    public ApprovedCitizen getApprovedCitizenJoined(final int citizen_id) {
+        final Set<UUID> approvals = new HashSet<>();
+        final Set<UUID> disapprovals = new HashSet<>();
+        String name = "";
+        UUID uuid = null;
+        try {
+            final PreparedStatement preparedStatement = getConnection()
+                    .prepareStatement("select cit.id as id, cit.uuid as uuid, cit.name as name, " +
+                            "app.approval as approval, app.voter_uuid as voterUUID " +
+                            "from courts_citizens cit " +
+                            "inner join courts_votes app on cit.id = app.citizen_id " +
+                            "where citizen_id = ?;");
+            preparedStatement.setInt(1, citizen_id);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                name = resultSet.getString("name");
+                uuid = UUID.fromString(resultSet.getString("uuid"));
+                final UUID voterUUID = UUID.fromString(resultSet.getString("voterUUID"));
+                final boolean approves = resultSet.getBoolean("approval");
+                if(approves) {
+                    approvals.add(voterUUID);
+                } else {
+                    disapprovals.add(voterUUID);
+                }
+            }
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return new ApprovedCitizen(citizen_id, name, uuid, approvals, disapprovals);
+    }
+
+    public ApprovedCitizen getApprovedCitizen(final int id, final String name, final UUID uuid) {
+        final Set<UUID> approvals = new HashSet<>();
+        final Set<UUID> disapprovals = new HashSet<>();
+        try {
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_votes WHERE citizen_id = ?");
+            preparedStatement.setInt(1, id);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                final UUID voterUUID = UUID.fromString(resultSet.getString("voter_uuid"));
+                final boolean approves = resultSet.getBoolean("approval");
+                if(approves) {
+                    approvals.add(voterUUID);
+                } else {
+                    disapprovals.add(voterUUID);
+                }
+            }
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return new ApprovedCitizen(id, name, uuid, approvals, disapprovals);
+    }
+
     private void setJudgeSecretaries(final Judge judge) {
         final Set<Secretary> secretaries = new HashSet<>();
         try {
@@ -424,11 +528,14 @@ public class SqlSaveManager {
         }
         judge.setSecretaries(secretaries);
     }
-    
+
     public Judge createJudge(final ApprovedCitizen approvedCitizen) {
         try {
-            final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_judges (citizen_id) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
+            String timeStr = String.valueOf(new Date().getTime());
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_judges (citizen_id,join_date,last_online_date) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, approvedCitizen.getId());
+            preparedStatement.setString(2, timeStr);
+            preparedStatement.setString(3, timeStr);
             preparedStatement.executeUpdate();
             final ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -441,7 +548,33 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
+    public Judge updateJudgeOnlineTime(final int id) {
+        try {
+            String timeStr = String.valueOf(new Date().getTime());
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_judges set last_online_date = ? WHERE citizen_id = ?");
+            preparedStatement.setString(1, timeStr);
+            preparedStatement.setString(2, String.valueOf(id));
+            preparedStatement.executeUpdate();
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Judge updateSecretaryOnlineTime(final int id) {
+        try {
+            String timeStr = String.valueOf(new Date().getTime());
+            final PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_secretaries set last_online_date = ? WHERE citizen_id = ?");
+            preparedStatement.setString(1, timeStr);
+            preparedStatement.setString(2, String.valueOf(id));
+            preparedStatement.executeUpdate();
+        } catch(final SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void removeSecretary(final Secretary secretary) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_secretaries WHERE id = ?");
@@ -451,7 +584,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Secretary createSecretary(final Judge judge, final Citizen citizen) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_secretaries (citizen_id,judge_id) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -467,15 +600,15 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     private Judge getJudge(final int judgeId, final int citizenId) {
-        final Citizen citizen = getCitizen(citizenId);
-        final ApprovedCitizen approvedCitizen = getApprovedCitizen(citizen);
+        //final Citizen citizen = getCitizen(citizenId);
+        final ApprovedCitizen approvedCitizen = getApprovedCitizenJoined(citizenId);
         final Judge judge = new Judge(approvedCitizen, judgeId);
         setJudgeSecretaries(judge);
         return judge;
     }
-    
+
     public void removeJudge(final Judge judge) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_judges WHERE id = ?");
@@ -485,7 +618,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void removeVotes(final Citizen citizen) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_votes WHERE citizen_id = ?");
@@ -495,7 +628,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     private Citizen resultSetToCitizen(final ResultSet resultSet) {
         try {
             final int id = resultSet.getInt("id");
@@ -507,7 +640,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Case createNewCase() {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_cases (case_status) VALUES(?)", Statement.RETURN_GENERATED_KEYS);
@@ -522,7 +655,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void addCaseHistoryEntry(final Case caze, final HistoryEntry historyEntry) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_case_history (date,case_id,case_status,responsible) VALUES(?,?,?,?)");
@@ -535,7 +668,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public CaseHistory getCaseHistory(final Case caze) {
         final List<HistoryEntry> historyEntries = new ArrayList<>();
         try {
@@ -553,7 +686,7 @@ public class SqlSaveManager {
         }
         return new CaseHistory(historyEntries);
     }
-    
+
     public void updateCourtDate(final Case caze) {
         if(caze.getCourtDate() == null) {
             removeCourtDate(caze);
@@ -570,7 +703,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void removeCourtDate(final Case caze) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_court_dates WHERE case_id = ?");
@@ -580,7 +713,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public CourtDate getCourtDate(final Case caze) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_court_dates WHERE case_id = ?");
@@ -597,7 +730,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void updateResolve(final Case caze) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("REPLACE INTO courts_case_resolves (case_id,resolve) VALUES(?,?)");
@@ -612,7 +745,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Resolve getResolve(final Case caze) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_case_resolves WHERE case_id = ?");
@@ -631,7 +764,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void updateCase(final Case caze) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_cases SET case_status = ?, plaintiff_id = ?, defendant_id = ?, case_category = ?, case_book_blob = ?, case_meta = ? WHERE id = ?");
@@ -673,7 +806,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Election election() {
         if(!isElection()) {
             return null;
@@ -697,7 +830,7 @@ public class SqlSaveManager {
         election.setCandidateSet(candidates);
         return election;
     }
-    
+
     public Candidate createCandidate(final Citizen citizen) {
         final ApprovedCitizen approvedCitizen = getApprovedCitizen(citizen);
         try {
@@ -713,7 +846,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Stall resultSetToStall(final ResultSet resultSet) {
         try {
             final int id = resultSet.getInt("id");
@@ -725,7 +858,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Set<Stall> getStalls() {
         final Set<Stall> stalls = new HashSet<>();
         try {
@@ -740,7 +873,7 @@ public class SqlSaveManager {
         }
         return stalls;
     }
-    
+
     public Fine addFine(final Citizen sender, final Citizen rec, final int amount) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_fines (sender_id,rec_id,amount) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -757,7 +890,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Fine resultSetToFine(final ResultSet resultSet) {
         try {
             final int senderId = resultSet.getInt("sender_id");
@@ -773,7 +906,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public Set<Fine> getFines() {
         final Set<Fine> fines = new HashSet<>();
         try {
@@ -788,7 +921,7 @@ public class SqlSaveManager {
         }
         return fines;
     }
-    
+
     public void updateFine(final Fine fine) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE courts_fines SET amount_paid = ? WHERE id = ?");
@@ -799,7 +932,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Stall addStall(final StallType stallType, final VLocation vLocation) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO courts_stalls (type,location) VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -815,7 +948,7 @@ public class SqlSaveManager {
         }
         return null;
     }
-    
+
     public void removeStall(final Stall stall) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_stalls WHERE id = ?");
@@ -825,7 +958,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void removeFine(final Fine fine) {
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM courts_fines WHERE id = ?");
@@ -835,7 +968,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public void removeCandidate(final Candidate candidate) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement("DELETE FROM election_candidates WHERE id = ?");
@@ -848,7 +981,7 @@ public class SqlSaveManager {
             e.printStackTrace();
         }
     }
-    
+
     public Case resultSetToCase(final ResultSet resultSet) {
         try {
             final int id = resultSet.getInt("id");
@@ -857,7 +990,7 @@ public class SqlSaveManager {
             if(caseStatusString != null) {
                 caseStatus = CaseStatus.valueOf(caseStatusString);
             }
-            
+
             Citizen plaintiff = null;
             final int plaintiffId = resultSet.getInt("plaintiff_id");
             if(plaintiffId != 0) {
@@ -878,32 +1011,41 @@ public class SqlSaveManager {
             if(caseMetaString != null) {
                 caseMeta = (CaseMeta) SCSerializer.deserialize(caseMetaString);
             }
-            
-            ItemStack caseBook = new ItemStack(Material.WRITABLE_BOOK);
+
+            ItemStack caseBook = new ItemStack(Material.WRITTEN_BOOK);
             final String caseBookString = resultSet.getString("case_book_blob");
             if(caseBookString != null) {
                 caseBook = (ItemStack) SCSerializer.deserialize(caseBookString);
             }
             final Case caze = new Case(id, caseStatus, plaintiff, defendant, caseBook, false, caseCategory, caseMeta);
-            final CourtDate courtDate = getCourtDate(caze);
-            caze.setCourtDate(courtDate);
-            
-            final CaseHistory caseHistory = getCaseHistory(caze);
-            caze.setCaseHistory(caseHistory);
-            
-            final Resolve resolve = getResolve(caze);
-            caze.setResolve(resolve);
+
+            Bukkit.getScheduler().runTaskAsynchronously(courts.getPlugin(), () -> {
+                final CourtDate courtDate = getCourtDate(caze);
+                caze.setCourtDate(courtDate);
+            });
+
+            Bukkit.getScheduler().runTaskAsynchronously(courts.getPlugin(), () -> {
+                final CaseHistory caseHistory = getCaseHistory(caze);
+                caze.setCaseHistory(caseHistory);
+            });
+
+            Bukkit.getScheduler().runTaskAsynchronously(courts.getPlugin(), () -> {
+                final Resolve resolve = getResolve(caze);
+                caze.setResolve(resolve);
+            });
+
             return caze;
         } catch(final SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
-    
+
     public List<Case> getCases() {
         final List<Case> cases = new ArrayList<>();
         try {
             final PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM courts_cases ORDER BY id ASC");
+            //preparedStatement.setFetchSize(500);
             final ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 final Case caze = resultSetToCase(resultSet);

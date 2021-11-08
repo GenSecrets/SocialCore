@@ -1,4 +1,4 @@
-package com.nicholasdoherty.socialcore.components.courts.policies.commands;
+package com.nicholasdoherty.socialcore.components.courts.commands.courtSubCommands;
 
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
@@ -9,8 +9,6 @@ import com.nicholasdoherty.socialcore.components.courts.policies.gui.Unconfirmed
 import com.voxmc.voxlib.util.ItemStackBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,14 +20,17 @@ import java.util.Optional;
 /**
  * Created by john on 9/12/16.
  */
-public class PolicyCommand implements CommandExecutor {
+public class CourtPolicyCmd {
     private final Courts courts;
     private final PolicyManager policyManager;
+    private final CommandSender commandSender;
+    private final String[] args;
     
-    public PolicyCommand(final Courts courts, final PolicyManager policyManager) {
+    public CourtPolicyCmd(final Courts courts, final PolicyManager policyManager, final CommandSender commandSender, final String[] args) {
         this.courts = courts;
         this.policyManager = policyManager;
-        courts.getPlugin().getCommand("policy").setExecutor(this);
+        this.commandSender = commandSender;
+        this.args = args;
     }
     
     private boolean isDraftBook(final ItemStack itemStack) {
@@ -59,11 +60,10 @@ public class PolicyCommand implements CommandExecutor {
             p.sendMessage(ChatColor.RED + "An error occurred while creating your policy... Error Code: 900");
         }
     }
-    
-    @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-        if(sender instanceof Player) {
-            final Player p = (Player) sender;
+
+    public boolean runCommand() {
+        if(commandSender instanceof Player) {
+            final Player p = (Player) commandSender;
             final Citizen citizen = courts.getCitizenManager().toCitizen(p);
             if(courts.getJudgeManager().isJudge(citizen.getUuid())) {
                 final Optional<Policy> currentPolicy =
@@ -74,8 +74,8 @@ public class PolicyCommand implements CommandExecutor {
                     if(currentPolicy.isPresent()) {
                         UnconfirmedPolicyGUI.createAndOpen(p, citizen, currentPolicy.get());
                     } else {
-                        sender.sendMessage(ChatColor.GRAY + "/policy new - Creates a book to draft a new policy in.");
-                        sender.sendMessage(ChatColor.GRAY + "/policy finish - Finalizes the policy book you're holding.");
+                        commandSender.sendMessage(ChatColor.GRAY + "/court policy new - Creates a book to draft a new policy in.");
+                        commandSender.sendMessage(ChatColor.GRAY + "/court policy finish - Finalizes the policy book you're holding.");
                     }
                 } else {
                     if(args[0].equalsIgnoreCase("new")) {
@@ -95,13 +95,13 @@ public class PolicyCommand implements CommandExecutor {
                             return true;
                         }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "Command not recognized, try /policy to view commands.");
+                        commandSender.sendMessage(ChatColor.RED + "Command not recognized, try /court policy to view commands.");
                     }
                 }
             }
             return true;
         }
-        sender.sendMessage(ChatColor.RED + "This command is only for judges, try /policies.");
+        commandSender.sendMessage(ChatColor.RED + "This command is only for judges, try /court policies.");
         return true;
     }
 }

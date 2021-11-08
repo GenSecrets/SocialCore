@@ -31,8 +31,8 @@ public class GrantCivilMarriage implements PostCourtAction,ConfigurationSerializ
         if (caze.getPlantiff() == null || caze.getDefendent() == null) {
             return;
         }
-        SocialPlayer p1 = SocialCore.plugin.save.getSocialPlayer(caze.getDefendent().getName());
-        SocialPlayer p2 = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getName());
+        SocialPlayer p1 = SocialCore.plugin.save.getSocialPlayer(caze.getDefendent().getUuid().toString());
+        SocialPlayer p2 = SocialCore.plugin.save.getSocialPlayer(caze.getPlantiff().getUuid().toString());
         Marriage oldMarriage = SocialCore.plugin.save.getMarriage(p1,p2);
         if (oldMarriage != null) {
             oldMarriage = SocialCore.plugin.save.getMarriage(p2,p1);

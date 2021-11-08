@@ -1,3 +1,4 @@
+/*
 package com.nicholasdoherty.socialcore.libraries;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 
+*/
 /**
  * ParticleEffect Library v1.1
  *
@@ -23,7 +25,8 @@ import org.bukkit.entity.Player;
  *  2. Don't remove this text
  *
  * @author DarkBlade12
- */
+ *//*
+
 public enum ParticleEffect {
 
 	HUGE_EXPLOSION("hugeexplosion", 0),
@@ -115,69 +118,87 @@ public enum ParticleEffect {
 		return players;
 	}
 
-	/**
+	*/
+/**
 	 * Displays a particle effect which is only visible for specific players
-	 */
+	 *//*
+
 	public void display(Location loc, float offsetX, float offsetY, float offsetZ, float speed, int amount, Player... players) {
 		sendPacket(Arrays.asList(players), createPacket(loc, offsetX, offsetY, offsetZ, speed, amount));
 	}
 
-	/**
+	*/
+/**
 	 * Displays a particle effect which is visible for all players whitin the maximum range of 20 blocks in the world of @param loc
-	 */
+	 *//*
+
 	public void display(Location loc, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
 		display(loc, MAX_RANGE, offsetX, offsetY, offsetZ, speed, amount);
 	}
 
-	/**
+	*/
+/**
 	 * Displays a particle effect which is visible for all players whitin a certain range in the the world of @param loc
-	 */
+	 *//*
+
 	public void display(Location loc, double range, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
 		if (range > MAX_RANGE)
 			throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
 		sendPacket(getPlayersInRange(loc, range), createPacket(loc, offsetX, offsetY, offsetZ, speed, amount));
 	}
 
-	/**
+	*/
+/**
 	 * Displays a tile crack (block break) effect which is only visible for specific players
-	 */
+	 *//*
+
 	public static void displayTileCrack(Location loc, int id, byte data, float offsetX, float offsetY, float offsetZ, int amount, Player... players) {
 		sendPacket(Arrays.asList(players), createTileCrackPacket(id, data, loc, offsetX, offsetY, offsetZ, amount));
 	}
 
-	/**
+	*/
+/**
 	 * Displays a tile crack (block break) effect which is visible for all players whitin the maximum range of 20 blocks in the world of @param loc
-	 */
+	 *//*
+
 	public static void displayTileCrack(Location loc, int id, byte data, float offsetX, float offsetY, float offsetZ, int amount) {
 		displayTileCrack(loc, MAX_RANGE, id, data, offsetX, offsetY, offsetZ, amount);
 	}
 
-	/**
+	*/
+/**
 	 * Displays a tile crack (block break) effect which is visible for all players whitin a certain range in the the world of @param loc
-	 */
+	 *//*
+
 	public static void displayTileCrack(Location loc, double range, int id, byte data, float offsetX, float offsetY, float offsetZ, int amount) {
 		if (range > MAX_RANGE)
 			throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
 		sendPacket(getPlayersInRange(loc, range), createTileCrackPacket(id, data, loc, offsetX, offsetY, offsetZ, amount));
 	}
 
-	/**
+	*/
+/**
 	 * Displays an icon crack (item break) effect which is only visible for specific players
-	 */
+	 *//*
+
 	public static void displayIconCrack(Location loc, int id, float offsetX, float offsetY, float offsetZ, int amount, Player... players) {
 		sendPacket(Arrays.asList(players), createIconCrackPacket(id, loc, offsetX, offsetY, offsetZ, amount));
 	}
 
-	/**
+	*/
+/**
 	 * Displays an icon crack (item break) effect which is visible for all players whitin the maximum range of 20 blocks in the world of @param loc
-	 */
+	 *//*
+
 	public static void displayIconCrack(Location loc, int id, float offsetX, float offsetY, float offsetZ, int amount) {
 		displayIconCrack(loc, MAX_RANGE, id, offsetX, offsetY, offsetZ, amount);
 	}
 
-	/**
+	*/
+/**
 	 * Displays an icon crack (item break) effect which is visible for all players whitin a certain range in the the world of @param loc
-	 */
+	 *//*
+
 	public static void displayIconCrack(Location loc, double range, int id, float offsetX, float offsetY, float offsetZ, int amount) {
 		if (range > MAX_RANGE)
 			throw new IllegalArgumentException("Range has to be lower/equal the maximum of 20");
@@ -225,4 +246,4 @@ public enum ParticleEffect {
 		for (Player p : players)
 			sendPacket(p, packet);
 	}
-}
+}*/

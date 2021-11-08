@@ -2,13 +2,13 @@ package com.nicholasdoherty.socialcore.components.courts.policies.gui;
 
 import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
-import com.voxmc.voxlib.gui.ClickItem;
-import com.voxmc.voxlib.gui.InventoryView;
 import com.nicholasdoherty.socialcore.components.courts.judges.Judge;
 import com.nicholasdoherty.socialcore.components.courts.objects.Citizen;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy;
 import com.nicholasdoherty.socialcore.components.courts.policies.Policy.State;
 import com.nicholasdoherty.socialcore.components.courts.policies.PolicyConfig;
+import com.voxmc.voxlib.gui.ClickItem;
+import com.voxmc.voxlib.gui.InventoryView;
 import com.voxmc.voxlib.util.ItemStackBuilder;
 import com.voxmc.voxlib.util.ItemUtil;
 import org.apache.commons.lang.WordUtils;

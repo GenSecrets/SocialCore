@@ -1,3 +1,4 @@
+/*
 package com.nicholasdoherty.socialcore.libraries;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -7,13 +8,15 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 
+*/
 /**
  * ReflectionUtil v1.1
  *
  * You are welcome to use it, modify it and redistribute it under the condition to not claim this class as your own
  *
  * @author DarkBlade12
- */
+ *//*
+
 public abstract class ReflectionUtil {
 	private static final Map<Class<?>, Class<?>> CORRESPONDING_TYPES = new HashMap<Class<?>, Class<?>>();
 
@@ -154,4 +157,4 @@ public abstract class ReflectionUtil {
 		for (FieldEntry f : entrys)
 			setValue(obj, f);
 	}
-}
+}*/

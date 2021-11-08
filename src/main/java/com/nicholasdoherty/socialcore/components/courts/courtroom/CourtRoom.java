@@ -23,18 +23,24 @@ public class CourtRoom {
     private final VLocation tpLocation;
     private final VLocation center;
     private final VLocation judgeChairLoc;
-    
+    private final VLocation secDeskLoc;
+
     public CourtRoom(final String name, final String regionName, final VLocation tpLocation, final VLocation center,
-                     final VLocation judgeChairLoc) {
+                     final VLocation judgeChairLoc, final VLocation secDeskLoc) {
         this.name = name;
         this.regionName = regionName;
         this.tpLocation = tpLocation;
         this.center = center;
         this.judgeChairLoc = judgeChairLoc;
+        this.secDeskLoc = secDeskLoc;
     }
     
     public VLocation getJudgeChairLoc() {
         return judgeChairLoc;
+    }
+
+    public VLocation getSecDeskLoc() {
+        return secDeskLoc;
     }
     
     public String getName() {

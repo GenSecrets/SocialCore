@@ -1,13 +1,12 @@
 package com.nicholasdoherty.socialcore.libraries;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 public class ConfigAccessor {
@@ -16,7 +15,7 @@ public class ConfigAccessor {
     private final JavaPlugin plugin;
     
     private final File configFile;
-    private FileConfiguration fileConfiguration;
+    private FileConfiguration fileConfiguration = null;
     
     public ConfigAccessor(final JavaPlugin plugin, final String fileName) {
         if(plugin == null) {
@@ -28,20 +27,26 @@ public class ConfigAccessor {
         if(dataFolder == null) {
             throw new IllegalStateException();
         }
-        configFile = new File(plugin.getDataFolder(), fileName);
+        configFile = new File(dataFolder, fileName);
     }
     
     public void reloadConfig() {
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
+        fileConfiguration = new YamlConfiguration();
+        try {
+            fileConfiguration.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        //fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
         
         // Look for defaults in the jar
-        if(!configFile.exists()) {
-            final InputStream defConfigStream = plugin.getResource(fileName);
-            if(defConfigStream != null) {
-                final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
-                fileConfiguration.setDefaults(defConfig);
-            }
-        }
+        //if(!configFile.exists()) {
+        //    final InputStream defConfigStream = plugin.getResource(fileName);
+        //    if(defConfigStream != null) {
+        //        final YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
+        //        fileConfiguration.setDefaults(defConfig);
+        //    }
+        //}
     }
     
     public FileConfiguration getConfig() {
@@ -50,9 +55,12 @@ public class ConfigAccessor {
         }
         return fileConfiguration;
     }
+
+    public File getFile() {
+        return configFile;
+    }
     
     public void saveConfig() {
-        //noinspection StatementWithEmptyBody
         if(fileConfiguration == null || configFile == null) {
         } else {
             try {

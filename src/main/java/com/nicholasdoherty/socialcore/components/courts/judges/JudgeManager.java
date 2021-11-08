@@ -7,9 +7,8 @@ import com.nicholasdoherty.socialcore.components.courts.notifications.BasicQueue
 import com.nicholasdoherty.socialcore.components.courts.notifications.NotificationManager;
 import com.nicholasdoherty.socialcore.components.courts.notifications.NotificationType;
 import com.nicholasdoherty.socialcore.components.courts.objects.ApprovedCitizen;
-import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import com.nicholasdoherty.socialcore.utils.VaultUtil;
-import com.voxmc.voxlib.util.PlayerUtil;
+import com.nicholasdoherty.socialcore.utils.time.VoxTimeUnit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -24,10 +23,9 @@ import java.util.stream.Collectors;
  * Created by john on 1/6/15.
  */
 public class JudgeManager {
-    private final Set<Judge> judges;
+    private Set<Judge> judges;
     private final Map<UUID, Judge> judgesByUUID = new HashMap<>();
     private final Courts courts;
-    private final Map<UUID, String> setPrefixes = new HashMap<>();
     
     public JudgeManager(final Courts courts) {
         judges = courts.getSqlSaveManager().getJudges();
@@ -54,6 +52,10 @@ public class JudgeManager {
             }
         }
     }
+
+    public void refreshJudges() {
+        judges = courts.getSqlSaveManager().getJudges();
+    }
     
     public void setupUUID() {
         for(final Judge judge : judges) {
@@ -77,9 +79,10 @@ public class JudgeManager {
     }
     
     public Judge promoteJudge(final ApprovedCitizen approvedCitizen) {
+        refreshJudges();
         Judge judge = null;
         for(final Judge judge1 : getJudges()) {
-            if(judge1.getId() == approvedCitizen.getId()) {
+            if(judge1!= null && judge1.getId() == approvedCitizen.getId()) {
                 judge = judge1;
                 break;
             }
@@ -90,7 +93,6 @@ public class JudgeManager {
         judges.add(judge);
         judgesByUUID.put(judge.getUuid(), judge);
         setPerms(judge.getUuid());
-        //setPrefix(judge.getUuid());
         return judge;
     }
     
@@ -100,16 +102,19 @@ public class JudgeManager {
         judgesByUUID.remove(judge.getUuid());
         Courts.getCourts().getCaseManager().onJudgeDemoted(judge);
         setPerms(judge.getUuid());
-        //setPrefix(judge.getUuid());
         Courts.getCourts().getElectionManager().checkShouldScheduleFile();
+    }
+
+    public void updateJudgeOnlineTime(final int id) {
+        courts.getSqlSaveManager().updateJudgeOnlineTime(id);
+    }
+
+    public void updateSecretaryOnlineTime(final int id) {
+        courts.getSqlSaveManager().updateSecretaryOnlineTime(id);
     }
 
     
     public Judge getJudge(final UUID uuid) {
-        //Player player = Bukkit.getPlayer(uuid);
-        //if (player != null && !judgesByUUID.containsKey(uuid) && player.hasPermission("courts.admin")) {
-        //    return Judge.adminJudge(player);
-        //}
         return judgesByUUID.get(uuid);
     }
     
@@ -133,13 +138,6 @@ public class JudgeManager {
                 return secretary;
             }
         }
-        //Player player = Bukkit.getPlayer(uuid);
-        //if (player != null && player.hasPermission("courts.admin")) {
-        //    Judge judge = getJudge(uuid);
-        //    Secretary secretary = new Secretary(player.getName(),player.getUniqueId(),judge);
-        //    judge.addSecretary(secretary);
-        //    return secretary;
-        //}
         return null;
     }
     
@@ -213,7 +211,7 @@ public class JudgeManager {
     }
     
     public void update(final Judge judge) {
-        if(PlayerUtil.timeSinceLastOnline(judge.getUuid()) > Days.days(Courts.getCourts().getCourtsConfig().getJudgeInactiveDaysAllowed()).toStandardDuration().getMillis()) {
+        if((new Date().getTime() - judge.getJudgeLastOnlineDate()) > Days.days(Courts.getCourts().getCourtsConfig().getJudgeInactiveDaysAllowed()).toStandardDuration().getMillis()) {
             demoteJudge(judge);
             final Courts courts = Courts.getCourts();
             final NotificationManager notificationManager = courts.getNotificationManager();
@@ -224,6 +222,26 @@ public class JudgeManager {
             final String judgeMessage = Courts.getCourts().getNotificationManager().getNotificationString(NotificationType.JUDGE_INACTIVE_JUDGE, null, new Object[] {judge}, judgeP);
             final long timeoutTicks = Courts.getCourts().getNotificationManager().notificationTimeout(NotificationType.JUDGE_INACTIVE_JUDGE);
             final BasicQueuedNotification queuedNotification = new BasicQueuedNotification(judge, judgeMessage, new Date().getTime() + VoxTimeUnit.TICK.toMillis(timeoutTicks), NotificationType.JUDGE_INACTIVE_JUDGE);
+            Courts.getCourts().getNotificationManager().addQueuedNotification(queuedNotification);
+            return;
+        }
+        if((new Date().getTime() - judge.getJoinDateTime()) > Days.days(Courts.getCourts().getCourtsConfig().getJudgeTermLimitDays()).toStandardDuration().getMillis()) {
+            /*Bukkit.getPlayer("GenSecrets").sendMessage("Term limit days: " + Days.days(Courts.getCourts().getCourtsConfig().getJudgeTermLimitDays()));
+            Bukkit.getPlayer("GenSecrets").sendMessage("Term limit days: " + Courts.getCourts().getCourtsConfig().getJudgeTermLimitDays());
+            Bukkit.getPlayer("GenSecrets").sendMessage("Term limit millis: " + Days.days(Courts.getCourts().getCourtsConfig().getJudgeTermLimitDays()).toStandardDuration().getMillis());
+            Bukkit.getPlayer("GenSecrets").sendMessage("Current time: " + (new Date().getTime()));
+            Bukkit.getPlayer("GenSecrets").sendMessage("Judge join date: " + (judge.getJoinDateTime()));
+            Bukkit.getPlayer("GenSecrets").sendMessage("Current time minus join date: " + (new Date().getTime() - judge.getJoinDateTime()));*/
+            demoteJudge(judge);
+            final Courts courts = Courts.getCourts();
+            final NotificationManager notificationManager = courts.getNotificationManager();
+
+            notificationManager.notification(NotificationType.JUDGE_TERM_REACHED_ALL, new Object[] {judge});
+
+            final Player judgeP = Bukkit.getPlayer(judge.getUuid());
+            final String judgeMessage = Courts.getCourts().getNotificationManager().getNotificationString(NotificationType.JUDGE_TERM_REACHED, null, new Object[] {judge}, judgeP);
+            final long timeoutTicks = Courts.getCourts().getNotificationManager().notificationTimeout(NotificationType.JUDGE_TERM_REACHED);
+            final BasicQueuedNotification queuedNotification = new BasicQueuedNotification(judge, judgeMessage, new Date().getTime() + VoxTimeUnit.TICK.toMillis(timeoutTicks), NotificationType.JUDGE_TERM_REACHED);
             Courts.getCourts().getNotificationManager().addQueuedNotification(queuedNotification);
             return;
         }
@@ -240,6 +258,7 @@ public class JudgeManager {
     }
     
     public Set<Judge> getJudges() {
+        //refreshJudges();
         return judges;
     }
 }

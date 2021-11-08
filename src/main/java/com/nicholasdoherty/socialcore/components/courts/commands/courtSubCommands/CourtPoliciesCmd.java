@@ -1,10 +1,8 @@
-package com.nicholasdoherty.socialcore.components.courts.policies.commands;
+package com.nicholasdoherty.socialcore.components.courts.commands.courtSubCommands;
 
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.policies.PolicyManager;
 import com.nicholasdoherty.socialcore.components.courts.policies.gui.PolicyGUI;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,21 +10,23 @@ import org.bukkit.entity.Player;
  * Created by john on 9/12/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PoliciesCommand implements CommandExecutor {
+public class CourtPoliciesCmd {
     private final Courts courts;
     private final PolicyManager policyManager;
-    
-    public PoliciesCommand(final Courts courts, final PolicyManager policyManager) {
+    private final CommandSender commandSender;
+    private final String[] args;
+
+    public CourtPoliciesCmd(final Courts courts, final PolicyManager policyManager, final CommandSender commandSender, final String[] args) {
         this.courts = courts;
         this.policyManager = policyManager;
-        courts.getPlugin().getCommand("policies").setExecutor(this);
+        this.commandSender = commandSender;
+        this.args = args;
     }
-    
-    @Override
-    public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
+
+    public boolean runCommand() {
         boolean failed = false;
-        if(strings.length > 0) {
-            if(strings[0].equalsIgnoreCase("failed")) {
+        if(args.length > 0) {
+            if(args[0].equalsIgnoreCase("failed")) {
                 failed = true;
             }
         }

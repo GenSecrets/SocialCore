@@ -39,7 +39,7 @@ public class ElectionManager {
     }
     
     public long judgeNeededTime() {
-        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts" + File.separator + "courts-election-flag-set");
         final boolean flagSet = file.exists();
         if(!flagSet) {
             return -1;
@@ -56,7 +56,7 @@ public class ElectionManager {
     }
     
     public void deleteJudgeNeededFile() {
-        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts" + File.separator + "courts-election-flag-set");
         if(file.exists()) {
             file.delete();
         }
@@ -66,7 +66,7 @@ public class ElectionManager {
         if(!requirementsForScheduleElectionMet()) {
             return;
         }
-        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts-election-flag-set");
+        final File file = new File(Courts.getCourts().getPlugin().getDataFolder(), "courts" + File.separator + "courts-election-flag-set");
         if(file.exists()) {
             file.delete();
             try {

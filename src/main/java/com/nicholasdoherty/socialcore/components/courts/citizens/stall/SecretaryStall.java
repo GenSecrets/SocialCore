@@ -1,11 +1,13 @@
 package com.nicholasdoherty.socialcore.components.courts.citizens.stall;
 
+import com.nicholasdoherty.socialcore.SocialCore;
 import com.nicholasdoherty.socialcore.components.courts.Courts;
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.Secretary;
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.gui.SecretaryGUI;
 import com.nicholasdoherty.socialcore.components.courts.stall.Stall;
 import com.nicholasdoherty.socialcore.components.courts.stall.StallType;
 import com.voxmc.voxlib.VLocation;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -25,6 +27,6 @@ public class SecretaryStall extends Stall {
             p.sendMessage(ChatColor.RED + "You are not a secretary.");
             return;
         }
-        SecretaryGUI.createAndOpen(p,secretary);
+        SecretaryGUI.createAndOpen(p, secretary);
     }
 }

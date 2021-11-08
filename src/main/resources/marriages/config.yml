@@ -60,16 +60,21 @@ perks:
     kissing-heart-effect: true
   #Settings to control sharing of items/inventory/food
   sharing:
-    #The required distance (in blocks) between partners when sharing eaten food
-    food-share-distance: 50
-    #The required distance (in blocks) between partners when using the share inventory command
-    inventory-share-distance: 0
-      #Settings to control sharable exp
+    food:
+      #The required distance (in blocks) between partners when sharing eaten food
+      food-share-distance: 50
+      #The cooldown between the messages each player will receive in chat when this is shared
+      food-message-cooldown: 15s
+    inv:
+      #The required distance (in blocks) between partners when using the share inventory command
+      inventory-share-distance: 0
     xp:
       #The required distance for married couples to get bonus xp from each other
       xp-bonus-distance: 5
       #The percent of the killer's xp to give to their significant other (0.0 - 1.0)
       xp-bonus-percent: 0.5
+      #The cooldown between the messages each player will receive in chat when this is shared
+      xp-message-cooldown: 15s
   piggyback:
     #The cooldown between piggybacking your partner
     piggyback-cooldown: 90s

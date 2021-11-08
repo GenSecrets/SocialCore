@@ -3,8 +3,8 @@ package com.nicholasdoherty.socialcore.components.courts.inventorygui.gui.clicki
 import com.nicholasdoherty.socialcore.components.courts.cases.Case;
 import com.nicholasdoherty.socialcore.components.courts.cases.CaseHistory;
 import com.nicholasdoherty.socialcore.components.courts.cases.CourtDate;
-import com.voxmc.voxlib.gui.ClickItem;
 import com.nicholasdoherty.socialcore.components.courts.judges.secretaries.gui.caseview.SecCaseView;
+import com.voxmc.voxlib.gui.ClickItem;
 import com.voxmc.voxlib.util.TextUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;

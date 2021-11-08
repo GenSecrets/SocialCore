@@ -111,11 +111,11 @@ public class ProposeCommand extends BaseCommand {
                     break;
             }
 
-            if(!player.hasPermission("sc.propose")) {
+            if(!player.hasPermission("socialcore.marriage.propose")) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to marry another player!");
                 return;
             }
-            if(!p.hasPermission("sc.propose")) {
+            if(!p.hasPermission("socialcore.marriage.propose")) {
                 player.sendMessage(ChatColor.RED + proposeFrom.getPlayerName() + " does not have permission to marry!");
                 return;
             }
@@ -211,11 +211,12 @@ public class ProposeCommand extends BaseCommand {
             final String dateBuilder = MarriagesUtil.getMonth() + ' ' + Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + ", " + Calendar.getInstance().get(Calendar.YEAR);
             e.setDate(dateBuilder);
             e.setTime(System.currentTimeMillis());
+            e.setWhoProposed(proposeFrom.getUUID());
 
             proposeFrom.setEngaged(true);
-            proposeFrom.setEngagedTo(proposeTo.getPlayerName());
+            proposeFrom.setEngagedTo(proposeTo.getUUID());
             proposeTo.setEngaged(true);
-            proposeTo.setEngagedTo(proposeFrom.getPlayerName());
+            proposeTo.setEngagedTo(proposeFrom.getUUID());
 
             sc.save.saveEngagement(e);
             sc.save.saveSocialPlayer(proposeFrom);
@@ -250,7 +251,7 @@ public class ProposeCommand extends BaseCommand {
                 }
             }
 
-            Bukkit.getServer().getOnlinePlayers().stream().filter(pr -> pr.hasPermission("sc.priest")).forEach(pr -> pr.sendMessage(ChatColor.GREEN + proposeTo.getPlayerName() + " and " + proposeFrom.getPlayerName() + " have become engaged!"));
+            Bukkit.getServer().getOnlinePlayers().stream().filter(pr -> pr.hasPermission("socialcore.marriage.priest")).forEach(pr -> pr.sendMessage(ChatColor.GREEN + proposeTo.getPlayerName() + " and " + proposeFrom.getPlayerName() + " have become engaged!"));
         } else {
             player.sendMessage(ChatColor.RED + "You have not been proposed to!");
         }
